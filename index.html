@@ -330,6 +330,9 @@ const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const CATS=[{k:'out',n:'طلعة',c:'#e0336a'},{k:'food',n:'أكل',c:'#f08a4b'},{k:'travel',n:'سفر',c:'#3a8dde'},{k:'sport',n:'رياضة',c:'#2bb39a'},{k:'watch',n:'فيلم ومسلسل',c:'#8b5cf6'},{k:'event',n:'مناسبة',c:'#d4a017'},{k:'home',n:'بالبيت',c:'#b0417f'},{k:'other',n:'شي تاني',c:'#8a7684'}];
 const cat=k=>CATS.find(c=>c.k===k)||CATS[7];
+const catLbl=o=>o.cat==='other'&&o.catOther?esc(o.catOther):cat(o.cat).n;
+const otherInput=(id,v,shown,ph)=>'<input class="in" id="'+id+'" maxlength="40" placeholder="'+ph+'" value="'+esc(v||'')+'"'+(shown?'':' hidden')+' style="margin-top:8px">';
+function wireOther(box,attr,id){sheet.querySelector(box).addEventListener('click',e=>{const b=e.target.closest('['+attr+']');if(!b)return;const i=document.getElementById(id);const on=b.getAttribute(attr)==='other';i.hidden=!on;if(on)setTimeout(()=>i.focus(),60)})}
 const WHO={both:'سوا',hassan:'حسن',leen:'لين'};
 const L='ar-u-nu-latn';
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
@@ -404,7 +407,7 @@ function renderMoments(){
   const d=pd(m.date),mk=String(m.date).slice(0,7);
   if(mk!==last){out+='<div class="month">'+d.toLocaleDateString(L,{month:'long',year:'numeric'})+'</div>';last=mk}
   const c=cat(m.cat);
-  out+='<article class="card"><div class="date"><b>'+d.getDate()+'</b><span>'+d.toLocaleDateString(L,{weekday:'short'})+'</span></div><div class="body"><h3>'+esc(m.title)+'</h3><div class="meta"><span class="tag"><i class="dot" style="background:'+c.c+'"></i>'+c.n+'</span><span>'+esc(WHO[m.who]||'سوا')+'</span>'+hearts(Math.min(5,Math.max(0,Number(m.rating)||0)))+'</div>'+(m.note?'<p class="note">'+esc(m.note)+'</p>':'')+(m.by?'<div class="small" style="margin-top:6px">زادها '+esc(WHO[m.by]||'')+'</div>':'')+'</div><button class="more" data-edit="'+esc(m.id)+'" aria-label="تعديل"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button></article>';
+  out+='<article class="card"><div class="date"><b>'+d.getDate()+'</b><span>'+d.toLocaleDateString(L,{weekday:'short'})+'</span></div><div class="body"><h3>'+esc(m.title)+'</h3><div class="meta"><span class="tag"><i class="dot" style="background:'+c.c+'"></i>'+catLbl(m)+'</span><span>'+esc(WHO[m.who]||'سوا')+'</span>'+hearts(Math.min(5,Math.max(0,Number(m.rating)||0)))+'</div>'+(m.note?'<p class="note">'+esc(m.note)+'</p>':'')+(m.by?'<div class="small" style="margin-top:6px">زادها '+esc(WHO[m.by]||'')+'</div>':'')+'</div><button class="more" data-edit="'+esc(m.id)+'" aria-label="تعديل"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button></article>';
  }
  $('#list').innerHTML=out;
 }
@@ -414,7 +417,7 @@ function renderPlans(){
  const list=[...plans].sort((a,b)=>(!!a.done-!!b.done)||(b.createdAt||0)-(a.createdAt||0));
  if(!list.length){$('#plist').innerHTML='<div class="empty"><h3>شو بدكن تعملوا سوا؟</h3>حطّوا هون أحلامكن الصغيرة والكبيرة: مطعم بدكن تجرّبوه، سفرة، فيلم…</div>';return}
  const open=list.filter(p=>!p.done).length;
- $('#plist').innerHTML='<div class="month">'+open+' لسّا ناطرين · '+(list.length-open)+' عملناهن</div>'+list.map(p=>{const c=cat(p.cat);return '<article class="card plan'+(p.done?' done':'')+'"><button class="check" data-tog="'+esc(p.id)+'" aria-label="'+(p.done?'رجّعها':'عملناها')+'">'+(p.done?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5 9-10"/></svg>':'')+'</button><div class="body"><h3>'+esc(p.title)+'</h3><div class="meta"><span class="tag"><i class="dot" style="background:'+c.c+'"></i>'+c.n+'</span>'+(p.when?'<span>'+pd(p.when).toLocaleDateString(L,{day:'numeric',month:'short'})+'</span>':'')+(p.by?'<span>من '+esc(WHO[p.by]||'')+'</span>':'')+'</div></div><button class="more" data-pedit="'+esc(p.id)+'" aria-label="تعديل"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button></article>'}).join('');
+ $('#plist').innerHTML='<div class="month">'+open+' لسّا ناطرين · '+(list.length-open)+' عملناهن</div>'+list.map(p=>{const c=cat(p.cat);return '<article class="card plan'+(p.done?' done':'')+'"><button class="check" data-tog="'+esc(p.id)+'" aria-label="'+(p.done?'رجّعها':'عملناها')+'">'+(p.done?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5 9-10"/></svg>':'')+'</button><div class="body"><h3>'+esc(p.title)+'</h3><div class="meta"><span class="tag"><i class="dot" style="background:'+c.c+'"></i>'+catLbl(p)+'</span>'+(p.when?'<span>'+pd(p.when).toLocaleDateString(L,{day:'numeric',month:'short'})+'</span>':'')+(p.by?'<span>من '+esc(WHO[p.by]||'')+'</span>':'')+'</div></div><button class="more" data-pedit="'+esc(p.id)+'" aria-label="تعديل"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button></article>'}).join('');
 }
 
 /* ---------- stats ---------- */
@@ -478,16 +481,16 @@ function openWorkout(m){
  const whoOpts=me?[[me,'أنا لحالي'],['both','سوا']]:[['both','سوا'],['hassan','حسن'],['leen','لين']];
  if(m.who&&!whoOpts.some(o=>o[0]===m.who))whoOpts.push([m.who,WHO[m.who]]);
  open('<h2>'+(m.id?'عدّل التمرين':'تمرين جديد')+'</h2><form id="wof">'+
- '<label class="l">شو تمرّنت؟</label><div class="chips" style="flex-wrap:wrap" id="wot">'+WT.map(([k,n])=>'<button type="button" class="chip" data-c="'+k+'" aria-pressed="'+(wt===k)+'">'+n+'</button>').join('')+'</div>'+
+ '<label class="l">شو تمرّنت؟</label><div class="chips" style="flex-wrap:wrap" id="wot">'+WT.map(([k,n])=>'<button type="button" class="chip" data-c="'+k+'" aria-pressed="'+(wt===k)+'">'+n+'</button>').join('')+'</div>'+otherInput('wo-ot',m.workoutOther,wt==='other','شو التمرين؟ مثلاً: تنس، ملاكمة…')+
  '<label class="l">مع مين؟</label><div class="seg" id="wow">'+whoOpts.map(([k,n])=>'<button type="button" data-w="'+k+'" aria-pressed="'+(who===k)+'">'+n+'</button>').join('')+'</div>'+
  '<div class="duo" style="margin-top:2px"><div><label class="l" for="wo-m">المدة (دقيقة)</label><input class="in" id="wo-m" type="number" inputmode="numeric" min="1" max="600" placeholder="45" value="'+esc(m.minutes||'')+'"></div><div><label class="l" for="wo-d">إيمتى؟</label><input class="in" id="wo-d" type="date" value="'+esc(m.date||today())+'"></div></div>'+
  '<label class="l">قدّيش كان قوي؟</label><div class="seg" id="woe">'+EF.map(([k,n])=>'<button type="button" data-e="'+k+'" aria-pressed="'+(ef===k)+'">'+n+'</button>').join('')+'</div>'+
  '<label class="l" for="wo-n">ملاحظة (مش ضروري)</label><input class="in" id="wo-n" maxlength="200" placeholder="مثلاً: ٥ كم، رجلين، رقم جديد بالبنش…" value="'+esc(m.note||'')+'">'+
  '<div class="acts">'+(m.id?'<button type="button" class="btn del" id="wodel">احذف</button>':'')+'<button class="btn pri" type="submit">'+(m.id?'احفظ':'سجّل التمرين')+'</button></div></form>');
- pick('#wot','data-c');pick('#wow','data-w');pick('#woe','data-e');
+ pick('#wot','data-c');pick('#wow','data-w');pick('#woe','data-e');wireOther('#wot','data-c','wo-ot');
  $('#wof').addEventListener('submit',async e=>{e.preventDefault();
-  const t=val('#wot','data-c')||'other',name=(WT.find(x=>x[0]===t)||WT[8])[1],min=Math.round(num($('#wo-m').value)||0);
-  const doc={title:name+(min?' · '+min+' دقيقة':''),date:$('#wo-d').value||today(),cat:'sport',workoutType:t,minutes:min,effort:val('#woe','data-e')||'mid',who:val('#wow','data-w')||'both',rating:0,note:$('#wo-n').value.trim(),by:m.by||me||'',createdAt:m.createdAt||Date.now(),updatedAt:Date.now(),editedBy:me||''};
+  const t=val('#wot','data-c')||'other',wo=t==='other'?$('#wo-ot').value.trim():'',name=wo||(WT.find(x=>x[0]===t)||WT[8])[1],min=Math.round(num($('#wo-m').value)||0);
+  const doc={title:name+(min?' · '+min+' دقيقة':''),date:$('#wo-d').value||today(),cat:'sport',workoutType:t,workoutOther:wo,minutes:min,effort:val('#woe','data-e')||'mid',who:val('#wow','data-w')||'both',rating:0,note:$('#wo-n').value.trim(),by:m.by||me||'',createdAt:m.createdAt||Date.now(),updatedAt:Date.now(),editedBy:me||''};
   close();await write(()=>m.id?db.collection('moments').doc(m.id).set(doc):db.collection('moments').add(doc),m.id?'انحفظ التمرين':'انسجّل التمرين 💪'.replace(' 💪',''))});
  const d=$('#wodel');if(d)d.onclick=async()=>{const copy={...m};delete copy.id;close();await write(()=>db.collection('moments').doc(m.id).delete());toast('انحذف التمرين','تراجع',()=>write(()=>db.collection('moments').doc(m.id).set(copy),'رجع'))};
 }
@@ -716,20 +719,20 @@ function renderCal(){
 }
 function evRow(e,ds,k){
  const cd=k==null?(e.time?'<b>'+esc(e.time)+'</b>':'<b>·</b>'):k===0?'<b>اليوم</b>':k===1?'<b>بكرا</b>':'بعد<b>'+k+'</b>يوم';
- return '<div class="evr"><div class="cd">'+cd+'</div><div class="body"><h3 style="font-size:16px;margin:0"><i class="dot" style="display:inline-block;background:'+e.c+';margin-inline-end:6px"></i>'+esc(label(e,ds))+'</h3><div class="small" style="margin:2px 0 0">'+pd(ds).toLocaleDateString(L,{weekday:'short',day:'numeric',month:'short'})+(e.time?' · '+esc(e.time):'')+(e.yearly&&!e.auto?' · كل سنة':'')+(e.note?' · '+esc(e.note):'')+'</div></div>'+(e.auto?'':'<button class="more" data-eedit="'+esc(e.id)+'" aria-label="تعديل"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button>')+'</div>';
+ return '<div class="evr"><div class="cd">'+cd+'</div><div class="body"><h3 style="font-size:16px;margin:0"><i class="dot" style="display:inline-block;background:'+e.c+';margin-inline-end:6px"></i>'+esc(label(e,ds))+'</h3><div class="small" style="margin:2px 0 0">'+pd(ds).toLocaleDateString(L,{weekday:'short',day:'numeric',month:'short'})+(e.time?' · '+esc(e.time):'')+(e.kind==='other'&&e.kindOther?' · '+esc(e.kindOther):'')+(e.yearly&&!e.auto?' · كل سنة':'')+(e.note?' · '+esc(e.note):'')+'</div></div>'+(e.auto?'':'<button class="more" data-eedit="'+esc(e.id)+'" aria-label="تعديل"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button>')+'</div>';
 }
 function openEvent(e,day){
  e=e||{};
  open('<h2>'+(e.id?'عدّل اليوم':'يوم مهم جايي')+'</h2><form id="ef"><label class="l" for="e-t">شو المناسبة؟</label><input class="in" id="e-t" required maxlength="120" placeholder="مثلاً: سفرتنا عإسطنبول" value="'+esc(e.title||'')+'">'+
  '<label class="l" for="e-d">التاريخ</label><input class="in" id="e-d" type="date" required value="'+esc(e.date||day||today())+'">'+
  '<label class="l" for="e-h">الساعة (مش ضروري)</label><input class="in" id="e-h" type="time" value="'+esc(e.time||'')+'">'+
- '<label class="l">نوعها</label><div class="chips" style="flex-wrap:wrap" id="ekind">'+EK.map(x=>'<button type="button" class="chip" data-c="'+x.k+'" aria-pressed="'+((e.kind||'date')===x.k)+'"><i class="dot" style="background:'+x.c+'"></i>'+x.n+'</button>').join('')+'</div>'+
+ '<label class="l">نوعها</label><div class="chips" style="flex-wrap:wrap" id="ekind">'+EK.map(x=>'<button type="button" class="chip" data-c="'+x.k+'" aria-pressed="'+((e.kind||'date')===x.k)+'"><i class="dot" style="background:'+x.c+'"></i>'+x.n+'</button>').join('')+'</div>'+otherInput('e-ok',e.kindOther,e.kind==='other','شو نوعها؟ مثلاً: عرس، تخرّج…')+
  '<label class="l">بتتكرّر؟</label><div class="seg" id="eyr"><button type="button" data-y="0" aria-pressed="'+(!e.yearly)+'">مرة وحدة</button><button type="button" data-y="1" aria-pressed="'+(!!e.yearly)+'">كل سنة</button></div>'+
  '<label class="l" for="e-n">ملاحظة</label><input class="in" id="e-n" maxlength="200" placeholder="وين، مع مين، شو لازم نحضّر…" value="'+esc(e.note||'')+'">'+
  '<div class="acts">'+(e.id?'<button type="button" class="btn del" id="edel">احذف</button>':'')+'<button class="btn pri" type="submit">'+(e.id?'احفظ':'زيدو')+'</button></div></form>');
- pick('#ekind','data-c');pick('#eyr','data-y');
+ pick('#ekind','data-c');pick('#eyr','data-y');wireOther('#ekind','data-c','e-ok');
  $('#ef').addEventListener('submit',async ev=>{ev.preventDefault();const title=$('#e-t').value.trim(),date=$('#e-d').value;if(!title||!date)return;
-  const doc={title,date,time:$('#e-h').value||'',kind:val('#ekind','data-c')||'other',yearly:val('#eyr','data-y')==='1',note:$('#e-n').value.trim(),by:e.by||me||'',createdAt:e.createdAt||Date.now(),updatedAt:Date.now()};close();
+  const doc={title,date,time:$('#e-h').value||'',kind:val('#ekind','data-c')||'other',kindOther:val('#ekind','data-c')==='other'?$('#e-ok').value.trim():'',yearly:val('#eyr','data-y')==='1',note:$('#e-n').value.trim(),by:e.by||me||'',createdAt:e.createdAt||Date.now(),updatedAt:Date.now()};close();
   selDay=date;calM=new Date(pd(date).getFullYear(),pd(date).getMonth(),1);
   await write(()=>e.id?db.collection('events').doc(e.id).set(doc):db.collection('events').add(doc),e.id?'انحفظ':'انزاد عالتقويم');renderCal()});
  const d=$('#edel');if(d)d.onclick=async()=>{const copy={...e};delete copy.id;delete copy.c;close();await write(()=>db.collection('events').doc(e.id).delete());toast('انحذف','تراجع',()=>write(()=>db.collection('events').doc(e.id).set(copy),'رجع'))};
@@ -878,17 +881,17 @@ function openMoment(m,prefill){
  const r=Number(m.rating)||0;
  open('<h2>'+(m.id?'عدّل اللحظة':'لحظة جديدة')+'</h2><form id="mf"><label class="l" for="f-t">شو عملتوا؟</label><input class="in" id="f-t" required maxlength="120" placeholder="مثلاً: عشا عالبحر" value="'+esc(m.title||p.title||'')+'">'+
  '<label class="l" for="f-d">إيمتى؟</label><input class="in" id="f-d" type="date" value="'+esc(m.date||today())+'">'+
- '<label class="l">نوعها</label>'+catChips(m.cat||p.cat||'out')+
+ '<label class="l">نوعها</label>'+catChips(m.cat||p.cat||'out')+otherInput('f-oc',m.catOther,(m.cat||p.cat)==='other','شو نوعها؟ مثلاً: حفلة، تسوّق…')+
  '<label class="l">مين؟</label><div class="seg" id="fwho">'+Object.entries(WHO).map(([k,n])=>'<button type="button" data-w="'+k+'" aria-pressed="'+((m.who||p.who||'both')===k)+'">'+n+'</button>').join('')+'</div>'+
  '<label class="l">قدّيش حلوة؟</label><div class="rate" id="frate">'+[1,2,3,4,5].map(i=>'<button type="button" data-r="'+i+'" class="'+(i<=r?'on':'')+'" aria-label="'+i+'">'+heart+'</button>').join('')+'</div>'+
  '<label class="l" for="f-n">شي بدكن تتذكروه</label><textarea class="in" id="f-n" maxlength="1000" placeholder="تفصيل صغير، جملة قالها حدا، شو طلبتوا…">'+esc(m.note||'')+'</textarea>'+
  '<div class="acts">'+(m.id?'<button type="button" class="btn del" id="fdel">احذف</button>':'')+'<button class="btn pri" type="submit">'+(m.id?'احفظ':'زيدها')+'</button></div></form>');
  let rating=r;
- pick('#fcat','data-c');pick('#fwho','data-w');
+ pick('#fcat','data-c');pick('#fwho','data-w');wireOther('#fcat','data-c','f-oc');
  $('#frate').addEventListener('click',e=>{const b=e.target.closest('[data-r]');if(!b)return;const v=Number(b.dataset.r);rating=rating===v?0:v;sheet.querySelectorAll('#frate button').forEach(x=>x.classList.toggle('on',Number(x.dataset.r)<=rating))});
  $('#mf').addEventListener('submit',async e=>{e.preventDefault();
   const title=$('#f-t').value.trim();if(!title)return;
-  const doc={title,date:$('#f-d').value||today(),cat:val('#fcat','data-c')||'other',who:val('#fwho','data-w')||'both',rating,note:$('#f-n').value.trim(),by:m.by||me||'',createdAt:m.createdAt||Date.now(),updatedAt:Date.now(),editedBy:me||''};
+  const doc={title,date:$('#f-d').value||today(),cat:val('#fcat','data-c')||'other',catOther:val('#fcat','data-c')==='other'?$('#f-oc').value.trim():'',who:val('#fwho','data-w')||'both',rating,note:$('#f-n').value.trim(),by:m.by||me||'',createdAt:m.createdAt||Date.now(),updatedAt:Date.now(),editedBy:me||''};
   close();
   await write(()=>m.id?db.collection('moments').doc(m.id).set(doc):db.collection('moments').add(doc),m.id?'انحفظ التعديل':'انزادت لحظة جديدة');
   if(p.planId)await write(()=>db.collection('plans').doc(p.planId).update({moment:true}));
@@ -900,13 +903,13 @@ function openMoment(m,prefill){
 function openPlan(p){
  p=p||{};
  open('<h2>'+(p.id?'عدّل الخطة':'شي بدنا نعملو')+'</h2><form id="pf"><label class="l" for="p-t">شو هوّي؟</label><input class="in" id="p-t" required maxlength="120" placeholder="مثلاً: نجرّب المطعم الياباني" value="'+esc(p.title||'')+'">'+
- '<label class="l">نوعو</label>'+catChips(p.cat||'out')+
+ '<label class="l">نوعو</label>'+catChips(p.cat||'out')+otherInput('p-oc',p.catOther,p.cat==='other','شو نوعو؟')+
  '<label class="l" for="p-w">إذا في تاريخ (مش ضروري)</label><input class="in" id="p-w" type="date" value="'+esc(p.when||'')+'">'+
  '<div class="acts">'+(p.id?'<button type="button" class="btn del" id="pdel">احذف</button>':'')+'<button class="btn pri" type="submit">'+(p.id?'احفظ':'زيدها')+'</button></div></form>');
- pick('#fcat','data-c');
+ pick('#fcat','data-c');wireOther('#fcat','data-c','p-oc');
  $('#pf').addEventListener('submit',async e=>{e.preventDefault();
   const title=$('#p-t').value.trim();if(!title)return;
-  const doc={title,cat:val('#fcat','data-c')||'other',when:$('#p-w').value||'',done:!!p.done,by:p.by||me||'',createdAt:p.createdAt||Date.now(),updatedAt:Date.now()};
+  const doc={title,cat:val('#fcat','data-c')||'other',catOther:val('#fcat','data-c')==='other'?$('#p-oc').value.trim():'',when:$('#p-w').value||'',done:!!p.done,by:p.by||me||'',createdAt:p.createdAt||Date.now(),updatedAt:Date.now()};
   close();await write(()=>p.id?db.collection('plans').doc(p.id).set(doc):db.collection('plans').add(doc),p.id?'انحفظ':'انزادت عالقائمة');
  });
  const del=$('#pdel');if(del)del.onclick=async()=>{const copy={...p};delete copy.id;close();await write(()=>db.collection('plans').doc(p.id).delete());toast('انحذفت','تراجع',()=>write(()=>db.collection('plans').doc(p.id).set(copy),'رجعت'))};
