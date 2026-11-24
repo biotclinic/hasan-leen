@@ -930,9 +930,10 @@ async function write(fn,ok){
 }
 
 /* ---------- events ---------- */
-document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b)return;tab=b.dataset.t;
+const posMem={};
+document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b)return;if(b.dataset.t===tab)return;posMem[tab]=window.scrollY;const stick=$('#hero').offsetHeight,wasStuck=window.scrollY>=stick-2;tab=b.dataset.t;
  document.querySelectorAll('.tabs [data-t]').forEach(x=>x.setAttribute('aria-selected',x===b));try{b.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})}catch(x){}
- ['moments','album','fit','cal','us','plans','stats'].forEach(v=>$('#v-'+v).hidden=v!==tab);$('#fab').classList.toggle('hide',tab==='stats');window.scrollTo({top:0});animateTab(tab)});
+ ['moments','album','fit','cal','us','plans','stats'].forEach(v=>$('#v-'+v).hidden=v!==tab);$('#fab').classList.toggle('hide',tab==='stats');if(wasStuck)window.scrollTo({top:Math.max(stick,posMem[tab]||0),behavior:'instant'});animateTab(tab)});
 $('#filters').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(!b)return;filter=b.dataset.f;renderFilters();renderMoments()});
 $('#recapHint').addEventListener('click',()=>{const t=pd(today());sumM=new Date(t.getFullYear(),t.getMonth()-1,1);goTab('stats')});
 $('#q').addEventListener('input',e=>{q=e.target.value;renderMoments()});
