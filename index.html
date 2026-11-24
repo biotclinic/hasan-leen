@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-25.7">
+<meta name="app-ver" content="2026-11-25.8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>حسن ولين</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -228,9 +228,9 @@ textarea.in{min-height:84px;resize:vertical}
 .fi.new .ft::after{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--rose);margin-inline-start:6px;vertical-align:middle}
 .fmore{width:100%;min-height:44px;margin-top:6px;border-radius:12px;background:var(--soft);font-weight:700;font-size:15.5px}
 .tabs .ic{position:relative}.tabs .ic[data-n]:not([data-n=""])::after{content:attr(data-n);position:absolute;top:-4px;inset-inline-end:-4px;min-width:18px;height:18px;padding:0 5px;border-radius:99px;background:#e0336a;color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;line-height:1}
-.kissb{margin-top:16px;display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:5px 20px 5px 6px;border-radius:99px;background:linear-gradient(135deg,#ff7a9c,#e0336a 55%,#b8124a);color:#fff;font-weight:800;font-size:18px;border:1.5px solid rgba(255,255,255,.45);box-shadow:0 8px 24px rgba(224,51,106,.5),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .15s}
-.kissb .kic{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#fff,#ffe1ea 55%,#ffc2d4)}
-.kissb svg{width:30px;height:20px;filter:drop-shadow(0 1px 1px rgba(120,0,40,.35))}
+.kissb{margin-top:12px;display:inline-flex;align-items:center;gap:6px;min-height:31px;padding:3px 12px 3px 4px;border-radius:99px;background:linear-gradient(135deg,#ff7a9c,#e0336a 55%,#b8124a);color:#fff;font-weight:800;font-size:12px;border:1.5px solid rgba(255,255,255,.45);box-shadow:0 5px 14px rgba(224,51,106,.45),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .15s}
+.kissb .kic{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#fff,#ffe1ea 55%,#ffc2d4)}
+.kissb svg{width:18px;height:12px;filter:drop-shadow(0 1px 1px rgba(120,0,40,.35))}
 .kissb:active{transform:scale(.94)}
 .kissfx{position:fixed;inset:0;z-index:80;pointer-events:none;display:none;align-items:center;justify-content:center;overflow:hidden}
 .kissfx.on{display:flex}
@@ -478,13 +478,7 @@ function renderMoments(){queueFeed();
 /* ---------- kisses ---------- */
 let kisses=[],actx=null,kissT=0,kissLoaded=false;
 function unlockAudio(){try{if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume()}catch(x){}}
-['pointerdown','touchend'].forEach(n=>document.addEventListener(n,unlockAudio,{passive:true}));
-function kissSound(){try{unlockAudio();if(!actx)return;const a=actx,t=a.currentTime+.02,out=a.createGain();out.gain.value=.9;out.connect(a.destination);
- const hum=a.createOscillator(),hl=a.createBiquadFilter(),hg=a.createGain();hum.type='triangle';hum.frequency.setValueAtTime(170,t);hum.frequency.linearRampToValueAtTime(200,t+.12);hl.type='lowpass';hl.frequency.value=700;hg.gain.setValueAtTime(0,t);hg.gain.linearRampToValueAtTime(.16,t+.07);hg.gain.linearRampToValueAtTime(0,t+.14);hum.connect(hl).connect(hg).connect(out);hum.start(t);hum.stop(t+.16);
- const smack=(at,amp,f)=>{const len=Math.floor(a.sampleRate*.07),buf=a.createBuffer(1,len,a.sampleRate),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(a.sampleRate*.012));const src=a.createBufferSource(),bp=a.createBiquadFilter(),g=a.createGain();src.buffer=buf;bp.type='bandpass';bp.frequency.value=f;bp.Q.value=.9;g.gain.value=amp;src.connect(bp).connect(g).connect(out);src.start(at)};
- smack(t+.13,1.6,1900);smack(t+.165,.6,2600);
- const ah=a.createOscillator(),ag=a.createGain();ah.type='sine';ah.frequency.setValueAtTime(460,t+.15);ah.frequency.exponentialRampToValueAtTime(250,t+.3);ag.gain.setValueAtTime(.07,t+.15);ag.gain.exponentialRampToValueAtTime(.001,t+.32);ah.connect(ag).connect(out);ah.start(t+.15);ah.stop(t+.34);
- if(navigator.vibrate)navigator.vibrate(30)}catch(x){}}
+function kissSound(){try{if(navigator.vibrate)navigator.vibrate(30)}catch(x){}}
 const HC=['#ff4d79','#ff8fab','#ffd166','#ffffff','#e0336a','#f1cf83'];
 function burst(n,delay,spread){let o='<div class="kburst">';for(let i=0;i<n;i++){const ang=(i/n)*Math.PI*2+Math.random()*.4,d=spread*(.6+Math.random()*.5);
  o+='<span class="kb" style="--dx:'+(Math.cos(ang)*d).toFixed(0)+'px;--dy:'+(Math.sin(ang)*d).toFixed(0)+'px;--s:'+(.7+Math.random()*.9).toFixed(2)+';--r:'+(Math.random()*80-40).toFixed(0)+'deg;animation-delay:'+(delay+Math.random()*.08).toFixed(2)+'s;color:'+HC[i%HC.length]+'"><svg viewBox="0 0 24 24"><use href="#h"/></svg></span>'}return o+'</div>'}
