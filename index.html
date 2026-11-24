@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-25.4">
+<meta name="app-ver" content="2026-11-25.5">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>حسن ولين</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -215,19 +215,35 @@ textarea.in{min-height:84px;resize:vertical}
 .feed{background:linear-gradient(160deg,color-mix(in srgb,var(--card) 92%,#f1cf83),var(--card));border:1px solid color-mix(in srgb,var(--line) 70%,#f1cf83);border-radius:22px;padding:14px 14px 10px;margin:4px 0 14px}
 .feed.flat{background:none;border:0;padding:0;margin:0}
 .fh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px;cursor:pointer}
-.fh h2{font-size:19px}.fh small{color:var(--mute);font-size:13px}
+.fh h2{font-size:21px}.fh small{color:color-mix(in srgb,var(--ink) 70%,transparent);font-size:14.5px;font-weight:700}
 .fbadge{background:linear-gradient(145deg,var(--gold),var(--rose));color:#14112c;border-radius:99px;padding:4px 10px;font-weight:700;font-size:13px;white-space:nowrap}
-.fi{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);position:relative}
+.fi{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line);position:relative}
 .feed .fi:first-of-type{border-top:0}
-.fav{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:16px;color:#14112c}
+.fav{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:18px;color:#14112c}
 .fav.hassan{background:linear-gradient(145deg,#ffe7a2,#d69535)}
 .fav.leen{background:linear-gradient(145deg,#ffffff,#c3c8de)}
 .fav.both{background:linear-gradient(145deg,#ffe7a2 0 50%,#e9ebf5 50%)}.fav svg{width:16px;height:16px;color:#c9862a}
-.ft{flex:1;font-size:14.5px;line-height:1.45;overflow-wrap:anywhere}.ft b{font-weight:700}
-.fw{flex:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;color:var(--mute);white-space:nowrap}.fw svg{width:15px;height:15px}
+.ft{flex:1;font-size:16.5px;line-height:1.5;font-weight:500;color:var(--ink);overflow-wrap:anywhere}.ft b{font-weight:800}
+.fw{flex:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:13px;font-weight:700;color:color-mix(in srgb,var(--ink) 65%,transparent);white-space:nowrap}.fw svg{width:17px;height:17px}
 .fi.new .ft::after{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--rose);margin-inline-start:6px;vertical-align:middle}
-.fmore{width:100%;min-height:40px;margin-top:6px;border-radius:12px;background:var(--soft);font-weight:600;font-size:14px}
+.fmore{width:100%;min-height:44px;margin-top:6px;border-radius:12px;background:var(--soft);font-weight:700;font-size:15.5px}
 .tabs .ic{position:relative}.tabs .ic[data-n]:not([data-n=""])::after{content:attr(data-n);position:absolute;top:-4px;inset-inline-end:-4px;min-width:18px;height:18px;padding:0 5px;border-radius:99px;background:#e0336a;color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;line-height:1}
+.kissb{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center;transition:transform .15s}
+.kissb svg{width:32px;height:22px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.3))}
+.kissb:active{transform:scale(.9)}
+.kissfx{position:fixed;inset:0;z-index:80;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+.kissfx.show{pointer-events:auto;background:radial-gradient(circle at 50% 42%,rgba(214,21,79,.45),rgba(8,6,24,.9) 72%);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:kfade .35s ease both}
+.kbig{width:min(62vw,260px);animation:kpop .9s cubic-bezier(.2,1.4,.4,1) both;filter:drop-shadow(0 12px 30px rgba(214,21,79,.5))}
+.kbig svg{width:100%;height:auto;display:block}
+.ktxt{position:relative;text-align:center;color:#fff;font-weight:800;font-size:24px;text-shadow:0 2px 12px rgba(0,0,0,.5);animation:rise .5s .35s both}
+.ktxt small{display:block;font-size:15px;font-weight:700;opacity:.85;margin-top:4px}
+.kh{position:absolute;width:22px;height:22px;color:#ff4d79;animation:kfloat 1.8s ease-out both}
+.kfly{position:fixed;width:46px;z-index:81;pointer-events:none;animation:kfly 1s cubic-bezier(.3,.7,.4,1) both}
+.kfly svg{width:100%;height:auto;display:block}
+@keyframes kpop{0%{transform:scale(.2) rotate(-12deg);opacity:0}55%{transform:scale(1.15) rotate(4deg);opacity:1}75%{transform:scale(.95) rotate(-2deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes kfade{from{opacity:0}to{opacity:1}}
+@keyframes kfloat{from{transform:translateY(0) scale(.6);opacity:0}20%{opacity:1}to{transform:translateY(-180px) scale(1.1);opacity:0}}
+@keyframes kfly{0%{transform:translate(0,0) scale(.6);opacity:0}25%{opacity:1;transform:translate(0,-20px) scale(1.2)}100%{transform:translate(var(--kx),var(--ky)) scale(.8);opacity:0}}
 .signs{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 .sg{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(241,207,131,.16),rgba(255,255,255,.05));border:1px solid rgba(241,207,131,.28);border-radius:16px;padding:6px 12px 6px 8px;color:#fff;text-align:start;min-height:52px}
 .sg .cst{width:40px;height:40px;flex:none}
@@ -281,13 +297,13 @@ textarea.in{min-height:84px;resize:vertical}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute"><defs><symbol id="h" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.3C.9 8.3 3 4.5 6.7 4.5c2.2 0 3.8 1.2 5.3 3 1.5-1.8 3.1-3 5.3-3 3.7 0 5.8 3.8 4.3 7.2C19.5 16.4 12 21 12 21z"/></symbol></defs></svg>
+<svg width="0" height="0" style="position:absolute"><defs><symbol id="lips" viewBox="0 0 120 80"><defs><linearGradient id="lg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6b8b"/><stop offset="1" stop-color="#d6154f"/></linearGradient><linearGradient id="lg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8235a"/><stop offset="1" stop-color="#a50e3c"/></linearGradient></defs><path d="M8 40C22 21 38 12 51 20C55 23 57 25 60 25C63 25 65 23 69 20C82 12 98 21 112 40C93 41 76 43 60 45C44 43 27 41 8 40Z" fill="url(#lg1)"/><path d="M8 40C27 43 44 47 60 47C76 47 93 43 112 40C100 61 81 73 60 73C39 73 20 61 8 40Z" fill="url(#lg2)"/><path d="M8 40C28 43 44 46 60 46C76 46 92 43 112 40" fill="none" stroke="#7a0a2c" stroke-width="2.2" stroke-linecap="round"/><ellipse cx="42" cy="58" rx="11" ry="4" fill="#fff" opacity=".35" transform="rotate(-8 42 58)"/><ellipse cx="74" cy="56" rx="7" ry="2.6" fill="#fff" opacity=".28"/><ellipse cx="40" cy="29" rx="8" ry="2.6" fill="#fff" opacity=".3" transform="rotate(-25 40 29)"/></symbol><symbol id="h" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.3C.9 8.3 3 4.5 6.7 4.5c2.2 0 3.8 1.2 5.3 3 1.5-1.8 3.1-3 5.3-3 3.7 0 5.8 3.8 4.3 7.2C19.5 16.4 12 21 12 21z"/></symbol></defs></svg>
 
 <header class="hero" id="hero">
  <div class="sky" id="sky" aria-hidden="true"></div>
  <div class="wrap">
   <div class="top">
-   <button class="me" id="meBtn">مين أنا؟</button>
+   <div style="display:flex;gap:8px;align-items:center"><button class="me" id="meBtn">مين أنا؟</button><button class="kissb" id="kissBtn" aria-label="ابعت بوسة"><svg viewBox="0 0 120 80"><use href="#lips"/></svg></button></div>
    <button class="gear" id="setBtn" aria-label="الإعدادات"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
   </div>
   <div class="pic">
@@ -348,6 +364,7 @@ textarea.in{min-height:84px;resize:vertical}
  <div class="vimg" id="vimg"><img id="vi" alt=""><button class="vbtn vnav p" id="vp" aria-label="اللي قبل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></button><button class="vbtn vnav n" id="vn" aria-label="اللي بعد"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 6l-6 6 6 6"/></svg></button></div>
  <div class="vcap"><p id="vc"></p><span id="vm"></span></div>
 </div>
+<div class="kissfx" id="kissfx" aria-live="polite"></div>
 <div class="toast" id="toast"><span id="tmsg"></span><button id="tbtn"></button></div>
 
 <script>
@@ -438,6 +455,33 @@ function renderMoments(){queueFeed();
  $('#list').innerHTML=out;
 }
 
+/* ---------- kisses ---------- */
+let kisses=[],actx=null,kissT=0,kissLoaded=false;
+function unlockAudio(){try{if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume()}catch(x){}}
+['pointerdown','touchend'].forEach(n=>document.addEventListener(n,unlockAudio,{passive:true}));
+function kissSound(){try{unlockAudio();if(!actx)return;const a=actx,t=a.currentTime+.02,out=a.createGain();out.gain.value=.9;out.connect(a.destination);
+ const hum=a.createOscillator(),hl=a.createBiquadFilter(),hg=a.createGain();hum.type='triangle';hum.frequency.setValueAtTime(170,t);hum.frequency.linearRampToValueAtTime(200,t+.12);hl.type='lowpass';hl.frequency.value=700;hg.gain.setValueAtTime(0,t);hg.gain.linearRampToValueAtTime(.16,t+.07);hg.gain.linearRampToValueAtTime(0,t+.14);hum.connect(hl).connect(hg).connect(out);hum.start(t);hum.stop(t+.16);
+ const smack=(at,amp,f)=>{const len=Math.floor(a.sampleRate*.07),buf=a.createBuffer(1,len,a.sampleRate),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(a.sampleRate*.012));const src=a.createBufferSource(),bp=a.createBiquadFilter(),g=a.createGain();src.buffer=buf;bp.type='bandpass';bp.frequency.value=f;bp.Q.value=.9;g.gain.value=amp;src.connect(bp).connect(g).connect(out);src.start(at)};
+ smack(t+.13,1.6,1900);smack(t+.165,.6,2600);
+ const ah=a.createOscillator(),ag=a.createGain();ah.type='sine';ah.frequency.setValueAtTime(460,t+.15);ah.frequency.exponentialRampToValueAtTime(250,t+.3);ag.gain.setValueAtTime(.07,t+.15);ag.gain.exponentialRampToValueAtTime(.001,t+.32);ah.connect(ag).connect(out);ah.start(t+.15);ah.stop(t+.34);
+ if(navigator.vibrate)navigator.vibrate(30)}catch(x){}}
+function showKiss(from,n){const fx=$('#kissfx');
+ let hs='';for(let i=0;i<9;i++){const x=10+Math.random()*80,y=45+Math.random()*30;hs+='<svg class="kh" style="left:'+x+'%;top:'+y+'%;animation-delay:'+(i*0.12).toFixed(2)+'s" viewBox="0 0 24 24"><use href="#h"/></svg>'}
+ fx.innerHTML='<div class="kbig"><svg viewBox="0 0 120 80"><use href="#lips"/></svg></div>'+hs+'<div class="ktxt">'+(from==='leen'?'لين بعتتلك':'حسن بعتلك')+(n===2?' بوستين':n>2?' '+n+' بوسات':' بوسة')+'<small>كبس لتسكّر</small></div>';
+ fx.classList.remove('show');void fx.offsetWidth;fx.classList.add('show');kissSound();
+ clearTimeout(kissT);kissT=setTimeout(hideKiss,3800)}
+function hideKiss(){const fx=$('#kissfx');fx.classList.remove('show');fx.innerHTML=''}
+$('#kissfx').addEventListener('click',hideKiss);
+async function sendKiss(){if(needMe())return;if(Date.now()-(window.__lastKiss||0)<1200)return;window.__lastKiss=Date.now();
+ const b=$('#kissBtn').getBoundingClientRect(),f=document.createElement('div');f.className='kfly';f.innerHTML='<svg viewBox="0 0 120 80"><use href="#lips"/></svg>';
+ f.style.left=(b.left+b.width/2-23)+'px';f.style.top=(b.top+b.height/2-15)+'px';f.style.setProperty('--kx',(innerWidth/2-b.left-b.width/2)+'px');f.style.setProperty('--ky',(innerHeight*.4-b.top)+'px');document.body.appendChild(f);setTimeout(()=>f.remove(),1100);
+ kissSound();
+ try{await db.collection('kisses').add({from:me,to:other(me),createdAt:Date.now(),seenAt:0});toast('انبعتت بوسة '+LI(other(me)))}catch(x){toast('ما قدرنا نبعت البوسة. تأكد من قواعد Firestore')}}
+$('#kissBtn').onclick=sendKiss;
+async function checkKisses(){if(!me||!kissLoaded)return;const pend=kisses.filter(k=>k.to===me&&!k.seenAt);if(!pend.length)return;
+ if(document.hidden)return;showKiss(pend[0].from,pend.length);for(const k of pend){try{await db.collection('kisses').doc(k.id).update({seenAt:Date.now()})}catch(x){}}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkKisses()});
+
 /* ---------- today feed ---------- */
 const VB={add:['زاد','زادت'],log:['سجّل','سجّلت'],give:['عطى','عطت'],send:['بعت','بعتت'],write:['كتب','كتبت'],open:['فتح','فتحت'],reply:['ردّ','ردّت'],fav:['حبّ','حبّت']};
 const vb=(k,w)=>VB[k][w==='leen'?1:0];
@@ -454,9 +498,11 @@ function feedItems(){
  points.forEach(x=>push(x.createdAt,x.from,'star',vb('give',x.from)+' '+WHO[x.to]+' '+sgn(Number(x.pts)||0)+(x.reason?' · '+esc(x.reason):'')));
  notes.forEach(n=>{push(n.createdAt,n.from,'msg',vb('send',n.from)+(n.kind==='thanks'?' كلمة شكر':' ملاحظة'));if(n.ok)push(n.okAt,n.to,'msg',vb('reply',n.to)+' على '+(n.kind==='thanks'?'كلمة الشكر':'الملاحظة'))});
  letters.forEach(l=>{push(l.createdAt,l.from,'env',vb('write',l.from)+' رسالة للمستقبل');if(l.openedAt)push(l.openedAt,l.to,'env',vb('open',l.to)+' رسالة '+q(l.title))});
+ const kg={};kisses.forEach(k=>{const t=Number(k.createdAt)||0,key=k.from+':'+Math.floor(t/6e5);(kg[key]=kg[key]||{t,who:k.from,to:k.to,n:0}).n++;kg[key].t=Math.max(kg[key].t,t)});
+ Object.values(kg).forEach(g=>push(g.t,g.who,'kiss',vb('send',g.who)+' '+(g.n===1?'بوسة':g.n===2?'بوستين':g.n+' بوسات')+' '+LI(g.to)));
  return out.sort((a,b)=>b.t-a.t);
 }
-const FIC={heart:'<path d="M12 20s-7-4.4-8.6-8.6C2.2 8.2 4.2 5 7.4 5c1.9 0 3.3 1 4.6 2.6C13.3 6 14.7 5 16.6 5c3.2 0 5.2 3.2 4 6.4C19 15.6 12 20 12 20z"/>',img:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 9"/>',fit:'<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/>',flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',cal:'<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',star:'<path d="M12 3l2.6 5.5 6 .8-4.4 4.2 1.1 6L12 16.6 6.7 19.5l1.1-6L3.4 9.3l6-.8z"/>',msg:'<path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 3.5V17A2.5 2.5 0 0 1 4 14.5z"/>',env:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7l8 6 8-6"/>'};
+const FIC={kiss:'<use href="#lips" x="1" y="6" width="22" height="14"/>',heart:'<path d="M12 20s-7-4.4-8.6-8.6C2.2 8.2 4.2 5 7.4 5c1.9 0 3.3 1 4.6 2.6C13.3 6 14.7 5 16.6 5c3.2 0 5.2 3.2 4 6.4C19 15.6 12 20 12 20z"/>',img:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 9"/>',fit:'<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/>',flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',cal:'<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',star:'<path d="M12 3l2.6 5.5 6 .8-4.4 4.2 1.1 6L12 16.6 6.7 19.5l1.1-6L3.4 9.3l6-.8z"/>',msg:'<path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 3.5V17A2.5 2.5 0 0 1 4 14.5z"/>',env:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7l8 6 8-6"/>'};
 const feedSeen=()=>{try{return Number(localStorage.getItem('hl-feed-seen'))||0}catch(x){return 0}};
 const tAgo=t=>{const d=new Date(t),td=pd(today());if(d>=td)return d.toLocaleTimeString(L,{hour:'numeric',minute:'2-digit'});if(d>=new Date(td-864e5))return 'مبارح';return d.toLocaleDateString(L,{weekday:'short',day:'numeric'})};
 function feedRow(it,seen){const fresh=it.who!==me&&it.who!=='both'&&it.t>seen;
@@ -1036,7 +1082,7 @@ function openWho(){
 }
 function resolveMe(){
  const k=db.who||'';
- if(k!==me){me=k;render();setTimeout(notifyOpened,800)}
+ if(k!==me){me=k;render();setTimeout(notifyOpened,800);setTimeout(checkKisses,1200)}
  if(!me&&!askedWho&&db.who!==undefined){askedWho=true;banner('هالحساب مش معروف بالتطبيق.')}
  if(me&&profilesLoaded&&!profiles[me]){const c=(settings.fit||{})[me];const b=(settings.bday||{})[me];if(c||b){profiles[me]={...(c||{}),bday:b||''};db.doc('profiles/'+me).set(profiles[me]).catch(()=>{})}}
 }
@@ -1144,6 +1190,7 @@ render();
  db.collection('plans').onSnapshot(s=>{plans=s.docs.map(d=>({...d.data(),id:d.id}));done(s);renderPlans();renderStats()},err);
  db.collection('photos').onSnapshot(s=>{photos=s.docs.map(d=>({...d.data(),id:d.id}));renderAlbum();if(vIdx>-1)showV()},err);
  db.collection('events').onSnapshot(s=>{events=s.docs.map(d=>({...d.data(),id:d.id}));renderCal()},err);
+ db.collection('kisses').onSnapshot(s=>{kisses=s.docs.map(d=>({...d.data(),id:d.id}));if(!s.metadata.fromCache)kissLoaded=true;queueFeed();checkKisses()},err);
  db.collection('letters').onSnapshot(s=>{letters=s.docs.map(d=>({...d.data(),id:d.id}));renderUs();if(!s.metadata.fromCache)setTimeout(notifyOpened,800)},err);
  db.collection('notes').onSnapshot(s=>{notes=s.docs.map(d=>({...d.data(),id:d.id}));renderUs()},err);
  db.collection('points').onSnapshot(s=>{points=s.docs.map(d=>({...d.data(),id:d.id}));renderUs()},err);
