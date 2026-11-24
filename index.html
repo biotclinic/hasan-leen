@@ -337,7 +337,7 @@ function banner(msg){const b=$('#banner');b.textContent=msg||'';b.classList.togg
 
 /* ---------- header ---------- */
 function renderHead(){
- $('#meBtn').textContent=me?('أنا '+WHO[me]):'مين أنا؟';renderSigns();
+ $('#meBtn').textContent=me?(me==='hassan'?'أهلا حسون 🤍':'أهلا لولو 🤍'):'مين أنا؟';renderSigns();
  const d=$('#days');
  if(settings.start){const n=Math.max(0,Math.floor((pd(today())-pd(settings.start))/864e5));d.innerHTML='سوا من <b>'+n.toLocaleString(L)+'</b> يوم'}
  else d.innerHTML='<button id="setStart">حطّوا تاريخ ارتباطكن</button>';
