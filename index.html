@@ -458,6 +458,31 @@ function fitData(k){
 }
 function wcount(k,wk){return moments.filter(m=>m.cat==='sport'&&(m.who===k||m.who==='both')&&weekKey(pd(m.date))===wk).length}
 const wgoal=k=>Math.min(14,Math.max(1,Number(profiles[k]&&profiles[k].weekGoal)||3));
+const WT=[['run','جري'],['gym','نادي وحديد'],['walk','مشي'],['swim','سباحة'],['ball','كرة'],['yoga','يوغا وتمطيط'],['bike','دراجة'],['home','تمارين بالبيت'],['other','غير شي']];
+const EF=[['easy','خفيف'],['mid','متوسط'],['hard','قوي']];
+function openWorkout(m){
+ m=m||{};const wt=m.workoutType||'gym',ef=m.effort||'mid',who=m.who||(me||'both');
+ const whoOpts=me?[[me,'أنا لحالي'],['both','سوا']]:[['both','سوا'],['hassan','حسن'],['leen','لين']];
+ if(m.who&&!whoOpts.some(o=>o[0]===m.who))whoOpts.push([m.who,WHO[m.who]]);
+ open('<h2>'+(m.id?'عدّل التمرين':'تمرين جديد')+'</h2><form id="wof">'+
+ '<label class="l">شو تمرّنت؟</label><div class="chips" style="flex-wrap:wrap" id="wot">'+WT.map(([k,n])=>'<button type="button" class="chip" data-c="'+k+'" aria-pressed="'+(wt===k)+'">'+n+'</button>').join('')+'</div>'+
+ '<label class="l">مع مين؟</label><div class="seg" id="wow">'+whoOpts.map(([k,n])=>'<button type="button" data-w="'+k+'" aria-pressed="'+(who===k)+'">'+n+'</button>').join('')+'</div>'+
+ '<div class="duo" style="margin-top:2px"><div><label class="l" for="wo-m">المدة (دقيقة)</label><input class="in" id="wo-m" type="number" inputmode="numeric" min="1" max="600" placeholder="45" value="'+esc(m.minutes||'')+'"></div><div><label class="l" for="wo-d">إيمتى؟</label><input class="in" id="wo-d" type="date" value="'+esc(m.date||today())+'"></div></div>'+
+ '<label class="l">قدّيش كان قوي؟</label><div class="seg" id="woe">'+EF.map(([k,n])=>'<button type="button" data-e="'+k+'" aria-pressed="'+(ef===k)+'">'+n+'</button>').join('')+'</div>'+
+ '<label class="l" for="wo-n">ملاحظة (مش ضروري)</label><input class="in" id="wo-n" maxlength="200" placeholder="مثلاً: ٥ كم، رجلين، رقم جديد بالبنش…" value="'+esc(m.note||'')+'">'+
+ '<div class="acts">'+(m.id?'<button type="button" class="btn del" id="wodel">احذف</button>':'')+'<button class="btn pri" type="submit">'+(m.id?'احفظ':'سجّل التمرين')+'</button></div></form>');
+ pick('#wot','data-c');pick('#wow','data-w');pick('#woe','data-e');
+ $('#wof').addEventListener('submit',async e=>{e.preventDefault();
+  const t=val('#wot','data-c')||'other',name=(WT.find(x=>x[0]===t)||WT[8])[1],min=Math.round(num($('#wo-m').value)||0);
+  const doc={title:name+(min?' · '+min+' دقيقة':''),date:$('#wo-d').value||today(),cat:'sport',workoutType:t,minutes:min,effort:val('#woe','data-e')||'mid',who:val('#wow','data-w')||'both',rating:0,note:$('#wo-n').value.trim(),by:m.by||me||'',createdAt:m.createdAt||Date.now(),updatedAt:Date.now(),editedBy:me||''};
+  close();await write(()=>m.id?db.collection('moments').doc(m.id).set(doc):db.collection('moments').add(doc),m.id?'انحفظ التمرين':'انسجّل التمرين 💪'.replace(' 💪',''))});
+ const d=$('#wodel');if(d)d.onclick=async()=>{const copy={...m};delete copy.id;close();await write(()=>db.collection('moments').doc(m.id).delete());toast('انحذف التمرين','تراجع',()=>write(()=>db.collection('moments').doc(m.id).set(copy),'رجع'))};
+}
+function recentWorkouts(){
+ const list=moments.filter(m=>m.cat==='sport').sort((a,b)=>String(b.date).localeCompare(String(a.date))||(b.createdAt||0)-(a.createdAt||0)).slice(0,6);
+ if(!list.length)return '';
+ return '<div class="sec"><h2>آخر التمارين</h2>'+list.map(m=>{const e=(EF.find(x=>x[0]===m.effort)||[])[1];return '<div class="pt"><span class="pv" style="min-width:52px;font-size:13px">'+pd(m.date).toLocaleDateString(L,{day:'numeric',month:'short'})+'</span><div class="body">'+esc(m.title)+'<div class="small">'+esc(m.who==='both'?'سوا':(WHO[m.who]||''))+(e?' · '+e:'')+(m.note?' · '+esc(m.note):'')+'</div></div><button class="more" data-wo="'+esc(m.id)+'" aria-label="عدّل"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button></div>'}).join('')+'</div>';
+}
 function challengeHtml(sport){
  const wk=weekKey(new Date()),both=k=>wcount(k,wk)>=wgoal(k);
  let st=0,w=wk;if(!(both('hassan')&&both('leen')))w-=6048e5;
@@ -476,7 +501,7 @@ function renderFit(){
  const el=$('#fit');if(!el)return;
  const ym=today().slice(0,7);
  const sport=moments.filter(m=>m.cat==='sport'&&String(m.date).startsWith(ym));
- let out=challengeHtml(sport);
+ let out=challengeHtml(sport)+recentWorkouts();
  for(const k of ['hassan','leen']){
   const d=fitData(k);
   let bar='',left='',bmi='';
@@ -535,7 +560,8 @@ function openGoal(){
 $('#fit').addEventListener('click',async e=>{
  if(e.target.closest('[data-wadd]'))return openWeight();
  if(e.target.closest('[data-goal]'))return openGoal();
- if(e.target.closest('#addWork'))return openMoment(null,{title:'تمرين',cat:'sport',who:me||'both'});
+ if(e.target.closest('#addWork'))return openWorkout();
+ const wo=e.target.closest('[data-wo]');if(wo){const m=moments.find(x=>x.id===wo.dataset.wo);if(m)return openWorkout(m)}
  if(e.target.closest('#setGoal'))return openWeekGoal();
  const x=e.target.closest('[data-wdel]');if(!x)return;const w=weights.find(v=>v.id===x.dataset.wdel);if(!w||w.who!==me)return;
  const copy={...w};delete copy.id;await write(()=>db.collection('weights').doc(w.id).delete());toast('انحذف الوزن','تراجع',()=>write(()=>db.collection('weights').doc(w.id).set(copy),'رجع'));
@@ -902,7 +928,7 @@ document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.cl
 $('#filters').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(!b)return;filter=b.dataset.f;renderFilters();renderMoments()});
 $('#recapHint').addEventListener('click',()=>{const t=pd(today());sumM=new Date(t.getFullYear(),t.getMonth()-1,1);goTab('stats')});
 $('#q').addEventListener('input',e=>{q=e.target.value;renderMoments()});
-$('#list').addEventListener('click',e=>{const b=e.target.closest('[data-edit]');if(b)openMoment(moments.find(m=>m.id===b.dataset.edit))});
+$('#list').addEventListener('click',e=>{const b=e.target.closest('[data-edit]');if(!b)return;const m=moments.find(x=>x.id===b.dataset.edit);if(m&&m.cat==='sport')openWorkout(m);else openMoment(m)});
 $('#plist').addEventListener('click',async e=>{
  const ed=e.target.closest('[data-pedit]');if(ed)return openPlan(plans.find(p=>p.id===ed.dataset.pedit));
  const t=e.target.closest('[data-tog]');if(!t)return;t.classList.add('popped');const p=plans.find(x=>x.id===t.dataset.tog);if(!p)return;
