@@ -191,6 +191,13 @@ textarea.in{min-height:84px;resize:vertical}
 .vcap{padding:12px 18px calc(18px + env(safe-area-inset-bottom));text-align:center}
 .vcap p{margin:0 0 4px;font-size:17px;overflow-wrap:anywhere}
 .vcap span{font-size:13px;opacity:.7}
+.sky{position:absolute;inset:0;z-index:0;pointer-events:none}
+.sky>div{position:absolute;inset:0;transition:opacity 1.6s ease}
+.sky svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero>.wrap{position:relative;z-index:1}
+.hero[data-phase=morning] .names,.hero[data-phase=day] .names,.hero[data-phase=evening] .names{text-shadow:0 2px 14px rgba(20,10,50,.45)}
+.hero[data-phase=morning] .days,.hero[data-phase=day] .days,.hero[data-phase=evening] .days{text-shadow:0 1px 8px rgba(20,10,50,.5)}
+.hero[data-phase=day] .names{color:#fff3d6}
 .signs{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 .sg{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(241,207,131,.16),rgba(255,255,255,.05));border:1px solid rgba(241,207,131,.28);border-radius:16px;padding:6px 12px 6px 8px;color:#fff;text-align:start;min-height:52px}
 .sg .cst{width:40px;height:40px;flex:none}
@@ -246,7 +253,8 @@ textarea.in{min-height:84px;resize:vertical}
 <body>
 <svg width="0" height="0" style="position:absolute"><defs><symbol id="h" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.3C.9 8.3 3 4.5 6.7 4.5c2.2 0 3.8 1.2 5.3 3 1.5-1.8 3.1-3 5.3-3 3.7 0 5.8 3.8 4.3 7.2C19.5 16.4 12 21 12 21z"/></symbol></defs></svg>
 
-<header class="hero">
+<header class="hero" id="hero">
+ <div class="sky" id="sky" aria-hidden="true"></div>
  <div class="wrap">
   <div class="top">
    <button class="me" id="meBtn">مين أنا؟</button>
@@ -941,6 +949,57 @@ function goTab(t){const b=document.querySelector('.tabs [data-t="'+t+'"]');if(b)
 $('#setBtn').onclick=openSettings;$('#meBtn').onclick=()=>me&&toast(me==='hassan'?'إنت حسن، والحساب مربوط باسمك':'إنتِ لين، والحساب مربوط باسمك');
 document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 
+/* ---------- live sky (by local time) ---------- */
+{
+const SKY={
+ night:{g:['#05081c','#0d1238','#1a2052','#2c2f6e'],stars:1},
+ morning:{g:['#3d3a8c','#8a5aa8','#e0839b','#f6b48a'],sun:[64,338,54,'#ffe2b0','#ff9f7a'],clouds:1},
+ day:{g:['#2d4a9e','#5878c9','#9aa9e6','#e9b4cc'],sun:[178,40,30,'#fffaf0','#ffe3b3'],clouds:1},
+ evening:{g:['#1d1b52','#5a2f7d','#c4507d','#f6926a'],sun:[336,345,60,'#ffc98a','#ff6f5a'],stars:.45,clouds:1}};
+function phaseOf(h){return h>=20||h<5?'night':h<10?'morning':h<16?'day':'evening'}
+let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
+function moonPhase(d){const syn=29.530588853,ref=Date.UTC(2000,0,6,18,14);let a=((d-ref)/864e5)%syn;if(a<0)a+=syn;return a/syn}
+function moonSvg(cx,cy,r,f){
+ const k=Math.cos(2*Math.PI*f),rx=Math.abs(k)*r,top=cx+' '+(cy-r),bot=cx+' '+(cy+r);
+ let sh;const wax=f<.5;
+ if(wax){sh='M'+top+'A'+r+' '+r+' 0 0 0 '+bot+'A'+rx+' '+r+' 0 0 '+(k>0?0:1)+' '+top+'Z'}
+ else{sh='M'+top+'A'+r+' '+r+' 0 0 1 '+bot+'A'+rx+' '+r+' 0 0 '+(k>0?1:0)+' '+top+'Z'}
+ const cr=[[-.32,-.28,.16],[.18,-.36,.1],[.36,.12,.14],[-.1,.3,.12],[-.42,.18,.08],[.08,.02,.07],[.3,.42,.07],[-.2,-.02,.06],[.48,-.18,.05],[-.05,-.55,.06]];
+ const ma=[[-.18,-.18,.34,.26,-20],[.22,.1,.26,.2,30],[-.05,.32,.22,.14,0],[.3,-.3,.16,.12,10]];
+ return '<defs><radialGradient id="mg" cx="40%" cy="38%" r="70%"><stop offset="0" stop-color="#fffdf2"/><stop offset=".6" stop-color="#efe6c9"/><stop offset="1" stop-color="#c9bc98"/></radialGradient>'+
+  '<radialGradient id="mh" r="50%"><stop offset="0" stop-color="#fff3cf" stop-opacity=".55"/><stop offset=".45" stop-color="#f1cf83" stop-opacity=".16"/><stop offset="1" stop-color="#f1cf83" stop-opacity="0"/></radialGradient>'+
+  '<radialGradient id="cg" r="50%"><stop offset="0" stop-color="#8a7f64" stop-opacity=".55"/><stop offset=".75" stop-color="#a99c7c" stop-opacity=".35"/><stop offset="1" stop-color="#fffbea" stop-opacity=".5"/></radialGradient>'+
+  '<filter id="mb" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="'+(r*.06)+'"/></filter><clipPath id="mc"><circle cx="'+cx+'" cy="'+cy+'" r="'+r+'"/></clipPath></defs>'+
+  '<circle cx="'+cx+'" cy="'+cy+'" r="'+(r*3.2)+'" fill="url(#mh)"/>'+
+  '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="url(#mg)"/>'+
+  '<g clip-path="url(#mc)"><g filter="url(#mb)" fill="#9b8f72" opacity=".42">'+ma.map(([x,y,a,b,t])=>'<ellipse cx="'+(cx+x*r)+'" cy="'+(cy+y*r)+'" rx="'+(a*r)+'" ry="'+(b*r)+'" transform="rotate('+t+' '+(cx+x*r)+' '+(cy+y*r)+')"/>').join('')+'</g>'+
+  cr.map(([x,y,s])=>'<circle cx="'+(cx+x*r)+'" cy="'+(cy+y*r)+'" r="'+(s*r)+'" fill="url(#cg)"/><circle cx="'+(cx+x*r-s*r*.18)+'" cy="'+(cy+y*r-s*r*.18)+'" r="'+(s*r*.9)+'" fill="none" stroke="#fffdf0" stroke-opacity=".35" stroke-width="'+(r*.012)+'"/>').join('')+
+  '<path d="'+sh+'" fill="#070a22" fill-opacity=".86"/></g>'+
+  '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#fff7dc" stroke-opacity=".25" stroke-width="1"/>';
+}
+function heartPath(x,y,s){return 'M'+x+' '+(y+s*.35)+'C'+(x-s*.9)+' '+(y-s*.25)+' '+(x-s*.45)+' '+(y-s*.95)+' '+x+' '+(y-s*.45)+'C'+(x+s*.45)+' '+(y-s*.95)+' '+(x+s*.9)+' '+(y-s*.25)+' '+x+' '+(y+s*.35)+'Z'}
+function cloud(x,y,s,o){return '<g fill="#fff" opacity="'+o+'"><ellipse cx="'+x+'" cy="'+y+'" rx="'+(s*1.6)+'" ry="'+(s*.55)+'"/><circle cx="'+(x-s*.5)+'" cy="'+(y-s*.25)+'" r="'+(s*.55)+'"/><circle cx="'+(x+s*.35)+'" cy="'+(y-s*.4)+'" r="'+(s*.7)+'"/></g>'}
+function skySvg(ph){
+ const c=SKY[ph],W=400,H=360;seed=7;
+ let o='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">'+c.g.map((v,i)=>'<stop offset="'+(i/(c.g.length-1))+'" stop-color="'+v+'"/>').join('')+'</linearGradient>'+
+  '<radialGradient id="sun" r="50%"><stop offset="0" stop-color="'+(c.sun?c.sun[3]:'#fff')+'"/><stop offset=".35" stop-color="'+(c.sun?c.sun[4]:'#fff')+'" stop-opacity=".55"/><stop offset="1" stop-color="'+(c.sun?c.sun[4]:'#fff')+'" stop-opacity="0"/></radialGradient></defs>'+
+  '<rect width="'+W+'" height="'+H+'" fill="url(#sg)"/>';
+ if(c.stars){for(let i=0;i<70;i++){const x=rnd()*W,y=rnd()*H*.85,r=rnd()<.12?1.4:.5+rnd()*.7;o+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+r.toFixed(2)+'" fill="'+(rnd()<.3?'#ffe6aa':'#fff')+'" opacity="'+((.35+rnd()*.6)*c.stars).toFixed(2)+'"/>'}}
+ if(ph==='night'){o+=moonSvg(176,46,48,window.__moonF!=null?window.__moonF:moonPhase(Date.now()))+'<path d="'+heartPath(150,40,7)+'" fill="#f1cf83" opacity=".5"/><path d="'+heartPath(340,150,5)+'" fill="#f1cf83" opacity=".35"/>'}
+ if(c.sun){const[x,y,r]=c.sun;o+='<circle cx="'+x+'" cy="'+y+'" r="'+(r*3)+'" fill="url(#sun)"/><circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="'+c.sun[3]+'" opacity=".85"/>'}
+ if(c.clouds){o+=cloud(ph==='day'?90:300,ph==='morning'?120:ph==='evening'?80:150,26,ph==='day'?.55:.22)+cloud(ph==='day'?250:140,ph==='day'?205:200,18,ph==='day'?.4:.16)+
+  '<path d="'+heartPath(ph==='evening'?320:120,ph==='day'?60:70,9)+'" fill="#fff" opacity="'+(ph==='day'?.5:.3)+'"/><path d="'+heartPath(ph==='evening'?350:155,ph==='day'?42:52,5)+'" fill="#fff" opacity="'+(ph==='day'?.4:.22)+'"/>'}
+ if(ph!=='night')o+='<rect width="'+W+'" height="'+H+'" fill="url(#ov)"/><defs><linearGradient id="ov" x1="0" y1="0" x2="0" y2="1"><stop offset=".35" stop-color="#0b0e30" stop-opacity="0"/><stop offset="1" stop-color="#0b0e30" stop-opacity="'+(ph==='day'?.45:.35)+'"/></linearGradient></defs>';
+ return o+'</svg>';
+}
+let cur='';const sky=$('#sky'),hero=$('#hero');
+function paintSky(force){const ph=window.__skyForce||phaseOf(new Date().getHours());if(ph===cur&&!force)return;cur=ph;hero.dataset.phase=ph;
+ const l=document.createElement('div');l.style.opacity='0';l.innerHTML=skySvg(ph);sky.appendChild(l);
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{l.style.opacity='1'}));
+ [...sky.children].slice(0,-1).forEach(x=>setTimeout(()=>x.remove(),1700))}
+window.__sky=p=>{window.__skyForce=p;paintSky(true)};
+paintSky();setInterval(()=>paintSky(),60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)paintSky()});
+}
 render();
 
 /* ---------- live sync ---------- */
