@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
+<meta name="app-ver" content="2026-11-25.3">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>حسن ولين</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -213,6 +214,22 @@ textarea.in{min-height:84px;resize:vertical}
 .hero[data-phase=morning] .names,.hero[data-phase=day] .names,.hero[data-phase=evening] .names{text-shadow:0 2px 14px rgba(20,10,50,.45)}
 .hero[data-phase=morning] .days,.hero[data-phase=day] .days,.hero[data-phase=evening] .days{text-shadow:0 1px 8px rgba(20,10,50,.5)}
 .hero[data-phase=day] .names{color:#fff3d6}
+.feed{background:linear-gradient(160deg,color-mix(in srgb,var(--card) 92%,#f1cf83),var(--card));border:1px solid color-mix(in srgb,var(--line) 70%,#f1cf83);border-radius:22px;padding:14px 14px 10px;margin:4px 0 14px}
+.feed.flat{background:none;border:0;padding:0;margin:0}
+.fh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px;cursor:pointer}
+.fh h2{font-size:19px}.fh small{color:var(--mute);font-size:13px}
+.fbadge{background:linear-gradient(145deg,var(--gold),var(--rose));color:#14112c;border-radius:99px;padding:4px 10px;font-weight:700;font-size:13px;white-space:nowrap}
+.fi{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);position:relative}
+.feed .fi:first-of-type{border-top:0}
+.fav{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:16px;color:#14112c}
+.fav.hassan{background:linear-gradient(145deg,#ffe7a2,#d69535)}
+.fav.leen{background:linear-gradient(145deg,#ffffff,#c3c8de)}
+.fav.both{background:linear-gradient(145deg,#ffe7a2 0 50%,#e9ebf5 50%)}.fav svg{width:16px;height:16px;color:#c9862a}
+.ft{flex:1;font-size:14.5px;line-height:1.45;overflow-wrap:anywhere}.ft b{font-weight:700}
+.fw{flex:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;color:var(--mute);white-space:nowrap}.fw svg{width:15px;height:15px}
+.fi.new .ft::after{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--rose);margin-inline-start:6px;vertical-align:middle}
+.fmore{width:100%;min-height:40px;margin-top:6px;border-radius:12px;background:var(--soft);font-weight:600;font-size:14px}
+.tabs .ic{position:relative}.tabs .ic[data-n]:not([data-n=""])::after{content:attr(data-n);position:absolute;top:-4px;inset-inline-end:-4px;min-width:18px;height:18px;padding:0 5px;border-radius:99px;background:#e0336a;color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;line-height:1}
 .signs{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 .sg{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(241,207,131,.16),rgba(255,255,255,.05));border:1px solid rgba(241,207,131,.28);border-radius:16px;padding:6px 12px 6px 8px;color:#fff;text-align:start;min-height:52px}
 .sg .cst{width:40px;height:40px;flex:none}
@@ -300,6 +317,7 @@ textarea.in{min-height:84px;resize:vertical}
 <main class="wrap">
  <div class="banner" id="banner"></div>
  <section id="v-moments">
+  <div id="feed"></div>
   <div class="tools">
    <input class="search" id="q" type="search" placeholder="دوّر بلحظاتنا…" aria-label="بحث">
    <div class="chips" id="filters"></div>
@@ -406,7 +424,7 @@ function renderFilters(){
  $('#filters').innerHTML=[{k:'all',n:'الكل'},...CATS].map(c=>'<button class="chip" data-f="'+c.k+'" aria-pressed="'+(filter===c.k)+'">'+(c.c?'<i class="dot" style="background:'+c.c+'"></i>':'')+c.n+'</button>').join('');
 }
 function hearts(n){return n?'<span class="hearts" aria-label="'+n+' من 5">'+heart.repeat(n)+'</span>':''}
-function renderMoments(){
+function renderMoments(){queueFeed();
  const t0=pd(today()),pm=new Date(t0.getFullYear(),t0.getMonth()-1,1),hint=$('#recapHint');
  if(hint){const show=t0.getDate()<=5&&moments.some(m=>String(m.date).startsWith(ymOf(pm)));hint.hidden=!show;if(show)hint.innerHTML='<b>ملخّص '+pm.toLocaleDateString(L,{month:'long'})+' جاهز</b><span>شوفوا شو عشتوا الشهر الماضي</span>'}
  const ql=q.trim();
@@ -422,8 +440,50 @@ function renderMoments(){
  $('#list').innerHTML=out;
 }
 
+/* ---------- today feed ---------- */
+const VB={add:['زاد','زادت'],log:['سجّل','سجّلت'],give:['عطى','عطت'],send:['بعت','بعتت'],write:['كتب','كتبت'],open:['فتح','فتحت'],reply:['ردّ','ردّت'],fav:['حبّ','حبّت']};
+const vb=(k,w)=>VB[k][w==='leen'?1:0];
+let feedT=0;function queueFeed(){clearTimeout(feedT);feedT=setTimeout(renderFeed,60)}
+function feedItems(){
+ const since=Date.now()-7*864e5,out=[],q=t=>'«'+esc(t||'')+'»';
+ const push=(t,who,ic,txt)=>{t=Number(t)||0;if(t>since&&t<=Date.now()+6e4&&(who==='hassan'||who==='leen'||who==='both'))out.push({t,who,ic,txt})};
+ moments.forEach(m=>{if(m.cat==='sport')push(m.createdAt,m.by,'fit',vb('log',m.by)+' تمرين '+q(m.title));else push(m.createdAt,m.by,'heart',vb('add',m.by)+' لحظة '+q(m.title))});
+ const ph={};photos.forEach(p=>{const t=Number(p.createdAt)||0,k=(p.by||'')+':'+Math.floor(t/6e5);(ph[k]=ph[k]||{t,who:p.by,n:0}).n++;ph[k].t=Math.max(ph[k].t,t)});
+ Object.values(ph).forEach(g=>push(g.t,g.who,'img',vb('add',g.who)+' '+(g.n===1?'صورة للألبوم':g.n+' صور للألبوم')));
+ weights.forEach(w=>push(w.createdAt,w.by||w.who,'fit',vb('log',w.by||w.who)+' وزن جديد'));
+ plans.forEach(p=>{push(p.createdAt,p.by,'flag',vb('add',p.by)+' خطة '+q(p.title));if(p.done)push(p.doneAt,'both','flag','خلّصتوا '+q(p.title)+' سوا')});
+ events.forEach(e=>push(e.createdAt,e.by,'cal',vb('add',e.by)+' موعد '+q(e.title)+' · '+pd(e.date).toLocaleDateString(L,{day:'numeric',month:'short'})));
+ points.forEach(x=>push(x.createdAt,x.from,'star',vb('give',x.from)+' '+WHO[x.to]+' '+sgn(Number(x.pts)||0)+(x.reason?' · '+esc(x.reason):'')));
+ notes.forEach(n=>{push(n.createdAt,n.from,'msg',vb('send',n.from)+(n.kind==='thanks'?' كلمة شكر':' ملاحظة'));if(n.ok)push(n.okAt,n.to,'msg',vb('reply',n.to)+' على '+(n.kind==='thanks'?'كلمة الشكر':'الملاحظة'))});
+ letters.forEach(l=>{push(l.createdAt,l.from,'env',vb('write',l.from)+' رسالة للمستقبل');if(l.openedAt)push(l.openedAt,l.to,'env',vb('open',l.to)+' رسالة '+q(l.title))});
+ return out.sort((a,b)=>b.t-a.t);
+}
+const FIC={heart:'<path d="M12 20s-7-4.4-8.6-8.6C2.2 8.2 4.2 5 7.4 5c1.9 0 3.3 1 4.6 2.6C13.3 6 14.7 5 16.6 5c3.2 0 5.2 3.2 4 6.4C19 15.6 12 20 12 20z"/>',img:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 9"/>',fit:'<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/>',flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',cal:'<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',star:'<path d="M12 3l2.6 5.5 6 .8-4.4 4.2 1.1 6L12 16.6 6.7 19.5l1.1-6L3.4 9.3l6-.8z"/>',msg:'<path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 3.5V17A2.5 2.5 0 0 1 4 14.5z"/>',env:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7l8 6 8-6"/>'};
+const feedSeen=()=>{try{return Number(localStorage.getItem('hl-feed-seen'))||0}catch(x){return 0}};
+const tAgo=t=>{const d=new Date(t),td=pd(today());if(d>=td)return d.toLocaleTimeString(L,{hour:'numeric',minute:'2-digit'});if(d>=new Date(td-864e5))return 'مبارح';return d.toLocaleDateString(L,{weekday:'short',day:'numeric'})};
+function feedRow(it,seen){const fresh=it.who!==me&&it.who!=='both'&&it.t>seen;
+ return '<div class="fi'+(fresh?' new':'')+'"><span class="fav '+it.who+'">'+(it.who==='both'?'<svg viewBox="0 0 24 24"><use href="#h"/></svg>':it.who==='hassan'?'ح':'ل')+'</span><div class="ft"><b>'+(it.who==='both'?'':WHO[it.who]+' ')+'</b>'+it.txt+'</div><span class="fw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+FIC[it.ic]+'</svg>'+tAgo(it.t)+'</span></div>'}
+function renderFeed(){
+ const el=$('#feed');if(!el)return;
+ const all=feedItems(),td=pd(today()).getTime(),todays=all.filter(i=>i.t>=td),seen=feedSeen();
+ const fresh=all.filter(i=>i.who!==me&&i.who!=='both'&&i.t>seen).length;
+ const tb=document.querySelector('.tabs [data-t="moments"] .ic');if(tb)tb.dataset.n=fresh?String(fresh):'';
+ const cnt=k=>todays.filter(i=>i.who===k).length;
+ const shown=(todays.length?todays:all).slice(0,4);
+ el.innerHTML='<div class="feed"><div class="fh"><div><h2>شو صار اليوم</h2><small>'+(todays.length?'حسن '+cnt('hassan')+' · لين '+cnt('leen'):all.length?'لسّا ما صار شي اليوم · آخر شي:':'لسّا ما صار شي')+'</small></div>'+(fresh?'<span class="fbadge">'+fresh+' جديد</span>':'')+'</div>'+
+  (shown.length?shown.map(i=>feedRow(i,seen)).join(''):'<p class="hint" style="margin:6px 0 0">أي شي بتزيدوه بيطلع هون.</p>')+
+  (all.length>shown.length||fresh?'<button class="fmore" id="feedAll">شوف كل الأسبوع</button>':'')+'</div>';
+}
+function openFeed(){
+ const all=feedItems(),seen=feedSeen();let html='',day='';
+ all.forEach(i=>{const d=new Date(i.t),k=d.toDateString();if(k!==day){day=k;const td=pd(today());html+='<div class="month" style="margin:14px 2px 4px">'+(d>=td?'اليوم':d>=new Date(td-864e5)?'مبارح':d.toLocaleDateString(L,{weekday:'long',day:'numeric',month:'long'}))+'</div>'}html+=feedRow(i,seen)});
+ open('<h2>آخر المستجدات</h2><p class="hint" style="margin-top:0">كل شي صار خلال آخر ٧ أيام.</p><div class="feed flat">'+(html||'<p class="hint">لسّا ما في شي.</p>')+'</div>');
+ try{localStorage.setItem('hl-feed-seen',String(Date.now()))}catch(x){}setTimeout(renderFeed,400);
+}
+$('#feed').addEventListener('click',e=>{if(e.target.closest('#feedAll')||e.target.closest('.fh'))openFeed()});
+
 /* ---------- plans ---------- */
-function renderPlans(){
+function renderPlans(){queueFeed();
  const list=[...plans].sort((a,b)=>(!!a.done-!!b.done)||(b.createdAt||0)-(a.createdAt||0));
  if(!list.length){$('#plist').innerHTML='<div class="empty"><h3>شو بدكن تعملوا سوا؟</h3>حطّوا هون أحلامكن الصغيرة والكبيرة: مطعم بدكن تجرّبوه، سفرة، فيلم…</div>';return}
  const open=list.filter(p=>!p.done).length;
@@ -523,7 +583,7 @@ function challengeHtml(sport){
 function openWeekGoal(){if(needMe())return;const g=wgoal(me);
  open('<h2>كم تمرين بالأسبوع؟</h2><p class="hint" style="margin-top:0">التمرين اللي بتسجّلوه «سوا» بينحسب للتنين.</p><div class="vals" id="wgv" style="grid-template-columns:repeat(7,minmax(0,1fr))">'+[1,2,3,4,5,6,7].map(v=>'<button type="button" data-v="'+v+'" aria-pressed="'+(v===g)+'">'+v+'</button>').join('')+'</div><div class="acts"><button class="btn pri" id="wgok">احفظ</button></div>');
  pick('#wgv','data-v');$('#wgok').onclick=async()=>{const v=Number(val('#wgv','data-v'))||3;close();const c=profiles[me]&&profiles[me].h?profiles[me]:((settings.fit||{})[me]||{});await write(()=>db.doc('profiles/'+me).set({...c,...(profiles[me]||{}),bday:bdayOf(me),weekGoal:v}),'انحفظ الهدف')}}
-function renderFit(){
+function renderFit(){queueFeed();
  const el=$('#fit');if(!el)return;
  const ym=today().slice(0,7);
  const sport=moments.filter(m=>m.cat==='sport'&&String(m.date).startsWith(ym));
@@ -596,7 +656,7 @@ $('#fit').addEventListener('click',async e=>{
 /* ---------- album ---------- */
 const okImg=u=>typeof u==='string'&&/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(u);
 function albList(){return photos.filter(p=>albF==='all'||p.fav).sort((a,b)=>String(b.date).localeCompare(String(a.date))||(b.createdAt||0)-(a.createdAt||0))}
-function renderAlbum(){
+function renderAlbum(){queueFeed();
  const el=$('#alb');if(!el)return;
  const list=albList();
  $('#albn').textContent=photos.length?photos.length+' صورة':'';$('#albdl').hidden=!list.length;
@@ -726,7 +786,7 @@ function onDay(e,ds){
  const y=Number(ds.slice(0,4))-Number(e.date.slice(0,4));return e.ann?y>0:y>=0;
 }
 function label(e,ds){const y=Number(ds.slice(0,4))-Number(String(e.date).slice(0,4));return e.title+(e.age?' ('+y+')':e.ann?' · '+y+(y===1?' سنة':' سنين'):'')}
-function renderCal(){
+function renderCal(){queueFeed();
  const el=$('#cal');if(!el)return;
  const t=pd(today());if(!calM)calM=new Date(t.getFullYear(),t.getMonth(),1);
  const all=allEvents(),y=calM.getFullYear(),m=calM.getMonth();
@@ -822,7 +882,7 @@ const LI=k=>k==='leen'?'للين':k==='hassan'?'لحسن':'';
 const other=k=>k==='hassan'?'leen':'hassan';
 const ago=t=>new Date(t||Date.now()).toLocaleDateString(L,{day:'numeric',month:'short'});
 const sgn=n=>'\u2066'+(n>0?'+':'')+n+'\u2069';
-function renderUs(){
+function renderUs(){queueFeed();
  const el=$('#us');if(!el)return;
  const ym=today().slice(0,7),tot={},mon={};
  for(const k of ['hassan','leen']){const mine=points.filter(p=>p.to===k);tot[k]=mine.reduce((a,p)=>a+(Number(p.pts)||0),0);mon[k]=mine.filter(p=>new Date(p.createdAt||0).toISOString().slice(0,7)===ym).reduce((a,p)=>a+(Number(p.pts)||0),0)}
@@ -947,7 +1007,7 @@ function openPlan(p){
 function openSettings(){
  open('<h2>إعداداتنا</h2><form id="sf"><label class="l" for="s-d">تاريخ خطبتنا</label><input class="in" id="s-d" type="date" value="'+esc(settings.start||'')+'">'+
  (me?'<label class="l" for="s-b">عيد ميلادك</label><input class="in" id="s-b" type="date" value="'+esc(bdayOf(me))+'">':'')+
- '<p class="small" style="opacity:.6">نسخة التطبيق: ٢٥ تشرين التاني · ٢</p><p class="small">'+(me?'إنت مسجّل باسم '+WHO[me]+'. كل واحد بيعدّل عيد ميلادو ووزنو وطولو هوّي بس.':'لسّا ما اخترت مين إنت.')+'</p><div class="acts"><button class="btn pri" type="submit">احفظ</button></div><div class="acts" style="margin-top:10px"><button type="button" class="btn" id="bk">نسخة احتياطية</button><button type="button" class="btn del" id="lo">طلوع من الحساب</button></div></form>');
+ '<p class="small" style="opacity:.6">نسخة التطبيق: '+APP_VER+'</p><p class="small">'+(me?'إنت مسجّل باسم '+WHO[me]+'. كل واحد بيعدّل عيد ميلادو ووزنو وطولو هوّي بس.':'لسّا ما اخترت مين إنت.')+'</p><div class="acts"><button class="btn pri" type="submit">احفظ</button></div><div class="acts" style="margin-top:10px"><button type="button" class="btn" id="bk">نسخة احتياطية</button><button type="button" class="btn del" id="lo">طلوع من الحساب</button></div></form>');
  $('#bk').onclick=()=>{close();backup()};
  $('#lo').onclick=()=>window.__logout&&window.__logout();
  $('#sf').addEventListener('submit',async e=>{e.preventDefault();
@@ -1064,6 +1124,14 @@ function paintSky(force){const ph=window.__skyForce||phaseOf(new Date().getHours
 window.__sky=p=>{window.__skyForce=p;paintSky(true)};
 paintSky();setInterval(()=>paintSky(),60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)paintSky()});
 }
+/* ---------- auto update ---------- */
+const APP_VER=document.querySelector('meta[name=app-ver]').content;
+let updShown=false;
+async function checkUpdate(){if(updShown||!/^https?:/.test(location.protocol))return;
+ try{const r=await fetch(location.pathname+'?t='+Date.now(),{cache:'no-store'});const t=await r.text();const m=t.match(/name="app-ver" content="([^"]+)"/);
+  if(m&&m[1]!==APP_VER){updShown=true;toast('في نسخة جديدة من التطبيق','حدّث',()=>{location.replace(location.pathname+'?v='+encodeURIComponent(m[1]))});
+   setTimeout(()=>{if(updShown)location.replace(location.pathname+'?v='+encodeURIComponent(m[1]))},8000)}}catch(x){}}
+setTimeout(checkUpdate,3000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkUpdate()});
 ['gesturestart','gesturechange'].forEach(n=>document.addEventListener(n,e=>e.preventDefault(),{passive:false}));
 render();
 
