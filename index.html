@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-25.5">
+<meta name="app-ver" content="2026-11-25.7">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>حسن ولين</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -50,7 +50,7 @@ button{cursor:pointer;border:0;background:none}
 .hero .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .me{background:rgba(255,255,255,.14);border-radius:99px;padding:8px 14px;font-size:14px;min-height:40px}
 .gear{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center}
-.pic{display:flex;align-items:center;gap:18px;margin-top:14px}
+.pic{display:flex;align-items:flex-end;gap:18px;margin-top:14px}
 .logo{height:min(54vw,220px);width:auto;flex:none;filter:drop-shadow(0 0 14px rgba(241,207,131,.35)) drop-shadow(0 6px 10px rgba(0,0,0,.35))}
 .names{font-family:"Aref Ruqaa",serif;font-weight:700;color:var(--gold);font-size:clamp(38px,11vw,56px);line-height:1.2}
 .days{margin-top:8px;font-size:17px;opacity:.92}
@@ -228,22 +228,41 @@ textarea.in{min-height:84px;resize:vertical}
 .fi.new .ft::after{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--rose);margin-inline-start:6px;vertical-align:middle}
 .fmore{width:100%;min-height:44px;margin-top:6px;border-radius:12px;background:var(--soft);font-weight:700;font-size:15.5px}
 .tabs .ic{position:relative}.tabs .ic[data-n]:not([data-n=""])::after{content:attr(data-n);position:absolute;top:-4px;inset-inline-end:-4px;min-width:18px;height:18px;padding:0 5px;border-radius:99px;background:#e0336a;color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;line-height:1}
-.kissb{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center;transition:transform .15s}
-.kissb svg{width:32px;height:22px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.3))}
-.kissb:active{transform:scale(.9)}
-.kissfx{position:fixed;inset:0;z-index:80;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
-.kissfx.show{pointer-events:auto;background:radial-gradient(circle at 50% 42%,rgba(214,21,79,.45),rgba(8,6,24,.9) 72%);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:kfade .35s ease both}
-.kbig{width:min(62vw,260px);animation:kpop .9s cubic-bezier(.2,1.4,.4,1) both;filter:drop-shadow(0 12px 30px rgba(214,21,79,.5))}
-.kbig svg{width:100%;height:auto;display:block}
-.ktxt{position:relative;text-align:center;color:#fff;font-weight:800;font-size:24px;text-shadow:0 2px 12px rgba(0,0,0,.5);animation:rise .5s .35s both}
-.ktxt small{display:block;font-size:15px;font-weight:700;opacity:.85;margin-top:4px}
-.kh{position:absolute;width:22px;height:22px;color:#ff4d79;animation:kfloat 1.8s ease-out both}
-.kfly{position:fixed;width:46px;z-index:81;pointer-events:none;animation:kfly 1s cubic-bezier(.3,.7,.4,1) both}
-.kfly svg{width:100%;height:auto;display:block}
-@keyframes kpop{0%{transform:scale(.2) rotate(-12deg);opacity:0}55%{transform:scale(1.15) rotate(4deg);opacity:1}75%{transform:scale(.95) rotate(-2deg)}100%{transform:scale(1) rotate(0)}}
+.kissb{margin-top:16px;display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:5px 20px 5px 6px;border-radius:99px;background:linear-gradient(135deg,#ff7a9c,#e0336a 55%,#b8124a);color:#fff;font-weight:800;font-size:18px;border:1.5px solid rgba(255,255,255,.45);box-shadow:0 8px 24px rgba(224,51,106,.5),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .15s}
+.kissb .kic{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#fff,#ffe1ea 55%,#ffc2d4)}
+.kissb svg{width:30px;height:20px;filter:drop-shadow(0 1px 1px rgba(120,0,40,.35))}
+.kissb:active{transform:scale(.94)}
+.kissfx{position:fixed;inset:0;z-index:80;pointer-events:none;display:none;align-items:center;justify-content:center;overflow:hidden}
+.kissfx.on{display:flex}
+.kbg{position:absolute;inset:0;background:radial-gradient(circle at 50% 44%,rgba(255,77,121,.62),rgba(110,10,58,.88) 40%,rgba(8,6,24,.97) 78%);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.kissfx.send .kbg{animation:kbgs 2.1s ease both}.kissfx.recv .kbg{animation:kfade .5s ease both}
+.kissfx.recv{pointer-events:auto}
+.kstage{position:relative;display:flex;flex-direction:column;align-items:center;gap:20px;width:100%}
+.klips{position:relative;width:min(64vw,270px);filter:drop-shadow(0 14px 34px rgba(214,21,79,.6))}
+.klips svg{width:100%;height:auto;display:block}
+.kissfx.send .klips{animation:ksend 2.1s cubic-bezier(.3,.7,.3,1) both}
+.kissfx.recv .klips{animation:krecv 1.2s cubic-bezier(.2,.9,.3,1) both}
+.kring{position:absolute;left:50%;top:50%;width:min(70vw,300px);aspect-ratio:1;border-radius:50%;border:3px solid rgba(255,182,203,.8);transform:translate(-50%,-50%) scale(.2);opacity:0;animation:kring 1.4s ease-out both}
+.kburst{position:absolute;left:50%;top:50%;width:0;height:0}
+.kb{position:absolute;left:-12px;top:-12px;width:24px;height:24px;opacity:0;animation:kbst 1.3s cubic-bezier(.15,.8,.3,1) both}
+.kb svg{width:100%;height:100%;display:block}
+.kfl{position:absolute;bottom:-40px;width:26px;height:26px;opacity:0;animation:kup 3.2s ease-in both}
+.kmsg{position:relative;text-align:center;color:#fff;opacity:0}
+.kissfx.send .kmsg{animation:kmsg 2.1s ease both}.kissfx.recv .kmsg{animation:rise .6s .55s both;opacity:1}
+.kmsg b{display:block;font-size:30px;font-weight:800;color:#ffe3a3;text-shadow:0 0 18px rgba(255,190,90,.55),0 2px 10px rgba(0,0,0,.5)}
+.kmsg span{display:block;font-size:16px;font-weight:700;opacity:.9;margin-top:6px}
+.kacts{display:flex;gap:10px;margin-top:8px;opacity:0;animation:rise .5s 1s both}
+.kacts button{min-height:48px;padding:0 22px;border-radius:16px;font-weight:800;font-size:16px}
+.kreply{background:linear-gradient(145deg,#ff6b8b,#d6154f);color:#fff;box-shadow:0 8px 22px rgba(214,21,79,.5)}
+.kclose{background:rgba(255,255,255,.16);color:#fff}
+@keyframes kbgs{0%{opacity:0}18%{opacity:1}78%{opacity:1}100%{opacity:0}}
 @keyframes kfade{from{opacity:0}to{opacity:1}}
-@keyframes kfloat{from{transform:translateY(0) scale(.6);opacity:0}20%{opacity:1}to{transform:translateY(-180px) scale(1.1);opacity:0}}
-@keyframes kfly{0%{transform:translate(0,0) scale(.6);opacity:0}25%{opacity:1;transform:translate(0,-20px) scale(1.2)}100%{transform:translate(var(--kx),var(--ky)) scale(.8);opacity:0}}
+@keyframes ksend{0%{transform:translate(var(--sx),var(--sy)) scale(.18) rotate(-10deg);opacity:0}12%{opacity:1}38%{transform:translate(0,0) scale(1.18) rotate(3deg)}46%{transform:scale(.9,1.12)}54%{transform:scale(1.06,.95)}62%{transform:scale(1)}76%{transform:scale(1);opacity:1}100%{transform:translate(var(--ex),var(--ey)) scale(.25) rotate(-18deg);opacity:0}}
+@keyframes krecv{0%{transform:translateY(90px) scale(.2);opacity:0}38%{transform:translateY(0) scale(1.28);opacity:1}50%{transform:scale(.88,1.14)}62%{transform:scale(1.08,.94)}74%{transform:scale(.98,1.02)}100%{transform:scale(1)}}
+@keyframes kring{0%{transform:translate(-50%,-50%) scale(.2);opacity:.9}100%{transform:translate(-50%,-50%) scale(1.6);opacity:0}}
+@keyframes kbst{0%{transform:translate(0,0) scale(.2) rotate(0);opacity:0}12%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(var(--s)) rotate(var(--r));opacity:0}}
+@keyframes kup{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:.95}100%{transform:translateY(-110vh) translateX(var(--w)) scale(1.1);opacity:0}}
+@keyframes kmsg{0%,30%{opacity:0;transform:translateY(12px)}42%{opacity:1;transform:none}74%{opacity:1}92%,100%{opacity:0}}
 .signs{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 .sg{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(241,207,131,.16),rgba(255,255,255,.05));border:1px solid rgba(241,207,131,.28);border-radius:16px;padding:6px 12px 6px 8px;color:#fff;text-align:start;min-height:52px}
 .sg .cst{width:40px;height:40px;flex:none}
@@ -303,7 +322,7 @@ textarea.in{min-height:84px;resize:vertical}
  <div class="sky" id="sky" aria-hidden="true"></div>
  <div class="wrap">
   <div class="top">
-   <div style="display:flex;gap:8px;align-items:center"><button class="me" id="meBtn">مين أنا؟</button><button class="kissb" id="kissBtn" aria-label="ابعت بوسة"><svg viewBox="0 0 120 80"><use href="#lips"/></svg></button></div>
+   <div style="display:flex;gap:8px;align-items:center"><button class="me" id="meBtn">مين أنا؟</button></div>
    <button class="gear" id="setBtn" aria-label="الإعدادات"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
   </div>
   <div class="pic">
@@ -311,6 +330,7 @@ textarea.in{min-height:84px;resize:vertical}
    <div>
     <h1 class="names">حسن ولين</h1>
     <div class="days" id="days"></div>
+    <button class="kissb" id="kissBtn" aria-label="ابعت بوسة قويّة"><span class="kic"><svg viewBox="0 0 120 80"><use href="#lips"/></svg></span>بوسة قويّة</button>
    </div>
   </div>
     <div class="signs" id="signs"></div>
@@ -465,18 +485,26 @@ function kissSound(){try{unlockAudio();if(!actx)return;const a=actx,t=a.currentT
  smack(t+.13,1.6,1900);smack(t+.165,.6,2600);
  const ah=a.createOscillator(),ag=a.createGain();ah.type='sine';ah.frequency.setValueAtTime(460,t+.15);ah.frequency.exponentialRampToValueAtTime(250,t+.3);ag.gain.setValueAtTime(.07,t+.15);ag.gain.exponentialRampToValueAtTime(.001,t+.32);ah.connect(ag).connect(out);ah.start(t+.15);ah.stop(t+.34);
  if(navigator.vibrate)navigator.vibrate(30)}catch(x){}}
-function showKiss(from,n){const fx=$('#kissfx');
- let hs='';for(let i=0;i<9;i++){const x=10+Math.random()*80,y=45+Math.random()*30;hs+='<svg class="kh" style="left:'+x+'%;top:'+y+'%;animation-delay:'+(i*0.12).toFixed(2)+'s" viewBox="0 0 24 24"><use href="#h"/></svg>'}
- fx.innerHTML='<div class="kbig"><svg viewBox="0 0 120 80"><use href="#lips"/></svg></div>'+hs+'<div class="ktxt">'+(from==='leen'?'لين بعتتلك':'حسن بعتلك')+(n===2?' بوستين':n>2?' '+n+' بوسات':' بوسة')+'<small>كبس لتسكّر</small></div>';
- fx.classList.remove('show');void fx.offsetWidth;fx.classList.add('show');kissSound();
- clearTimeout(kissT);kissT=setTimeout(hideKiss,3800)}
-function hideKiss(){const fx=$('#kissfx');fx.classList.remove('show');fx.innerHTML=''}
-$('#kissfx').addEventListener('click',hideKiss);
-async function sendKiss(){if(needMe())return;if(Date.now()-(window.__lastKiss||0)<1200)return;window.__lastKiss=Date.now();
- const b=$('#kissBtn').getBoundingClientRect(),f=document.createElement('div');f.className='kfly';f.innerHTML='<svg viewBox="0 0 120 80"><use href="#lips"/></svg>';
- f.style.left=(b.left+b.width/2-23)+'px';f.style.top=(b.top+b.height/2-15)+'px';f.style.setProperty('--kx',(innerWidth/2-b.left-b.width/2)+'px');f.style.setProperty('--ky',(innerHeight*.4-b.top)+'px');document.body.appendChild(f);setTimeout(()=>f.remove(),1100);
- kissSound();
- try{await db.collection('kisses').add({from:me,to:other(me),createdAt:Date.now(),seenAt:0});toast('انبعتت بوسة '+LI(other(me)))}catch(x){toast('ما قدرنا نبعت البوسة. تأكد من قواعد Firestore')}}
+const HC=['#ff4d79','#ff8fab','#ffd166','#ffffff','#e0336a','#f1cf83'];
+function burst(n,delay,spread){let o='<div class="kburst">';for(let i=0;i<n;i++){const ang=(i/n)*Math.PI*2+Math.random()*.4,d=spread*(.6+Math.random()*.5);
+ o+='<span class="kb" style="--dx:'+(Math.cos(ang)*d).toFixed(0)+'px;--dy:'+(Math.sin(ang)*d).toFixed(0)+'px;--s:'+(.7+Math.random()*.9).toFixed(2)+';--r:'+(Math.random()*80-40).toFixed(0)+'deg;animation-delay:'+(delay+Math.random()*.08).toFixed(2)+'s;color:'+HC[i%HC.length]+'"><svg viewBox="0 0 24 24"><use href="#h"/></svg></span>'}return o+'</div>'}
+function floaters(n,delay){let o='';for(let i=0;i<n;i++){o+='<span class="kfl" style="left:'+(4+Math.random()*90).toFixed(1)+'%;--w:'+(Math.random()*80-40).toFixed(0)+'px;animation-delay:'+(delay+i*.22+Math.random()*.2).toFixed(2)+'s;color:'+HC[i%HC.length]+';width:'+(18+Math.random()*16).toFixed(0)+'px;height:auto"><svg viewBox="0 0 24 24" style="width:100%;display:block"><use href="#h"/></svg></span>'}return o}
+function showKiss(from,n){const fx=$('#kissfx');clearTimeout(kissT);
+ fx.className='kissfx';void fx.offsetWidth;
+ fx.innerHTML='<div class="kbg"></div>'+floaters(14,.5)+'<div class="kstage"><div class="klips"><span class="kring" style="animation-delay:.45s"></span><span class="kring" style="animation-delay:.75s"></span><svg viewBox="0 0 120 80"><use href="#lips"/></svg>'+burst(16,.42,150)+'</div><div class="kmsg"><b>'+(from==='leen'?'لين بعتتلك':'حسن بعتلك')+(n===2?' بوستين':n>2?' '+n+' بوسات':' بوسة')+'</b><span>'+(from==='leen'?'من كل قلبها':'من كل قلبو')+'</span></div><div class="kacts"><button class="kreply" id="kRe">ردّ ببوسة</button><button class="kclose" id="kNo">سكّر</button></div></div>';
+ fx.classList.add('on','recv');setTimeout(kissSound,430);
+ $('#kRe').onclick=e=>{e.stopPropagation();hideKiss();setTimeout(sendKiss,120)};$('#kNo').onclick=e=>{e.stopPropagation();hideKiss()};
+ kissT=setTimeout(hideKiss,8000)}
+function hideKiss(){const fx=$('#kissfx');clearTimeout(kissT);fx.className='kissfx';fx.innerHTML=''}
+$('#kissfx').addEventListener('click',e=>{if($('#kissfx').classList.contains('recv')&&!e.target.closest('.kacts'))hideKiss()});
+function sendFx(){const fx=$('#kissfx'),b=$('#kissBtn').getBoundingClientRect();clearTimeout(kissT);
+ const cx=innerWidth/2,cy=innerHeight/2;
+ fx.className='kissfx';void fx.offsetWidth;
+ fx.innerHTML='<div class="kbg"></div><div class="kstage"><div class="klips" style="--sx:'+(b.left+b.width/2-cx).toFixed(0)+'px;--sy:'+(b.top+b.height/2-cy).toFixed(0)+'px;--ex:'+(innerWidth*.42).toFixed(0)+'px;--ey:'+(-innerHeight*.55).toFixed(0)+'px"><svg viewBox="0 0 120 80"><use href="#lips"/></svg>'+burst(14,.8,130)+'</div><div class="kmsg"><b>بوسة '+LI(other(me))+'</b><span>بالطريق إلها 💌</span></div></div>'.replace('إلها 💌',other(me)==='leen'?'إلها':'إلو');
+ fx.classList.add('on','send');setTimeout(kissSound,780);kissT=setTimeout(hideKiss,2150)}
+async function sendKiss(){if(needMe())return;if(Date.now()-(window.__lastKiss||0)<2200)return;window.__lastKiss=Date.now();
+ unlockAudio();sendFx();
+ try{await db.collection('kisses').add({from:me,to:other(me),createdAt:Date.now(),seenAt:0})}catch(x){setTimeout(()=>toast('ما قدرنا نبعت البوسة. تأكد من الإنترنت'),2200)}}
 $('#kissBtn').onclick=sendKiss;
 async function checkKisses(){if(!me||!kissLoaded)return;const pend=kisses.filter(k=>k.to===me&&!k.seenAt);if(!pend.length)return;
  if(document.hidden)return;showKiss(pend[0].from,pend.length);for(const k of pend){try{await db.collection('kisses').doc(k.id).update({seenAt:Date.now()})}catch(x){}}}
@@ -1153,7 +1181,7 @@ function skySvg(ph){
   '<radialGradient id="sun" r="50%"><stop offset="0" stop-color="'+(c.sun?c.sun[3]:'#fff')+'"/><stop offset=".35" stop-color="'+(c.sun?c.sun[4]:'#fff')+'" stop-opacity=".55"/><stop offset="1" stop-color="'+(c.sun?c.sun[4]:'#fff')+'" stop-opacity="0"/></radialGradient></defs>'+
   '<rect width="'+W+'" height="'+H+'" fill="url(#sg)"/>';
  if(c.stars){for(let i=0;i<70;i++){const x=rnd()*W,y=rnd()*H*.85,r=rnd()<.12?1.4:.5+rnd()*.7;o+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+r.toFixed(2)+'" fill="'+(rnd()<.3?'#ffe6aa':'#fff')+'" opacity="'+((.35+rnd()*.6)*c.stars).toFixed(2)+'"/>'}}
- if(ph==='night'){o+=moonSvg(176,46,48,window.__moonF!=null?window.__moonF:moonPhase(Date.now()))+'<path d="'+heartPath(150,40,7)+'" fill="#f1cf83" opacity=".5"/><path d="'+heartPath(340,150,5)+'" fill="#f1cf83" opacity=".35"/>'}
+ if(ph==='night'){o+=moonSvg(176,38,42,window.__moonF!=null?window.__moonF:moonPhase(Date.now()))+'<path d="'+heartPath(150,40,7)+'" fill="#f1cf83" opacity=".5"/><path d="'+heartPath(340,150,5)+'" fill="#f1cf83" opacity=".35"/>'}
  if(c.sun){const[x,y,r]=c.sun;o+='<circle cx="'+x+'" cy="'+y+'" r="'+(r*3)+'" fill="url(#sun)"/><circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="'+c.sun[3]+'" opacity=".85"/>'}
  if(c.clouds){o+=cloud(ph==='day'?90:300,ph==='morning'?120:ph==='evening'?80:150,26,ph==='day'?.55:.22)+cloud(ph==='day'?250:140,ph==='day'?205:200,18,ph==='day'?.4:.16)+
   '<path d="'+heartPath(ph==='evening'?320:120,ph==='day'?60:70,9)+'" fill="#fff" opacity="'+(ph==='day'?.5:.3)+'"/><path d="'+heartPath(ph==='evening'?350:155,ph==='day'?42:52,5)+'" fill="#fff" opacity="'+(ph==='day'?.4:.22)+'"/>'}
