@@ -626,26 +626,26 @@ function needMe(){if(!me){openWho();return true}return false}
 function openPoints(){
  if(needMe())return;
  const to=other(me);
- open('<h2>عطي نقاط</h2><form id="ptf"><label class="l">لمين؟</label><div class="seg" id="pto"><button type="button" data-w="hassan" aria-pressed="'+(to==='hassan')+'">حسن</button><button type="button" data-w="leen" aria-pressed="'+(to==='leen')+'">لين</button></div>'+
+ open('<h2>نقاط لـ'+WHO[to]+'</h2><form id="ptf">'+
  '<label class="l">كم نقطة؟</label><div class="vals" id="pval">'+[-5,-3,-1,1,3,5].map(v=>'<button type="button" data-v="'+v+'" aria-pressed="'+(v===3)+'">'+sgn(v)+'</button>').join('')+'</div>'+
  '<label class="l" for="pt-r">ليش؟</label><input class="in" id="pt-r" required maxlength="140" placeholder="مثلاً: فاجأني بقهوة الصبح">'+
  '<div class="acts"><button class="btn pri" type="submit">عطي</button></div></form>');
- pick('#pto','data-w');pick('#pval','data-v');
+ pick('#pval','data-v');
  $('#ptf').addEventListener('submit',async e=>{e.preventDefault();const reason=$('#pt-r').value.trim();if(!reason)return;
-  const pts=Number(val('#pval','data-v'))||1,t=val('#pto','data-w')||to;close();
+  const pts=Number(val('#pval','data-v'))||1,t=to;close();
   await write(()=>db.collection('points').add({to:t,from:me,pts,reason,createdAt:Date.now()}),(pts>0?'انبعتت '+sgn(pts)+' لـ':'انسحبت '+(-pts)+' من ')+WHO[t])});
  setTimeout(()=>$('#pt-r')?.focus(),50);
 }
 function openNote(n){
  if(needMe())return;n=n||{};
  const to=n.to||other(me),kind=n.kind||'note';
- open('<h2>'+(n.id?'عدّل الملاحظة':'ملاحظة جديدة')+'</h2><form id="nf"><label class="l">لمين؟</label><div class="seg" id="nto"><button type="button" data-w="hassan" aria-pressed="'+(to==='hassan')+'">حسن</button><button type="button" data-w="leen" aria-pressed="'+(to==='leen')+'">لين</button></div>'+
+ open('<h2>'+(n.id?'عدّل الملاحظة':'ملاحظة لـ'+WHO[to])+'</h2><form id="nf">'+
  '<label class="l">شو نوعها؟</label><div class="seg" id="nkind"><button type="button" data-k="note" aria-pressed="'+(kind==='note')+'">ملاحظة ننتبه عليها</button><button type="button" data-k="thanks" aria-pressed="'+(kind==='thanks')+'">شكر</button></div>'+
  '<label class="l" for="n-t">شو بدك تقول؟</label><textarea class="in" id="n-t" required maxlength="600" placeholder="مثلاً: لما تتأخر بدون ما تخبرني بقلق، ياريت تبعتلي مسج">'+esc(n.text||'')+'</textarea>'+
  '<div class="acts">'+(n.id?'<button type="button" class="btn del" id="ndel">احذف</button>':'')+'<button class="btn pri" type="submit">'+(n.id?'احفظ':'ابعت')+'</button></div></form>');
- pick('#nto','data-w');pick('#nkind','data-k');
+ pick('#nkind','data-k');
  $('#nf').addEventListener('submit',async e=>{e.preventDefault();const text=$('#n-t').value.trim();if(!text)return;
-  const doc={from:n.from||me,to:val('#nto','data-w')||to,kind:val('#nkind','data-k')||'note',text,ok:!!n.ok,reply:n.reply||'',createdAt:n.createdAt||Date.now(),updatedAt:Date.now()};close();
+  const doc={from:n.from||me,to,kind:val('#nkind','data-k')||'note',text,ok:!!n.ok,reply:n.reply||'',createdAt:n.createdAt||Date.now(),updatedAt:Date.now()};close();
   await write(()=>n.id?db.collection('notes').doc(n.id).set(doc):db.collection('notes').add(doc),n.id?'انحفظ':'انبعتت الملاحظة')});
  const d=$('#ndel');if(d)d.onclick=async()=>{const copy={...n};delete copy.id;close();await write(()=>db.collection('notes').doc(n.id).delete());toast('انحذفت','تراجع',()=>write(()=>db.collection('notes').doc(n.id).set(copy),'رجعت'))};
 }
