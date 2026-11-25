@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-25.32">
+<meta name="app-ver" content="2026-11-25.33">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -356,9 +356,10 @@ textarea.in{min-height:84px;resize:vertical}
 .chpill:active{transform:scale(.93)}
 .chpill.new{animation:chping 2.2s ease-in-out infinite}
 @keyframes chping{0%,100%{box-shadow:0 6px 18px -6px color-mix(in srgb,var(--rose) 80%,transparent),0 0 0 0 color-mix(in srgb,var(--rose) 55%,transparent)}50%{box-shadow:0 6px 18px -6px color-mix(in srgb,var(--rose) 80%,transparent),0 0 0 9px transparent}}
-.chbadge{position:absolute;top:-3px;inset-inline-end:-3px;min-width:20px;height:20px;padding:0 5px;border-radius:99px;background:#ff3b6b;color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;box-shadow:0 0 0 2px rgba(0,0,0,.15);animation:kpop .35s ease both}
+.chbadge{position:absolute;top:-8px;inset-inline-end:-8px;min-width:24px;height:24px;padding:0 6px;border-radius:99px;background:#ff2d55;color:#fff;font-size:13.5px;font-weight:800;line-height:1;display:grid;place-items:center;border:2px solid #fff;box-shadow:0 3px 10px rgba(255,45,85,.55);animation:kpop .35s cubic-bezier(.3,1.6,.5,1) both;font-variant-numeric:tabular-nums;z-index:2}
+.chbadge[hidden]{display:none}
 @keyframes kpop{from{transform:scale(.3)}to{transform:scale(1)}}
-.ch{position:fixed;left:0;right:0;top:0;height:100%;z-index:72;display:none;flex-direction:column;background:radial-gradient(120% 60% at 50% 0%,color-mix(in srgb,var(--rose) 10%,transparent),transparent 70%),radial-gradient(90% 50% at 100% 100%,color-mix(in srgb,var(--gold) 12%,transparent),transparent 70%),var(--bg);color:var(--ink);transition:background .8s}
+.ch{position:fixed;left:0;right:0;top:0;height:100%;z-index:72;overscroll-behavior:none;touch-action:pan-y;display:none;flex-direction:column;background:radial-gradient(120% 60% at 50% 0%,color-mix(in srgb,var(--rose) 10%,transparent),transparent 70%),radial-gradient(90% 50% at 100% 100%,color-mix(in srgb,var(--gold) 12%,transparent),transparent 70%),var(--bg);color:var(--ink);transition:background .8s}
 .ch.on{display:flex;animation:chin .32s cubic-bezier(.2,.8,.2,1) both}
 @keyframes chin{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
 .chtop{display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top) + 8px) 12px 10px;background:var(--card);border-bottom:1px solid var(--line)}
@@ -366,7 +367,7 @@ textarea.in{min-height:84px;resize:vertical}
 .chav{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:18px;color:var(--on);background:linear-gradient(135deg,var(--rose),color-mix(in srgb,var(--rose) 50%,var(--gold)))}
 .chtop .nm{flex:1;min-width:0}.chtop .nm b{display:block;font-size:18px}.chtop .nm span{font-size:13.5px;font-weight:600;color:var(--mute)}
 .chtop .nm span.ty{color:var(--rose)}
-.chlist{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 10px 6px;overscroll-behavior:contain;touch-action:pan-y}
+.chlist{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 10px 6px;overscroll-behavior:contain;touch-action:pan-y}
 .chday{text-align:center;margin:14px 0 8px}.chday span{display:inline-block;background:var(--soft);color:var(--mute);font-size:12.5px;font-weight:700;padding:4px 12px;border-radius:99px}
 .cm{display:flex;margin:3px 0;position:relative}
 .cm.cme{justify-content:flex-start}.cm.cot{justify-content:flex-end}
@@ -435,6 +436,14 @@ textarea.in{min-height:84px;resize:vertical}
 @keyframes chflash{0%,100%{filter:none}25%,60%{filter:brightness(1.25) drop-shadow(0 0 10px color-mix(in srgb,var(--rose) 70%,transparent))}}
 .cholder{display:block;margin:4px auto 10px;padding:7px 16px;border-radius:99px;background:var(--soft);color:var(--ink);font-weight:700;font-size:13.5px}
 .cb .tk.pd{opacity:.55}
+.cb{font-weight:700;font-size:17px}
+.cb.del{font-weight:600}
+.cb .tm{font-weight:700;opacity:.85}
+.crp{font-weight:600}.crp b{font-weight:800}
+.chrow textarea{font-weight:600}
+.chreply{font-weight:600}
+.chmenu .pv{font-weight:700}
+.chread{font-weight:700}
 .chempty{text-align:center;color:var(--mute);font-weight:600;padding:60px 20px;font-size:16px}
 .chempty b{display:block;font-size:44px;margin-bottom:10px}
 
@@ -831,9 +840,14 @@ function onChat(docs){const before=chSeenIds;chat=docs.sort((a,b)=>(a.t||0)-(b.t
 function onChatMeta(docs){chMeta={};docs.forEach(d=>chMeta[d.id]=d);if(chOpen){chStatus();renderChat()}else chBadge()}
 function fitCh(){const vv=window.visualViewport,c=$('#ch');if(!vv||!chOpen)return;c.style.height=vv.height+'px';c.style.top=vv.offsetTop+'px'}
 if(window.visualViewport){visualViewport.addEventListener('resize',()=>{fitCh();if(chOpen&&document.activeElement===chin)chl.scrollTop=chl.scrollHeight});visualViewport.addEventListener('scroll',fitCh)}
-function openChat(){if(needMe())return;chOpen=true;chFirst=true;chStick=true;chNew=0;try{const d=localStorage.getItem('hl-chat-draft');if(d&&!chin.value){chin.value=d;setTimeout(chGrow,0)}}catch(x){}const c=$('#ch');c.classList.add('on');c.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';fitCh();renderChat();chBadge();
+let chLockY=0;
+function chLock(on){const b=document.body;if(on){chLockY=window.scrollY;b.style.position='fixed';b.style.top=-chLockY+'px';b.style.left='0';b.style.right='0';b.style.overflow='hidden'}else{b.style.position='';b.style.top='';b.style.left='';b.style.right='';b.style.overflow='';window.scrollTo(0,chLockY)}}
+{let ty=0;const C=$('#ch');C.addEventListener('touchstart',e=>{ty=e.touches[0].clientY},{passive:true});
+ C.addEventListener('touchmove',e=>{if(e.touches.length>1)return;if(e.target.closest('textarea,#chq'))return;const sc=e.target.closest('#chlist,#chemo');if(!sc){e.preventDefault();return}
+  const dy=e.touches[0].clientY-ty;if((dy>0&&sc.scrollTop<=0)||(dy<0&&sc.scrollTop+sc.clientHeight>=sc.scrollHeight-1))e.preventDefault()},{passive:false})}
+function openChat(){if(needMe())return;chOpen=true;chFirst=true;chStick=true;chNew=0;try{const d=localStorage.getItem('hl-chat-draft');if(d&&!chin.value){chin.value=d;setTimeout(chGrow,0)}}catch(x){}const c=$('#ch');c.classList.add('on');c.setAttribute('aria-hidden','false');chLock(true);fitCh();renderChat();chBadge();
  if(db)db.doc('chatmeta/'+me).set({...(chMeta[me]||{}),seen:Date.now()}).catch(()=>{});try{Music.hush(true)}catch(x){}}
-function closeChat(){if(recMR)stopRec(true);if(auEl){auEl.pause();auEl=null;auId=''}chOpen=false;const c=$('#ch');c.classList.remove('on');c.setAttribute('aria-hidden','true');document.body.style.overflow='';$('#chemo').hidden=true;chin.blur();setReply(null);chBadge();try{Music.hush(false);Music.duck(tab==='games')}catch(x){}}
+function closeChat(){if(recMR)stopRec(true);if(auEl){auEl.pause();auEl=null;auId=''}chOpen=false;const c=$('#ch');c.classList.remove('on');c.setAttribute('aria-hidden','true');chLock(false);$('#chemo').hidden=true;chin.blur();setReply(null);chBadge();try{Music.hush(false);Music.duck(tab==='games')}catch(x){}}
 $('#chBtn').onclick=e=>{e.stopPropagation();openChat()};$('#chx').onclick=closeChat;
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&chOpen)chMarkRead()});
 setInterval(()=>{if(chOpen)chStatus()},2000);
