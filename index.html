@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-25.39">
+<meta name="app-ver" content="2026-11-25.40">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -381,9 +381,13 @@ textarea.in{min-height:84px;resize:vertical}
 .cm.cot .cb .tm{float:right}
 .cb.del{font-style:italic;opacity:.65;font-size:14.5px}
 .cb img{display:block;max-width:220px;max-height:300px;border-radius:14px;margin:2px 0 4px}
-.crp{display:block;border-inline-start:3px solid currentColor;padding:3px 8px;margin:0 0 6px;border-radius:8px;background:rgba(0,0,0,.08);font-size:13.5px;opacity:.9;max-height:44px;overflow:hidden}
+.crp{display:block;border-inline-start:3px solid currentColor;padding:3px 8px;margin:0 0 6px;border-radius:8px;background:rgba(0,0,0,.08);font-size:13.5px;opacity:.9;overflow:hidden;max-width:100%}
+.crp b{display:block}.crp .crt{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .crx{position:absolute;bottom:-12px;display:flex;gap:1px;background:var(--card);border:1px solid var(--line);border-radius:99px;padding:1px 6px;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,.12)}
-.cm.cme .crx{inset-inline-start:10px}.cm.cot .crx{inset-inline-end:10px}
+.cm.cme .crx{inset-inline-end:12px}.cm.cot .crx{inset-inline-start:12px}
+.crx{bottom:-15px;z-index:1;color:initial;font-style:normal;line-height:1.4}
+.cb.stk .crx{bottom:30px}
+.cm.hasr .cb.stk{margin-bottom:4px}
 .cm.hasr{margin-bottom:16px}
 .chbar{background:var(--card);border-top:1px solid var(--line);padding:8px 8px max(6px,calc(env(safe-area-inset-bottom) - 12px))}
 .chreply{display:flex;align-items:center;gap:8px;padding:6px 10px;margin-bottom:6px;border-radius:12px;background:var(--soft);font-size:14px}
@@ -831,13 +835,14 @@ function chStatus(){const o=other(me),om=chMeta[o]||{};const typing=om.typing&&D
 function chMsgHtml(m,prevBy,oread){const mine=m.by===me;let inner='';
  if(m.del)inner='<div class="cb del">🚫 انحذفت هالرسالة</div>';
  else{const big=!m.img&&!m.aud&&!m.reply&&isBigEmo(m.text);
-  const rp=m.reply?'<span class="crp" data-goto="'+esc(m.reply.id||'')+'"><b>'+esc(WHO[m.reply.by]||'')+'</b><br>'+esc((m.reply.text||'📷 صورة').slice(0,80))+'</span>':'';
+  const rp=m.reply?'<span class="crp" data-goto="'+esc(m.reply.id||'')+'"><b>'+esc(WHO[m.reply.by]||'')+'</b><span class="crt">'+esc((m.reply.text||'📷 صورة').slice(0,80))+'</span></span>':'';
   const im=m.img?'<img alt="صورة" data-cimg="'+esc(m.id)+'" src="'+m.img+'"'+imgDim(m)+'>':'';
   const au=m.aud?audHtml(m):'';
   const tk=mine?(m._p?'<span class="tk pd">🕓</span>':'<span class="tk'+((oread||0)>=(m.t||0)?' rd':'')+'">✓✓</span>'):'';
   inner=m.stk?'<div class="cb stk" data-chm="'+esc(m.id)+'">'+(m.reply?rp:'')+'<span class="sk">'+stkHtml(m.stk)+'</span>'+'<span class="tm">'+hm(m.t)+' '+tk+'</span></div>':'<div class="cb'+(big?' big':'')+'" data-chm="'+esc(m.id)+'">'+rp+im+au+(m.text?linkify(esc(m.text)):'')+'<span class="tm">'+hm(m.t)+' '+tk+'</span></div>'}
  const rx=m.react&&!m.del?Object.values(m.react).filter(Boolean):[];
- return '<div class="cm '+(mine?'cme':'cot')+(rx.length?' hasr':'')+'"'+(prevBy===m.by?'':' style="margin-top:10px"')+'>'+inner+(rx.length?'<span class="crx">'+rx.join('')+'</span>':'')+'</div>'}
+ if(rx.length)inner=inner.replace(/<\/div>$/,'<span class="crx">'+rx.join('')+'</span></div>');
+ return '<div class="cm '+(mine?'cme':'cot')+(rx.length?' hasr':'')+'"'+(prevBy===m.by?'':' style="margin-top:10px"')+'>'+inner+'</div>'}
 function renderChat(){chBadge();if(!chOpen)return;if(swBusy){swPend=true;return}
  const o=other(me);$('#chnm').textContent=WHO[o]||'';$('#chav').textContent=o==='leen'?'ل':'ح';chStatus();
  const near=chStick,prevH=chl.scrollHeight,prevTop=chl.scrollTop;
@@ -1041,7 +1046,7 @@ function swReset(anim){swEls.forEach(x=>{x.style.transition=anim?'transform .25s
 chl.addEventListener('touchstart',e=>{const b=e.target.closest('[data-chm]');if(!b||e.touches.length>1)return;lpX=e.touches[0].clientX;lpY=e.touches[0].clientY;swB=b;swMode='';swDx=0;
  clearTimeout(lpT);b.style.transition='transform .15s';b.style.transform='scale(.97)';lpT=setTimeout(()=>{if(swMode)return;b.style.transform='';try{navigator.vibrate&&navigator.vibrate(15)}catch(x){}swB=null;chMenu(b.dataset.chm)},420)},{passive:true});
 chl.addEventListener('touchmove',e=>{if(!swB)return;const dx=e.touches[0].clientX-lpX,dy=e.touches[0].clientY-lpY;
- if(!swMode){if(Math.abs(dx)>10&&Math.abs(dx)>Math.abs(dy)*1.3){swMode='h';swBusy=true;clearTimeout(lpT);const row=swB.closest('.cm');swEls=[swB,...row.querySelectorAll('.crx')];swEls.forEach(x=>x.style.transition='');swB.style.transform='';
+ if(!swMode){if(Math.abs(dx)>10&&Math.abs(dx)>Math.abs(dy)*1.3){swMode='h';swBusy=true;clearTimeout(lpT);const row=swB.closest('.cm');swEls=[swB,...row.querySelectorAll(':scope > .crx')];swEls.forEach(x=>x.style.transition='');swB.style.transform='';
    swIc=document.createElement('span');swIc.className='swr';swIc.textContent='↩️';row.appendChild(swIc)}
   else if(Math.abs(dy)>8||Math.abs(dx)>8){clearTimeout(lpT);swB.style.transform='';swB=null;return}else return}
  if(swMode!=='h')return;e.preventDefault();const lim=Math.sign(dx)*Math.min(90,Math.abs(dx)*.7);swDx=dx;swEls.forEach(x=>x.style.transform='translateX('+lim+'px)');
