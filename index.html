@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-25.38">
+<meta name="app-ver" content="2026-11-25.39">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -416,7 +416,8 @@ textarea.in{min-height:84px;resize:vertical}
 .chrec .rdot{width:12px;height:12px;border-radius:50%;background:#ff3b5c;animation:rdot 1s ease-in-out infinite}
 @keyframes rdot{50%{opacity:.25;transform:scale(.8)}}
 .chrec .lv{flex:1;display:flex;align-items:center;gap:2px;height:28px;overflow:hidden;justify-content:flex-end}
-.chrec .lv i{flex:none;width:3px;border-radius:2px;background:var(--rose);opacity:.8}
+.chrec .lv canvas{width:100%;height:28px;display:block;color:var(--rose)}
+.chrec #chrect{min-width:38px}
 .cau{display:flex;align-items:center;gap:8px;min-width:210px;padding:2px 0}
 .cau .pl{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.22);font-size:16px}
 .cm.cot .cau .pl{background:var(--rose);color:var(--on)}
@@ -636,7 +637,7 @@ textarea.in{min-height:84px;resize:vertical}
 <div class="chlist" id="chlist"></div>
 <div class="chbar"><button class="chjump" id="chjump" hidden aria-label="لآخر رسالة">⬇️</button><div class="chreply" id="chrp" hidden><div id="chrpt"></div><button id="chrpx" aria-label="إلغاء الرد">✕</button></div><div class="chquick" id="chq"></div><div class="chemo" id="chemo" hidden></div><div class="chstk" id="chstk" hidden></div><input type="file" id="stkfile" accept="image/*" hidden>
 <div class="chrow"><button class="ib" id="chemob" aria-label="إيموجي">😊</button><button class="ib" id="chstkb" aria-label="ستيكرات"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 21H8a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v6.5z"/><path d="M14.5 21v-3.5a3 3 0 0 1 3-3H21"/><circle cx="9" cy="10" r=".9" fill="currentColor"/><circle cx="15" cy="10" r=".9" fill="currentColor"/><path d="M8.8 13.6c1.6 1.3 4 1.3 5.4 0"/></svg></button><button class="ib" id="chpic" aria-label="صورة"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></svg></button><textarea id="chin" rows="1" placeholder="اكتب رسالة…" maxlength="2000"></textarea><button class="chmic" id="chmic" aria-label="سجّل رسالة صوتية"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></button><button class="chsend hid" id="chsend" aria-label="ابعت"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5L3.6 10.6c-.8.3-.8 1.5.1 1.7l6.3 1.7 1.7 6.3c.2.9 1.4 1 1.7.1L20.5 3.5z" transform="scale(-1,1) translate(-24,0)"/></svg></button></div>
-<div class="chrec" id="chrec" hidden><button class="ib" id="chrecx" aria-label="إلغاء" style="width:44px;height:44px;font-size:20px">🗑️</button><div class="recst"><i class="rdot"></i><span id="chrect">0:00</span><span class="lv" id="chlv"></span></div><button class="chsend" id="chrecs" aria-label="ابعت الصوت"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5L3.6 10.6c-.8.3-.8 1.5.1 1.7l6.3 1.7 1.7 6.3c.2.9 1.4 1 1.7.1L20.5 3.5z" transform="scale(-1,1) translate(-24,0)"/></svg></button></div>
+<div class="chrec" id="chrec" hidden><button class="ib" id="chrecx" aria-label="إلغاء" style="width:44px;height:44px;font-size:20px">🗑️</button><div class="recst"><i class="rdot"></i><span id="chrect">0:00</span><span class="lv" id="chlv"><canvas id="chlvc"></canvas></span></div><button class="chsend" id="chrecs" aria-label="ابعت الصوت"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5L3.6 10.6c-.8.3-.8 1.5.1 1.7l6.3 1.7 1.7 6.3c.2.9 1.4 1 1.7.1L20.5 3.5z" transform="scale(-1,1) translate(-24,0)"/></svg></button></div>
 <input type="file" id="chfile" accept="image/*" multiple hidden></div></div>
 <div class="toast" id="toast"><span id="tmsg"></span><button id="tbtn"></button></div>
 
@@ -987,26 +988,42 @@ const chFull={},chAud={};let recMR=null,recChunks=[],recT0=0,recTick=0,recStream
 const fmtDur=s=>{s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
 function audBars(id){let h=0;for(const c of String(id))h=(h*31+c.charCodeAt(0))>>>0;const o=[];for(let i=0;i<28;i++){h=(h*1103515245+12345)>>>0;o.push(25+((h>>16)%75))}return o}
 function audHtml(m){return '<div class="cau" data-aud="'+esc(m.id)+'"><button class="pl" aria-label="شغّل">▶</button><span class="wv">'+audBars(m.id).map(v=>'<i style="height:'+v+'%"></i>').join('')+'</span><span class="du">'+fmtDur(m.dur||0)+'</span></div>'}
-async function startRec(){if(needMe())return;if(!navigator.mediaDevices||!window.MediaRecorder){toast('التلفون ما بيدعم التسجيل هون');return}
- try{recStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}catch(x){toast('لازم تسمح للتطبيق يستعمل المايك');return}
+let recRaf=0,recLv=0,recBars=[],recLastPush=0,recSec=-1,recUI=false;
+function recShow(on){const rec=$('#chrec'),row=document.querySelector('.chrow'),q=$('#chq');if(on===recUI)return;recUI=on;
+ [rec,row,q].forEach(e=>e.getAnimations().forEach(a=>a.cancel()));
+ if(on){const qh=q.offsetHeight;row.hidden=true;rec.hidden=false;
+  rec.animate([{opacity:0,transform:'translateX(-28px) scale(.97)'},{opacity:1,transform:'none'}],{duration:280,easing:'cubic-bezier(.2,.85,.25,1)'});
+  q.style.overflow='hidden';const a=q.animate([{height:qh+'px',opacity:1},{height:'0px',opacity:0,paddingBottom:'0px'}],{duration:260,easing:'cubic-bezier(.4,0,.2,1)'});a.onfinish=()=>{q.hidden=true;q.style.overflow=''};stickDuring(300)}
+ else{rec.hidden=true;row.hidden=false;q.hidden=false;const qh=q.offsetHeight;
+  row.animate([{opacity:0,transform:'translateX(28px)'},{opacity:1,transform:'none'}],{duration:260,easing:'cubic-bezier(.2,.85,.25,1)'});
+  q.style.overflow='hidden';const a=q.animate([{height:'0px',opacity:0},{height:qh+'px',opacity:1}],{duration:260,easing:'cubic-bezier(.2,.85,.25,1)'});a.onfinish=a.oncancel=()=>{q.style.overflow=''};stickDuring(300)}}
+function recDraw(){recRaf=requestAnimationFrame(recDraw);const cv=$('#chlvc');if(!cv)return;const now=performance.now();
+ let cur=.08;if(recAn){const a=new Uint8Array(recAn.fftSize);recAn.getByteTimeDomainData(a);let sum=0;for(const v of a){const d=(v-128)/128;sum+=d*d}cur=Math.min(1,Math.sqrt(sum/a.length)*4.5)}
+ recLv+=(cur-recLv)*(cur>recLv?.45:.12);
+ const STEP=70;if(now-recLastPush>=STEP){recLastPush=now;recBars.push(recLv);if(recBars.length>80)recBars.shift()}
+ const dpr=Math.min(3,devicePixelRatio||1),w=cv.clientWidth,h=cv.clientHeight;if(!w)return;if(cv.width!==Math.round(w*dpr)){cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr)}
+ const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,w,h);g.fillStyle=getComputedStyle(cv).color;
+ const gap=5,bw=3,frac=Math.min(1,(now-recLastPush)/STEP),n=recBars.length;
+ for(let k=0;k<n;k++){const age=n-1-k,x=6+(age+frac)*gap;if(x>w)continue;const lv=recBars[k],bh=Math.max(3,(.12+lv*.88)*h);
+  g.globalAlpha=Math.max(.25,1-x/w*.75);g.beginPath();g.roundRect?g.roundRect(x,(h-bh)/2,bw,bh,1.5):g.rect(x,(h-bh)/2,bw,bh);g.fill()}
+ const s=Math.floor((Date.now()-recT0)/1000);if(s!==recSec){recSec=s;$('#chrect').textContent=fmtDur(s);if(s>=180)stopRec(false)}}
+async function startRec(){if(needMe()||recMR)return;if(!navigator.mediaDevices||!window.MediaRecorder){toast('التلفون ما بيدعم التسجيل هون');return}
+ chClosePanels();recBars=[];recLv=0;recSec=-1;$('#chrect').textContent='0:00';recT0=Date.now();recShow(true);
+ try{recStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}catch(x){recShow(false);toast('لازم تسمح للتطبيق يستعمل المايك');return}
  const mt=['audio/mp4','audio/aac','audio/webm;codecs=opus','audio/webm'].find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
  try{recMR=new MediaRecorder(recStream,mt?{mimeType:mt,audioBitsPerSecond:40000}:{})}catch(x){recMR=new MediaRecorder(recStream)}
  recChunks=[];recCancel=false;recMR.ondataavailable=e=>{if(e.data&&e.data.size)recChunks.push(e.data)};recMR.onstop=finishRec;recMR.start(250);recT0=Date.now();
- $('#chrec').hidden=false;document.querySelector('.chrow').hidden=true;$('#chq').hidden=true;chClosePanels();$('#chlv').innerHTML='';
- try{unlockAudio();if(actx){const src=actx.createMediaStreamSource(recStream);recAn=actx.createAnalyser();recAn.fftSize=256;src.connect(recAn)}}catch(x){recAn=null}
- clearInterval(recTick);recTick=setInterval(()=>{const s=(Date.now()-recT0)/1000;$('#chrect').textContent=fmtDur(s);
-  let lv=.3;if(recAn){const a=new Uint8Array(recAn.fftSize);recAn.getByteTimeDomainData(a);let m=0;for(const v of a)m=Math.max(m,Math.abs(v-128));lv=Math.min(1,m/60+.1)}
-  const i=document.createElement('i');i.style.height=Math.round(12+lv*88)+'%';const lvl=$('#chlv');lvl.appendChild(i);if(lvl.children.length>40)lvl.firstChild.remove();
-  if(s>=180)stopRec(false)},120);try{navigator.vibrate&&navigator.vibrate(20)}catch(x){}}
+ try{unlockAudio();if(actx){const src=actx.createMediaStreamSource(recStream);recAn=actx.createAnalyser();recAn.fftSize=512;recAn.smoothingTimeConstant=.6;src.connect(recAn)}}catch(x){recAn=null}
+ cancelAnimationFrame(recRaf);recLastPush=0;recDraw();try{navigator.vibrate&&navigator.vibrate(20)}catch(x){}}
 function stopRec(cancel){if(!recMR)return;recCancel=!!cancel;try{recMR.stop()}catch(x){finishRec()}}
-async function finishRec(){clearInterval(recTick);const dur=(Date.now()-recT0)/1000;const mr=recMR;recMR=null;try{recStream&&recStream.getTracks().forEach(t=>t.stop())}catch(x){}recStream=null;recAn=null;
- $('#chrec').hidden=true;document.querySelector('.chrow').hidden=false;$('#chq').hidden=false;
+async function finishRec(){clearInterval(recTick);cancelAnimationFrame(recRaf);const dur=(Date.now()-recT0)/1000;const mr=recMR;recMR=null;try{recStream&&recStream.getTracks().forEach(t=>t.stop())}catch(x){}recStream=null;recAn=null;
+ recShow(false);
  if(recCancel||!recChunks.length)return;if(dur<0.8){toast('الرسالة قصيرة كتير');return}
  const blob=new Blob(recChunks,{type:(mr&&mr.mimeType)||'audio/mp4'});if(blob.size>4000000){toast('الرسالة طويلة كتير');return}
  const data=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(blob)});
  try{const ref=db.collection('chataudio').doc(),CH=900000,n=Math.ceil(data.length/CH);for(let i=0;i<n;i++)await db.doc('chataudio/'+(i?ref.id+'_'+i:ref.id)).set({data:data.slice(i*CH,(i+1)*CH),i,n});chAud[ref.id]=data;chStick=true;await chSend('',null,{aud:ref.id,dur:Math.round(dur),parts:n})}
  catch(x){toast(x&&x.code==='permission-denied'?'لازم نزيد «chataudio» لقواعد Firestore':'ما انبعت الصوت، جرّب كمان مرة')}}
-$('#chmic').onclick=startRec;$('#chrecx').onclick=()=>stopRec(true);$('#chrecs').onclick=()=>stopRec(false);
+$('#chmic').onclick=startRec;$('#chrecx').onclick=()=>{if(recMR)stopRec(true);else recShow(false)};$('#chrecs').onclick=()=>stopRec(false);
 function auUI(id,playing,p){const w=chl.querySelector('[data-aud="'+CSS.escape(id)+'"]');if(!w)return;w.querySelector('.pl').textContent=playing?'⏸':'▶';const bars=w.querySelectorAll('.wv i');const n=Math.round((p||0)*bars.length);bars.forEach((b,i)=>b.classList.toggle('on',i<n));
  if(auEl&&playing)w.querySelector('.du').textContent=fmtDur(auEl.currentTime)}
 chl.addEventListener('click',async e=>{const b=e.target.closest('.cau .pl');if(!b)return;const w=b.closest('[data-aud]'),id=w.dataset.aud,m=chat.find(x=>x.id===id);if(!m||!m.aud)return;
