@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-25.10">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="app-ver" content="2026-11-25.11">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>حسن ولين</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -35,7 +35,7 @@
 *{box-sizing:border-box;min-width:0}
 [hidden]{display:none!important}
 html,body{overflow-x:hidden;overscroll-behavior-x:none;max-width:100%}
-html{touch-action:pan-y}
+html{touch-action:manipulation}
 body{margin:0;background:var(--bg);color:var(--ink);font:500 16.5px/1.6 "Tajawal",system-ui,sans-serif;overflow-x:clip;-webkit-tap-highlight-color:transparent}
 h1,h2,h3{font-family:"Tajawal",system-ui,sans-serif;line-height:1.1;margin:0;text-wrap:balance}
 button,input,textarea,select{font:inherit;color:inherit}
@@ -116,7 +116,13 @@ main{padding:8px max(5vw,18px) calc(110px + env(safe-area-inset-bottom))}
 .grab{width:44px;height:5px;border-radius:9px;background:var(--line);margin:4px auto 14px;box-shadow:0 0 0 14px transparent;touch-action:none}
 .sheet h2{font-size:24px;margin-bottom:14px}
 label.l{display:block;font-size:14px;color:var(--mute);margin:14px 0 6px;font-weight:500}
-.in{width:100%;min-height:48px;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:10px 14px;font-size:16px}
+.in{display:block;width:100%;max-width:100%;min-width:0;height:50px;min-height:50px;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:10px 14px;font-size:16px;-webkit-appearance:none;appearance:none;text-align:start}
+textarea.in{height:auto}
+input.in[type=date],input.in[type=time],input.in[type=number]{-webkit-appearance:none;appearance:none;width:100%;max-width:100%;min-width:0;line-height:28px}
+input.in::-webkit-date-and-time-value{text-align:start;min-height:28px;margin:0}
+input.in::-webkit-datetime-edit{padding:0}
+input.in::-webkit-calendar-picker-indicator{opacity:.6}
+.duo>div{min-width:0}
 textarea.in{min-height:84px;resize:vertical}
 .seg{display:flex;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px}
 .seg button{flex:1;min-height:42px;border-radius:10px}
@@ -625,7 +631,7 @@ function openWorkout(m){
  open('<h2>'+(m.id?'عدّل التمرين':'تمرين جديد')+'</h2><form id="wof">'+
  '<label class="l">شو تمرّنت؟</label><div class="chips" style="flex-wrap:wrap" id="wot">'+WT.map(([k,n])=>'<button type="button" class="chip" data-c="'+k+'" aria-pressed="'+(wt===k)+'">'+n+'</button>').join('')+'</div>'+otherInput('wo-ot',m.workoutOther,wt==='other','شو التمرين؟ مثلاً: تنس، ملاكمة…')+
  '<label class="l">مع مين؟</label><div class="seg" id="wow">'+whoOpts.map(([k,n])=>'<button type="button" data-w="'+k+'" aria-pressed="'+(who===k)+'">'+n+'</button>').join('')+'</div>'+
- '<div class="duo" style="margin-top:2px"><div><label class="l" for="wo-m">المدة (دقيقة)</label><input class="in" id="wo-m" type="number" inputmode="numeric" min="1" max="600" placeholder="45" value="'+esc(m.minutes||'')+'"></div><div><label class="l" for="wo-d">إيمتى؟</label><input class="in" id="wo-d" type="date" value="'+esc(m.date||today())+'"></div></div>'+
+ '<label class="l" for="wo-m">المدة (دقيقة)</label><input class="in" id="wo-m" type="number" inputmode="numeric" min="1" max="600" placeholder="45" value="'+esc(m.minutes||'')+'"><label class="l" for="wo-d">إيمتى؟</label><input class="in" id="wo-d" type="date" value="'+esc(m.date||today())+'">'+
  '<label class="l">قدّيش كان قوي؟</label><div class="seg" id="woe">'+EF.map(([k,n])=>'<button type="button" data-e="'+k+'" aria-pressed="'+(ef===k)+'">'+n+'</button>').join('')+'</div>'+
  '<label class="l" for="wo-n">ملاحظة (مش ضروري)</label><input class="in" id="wo-n" maxlength="200" placeholder="مثلاً: ٥ كم، رجلين، رقم جديد بالبنش…" value="'+esc(m.note||'')+'">'+
  '<div class="acts">'+(m.id?'<button type="button" class="btn del" id="wodel">احذف</button>':'')+'<button class="btn pri" type="submit">'+(m.id?'احفظ':'سجّل التمرين')+'</button></div></form>');
@@ -1204,7 +1210,7 @@ async function checkUpdate(){if(updShown||!/^https?:/.test(location.protocol))re
   if(m&&m[1]!==APP_VER){updShown=true;toast('في نسخة جديدة من التطبيق','حدّث',()=>{location.replace(location.pathname+'?v='+encodeURIComponent(m[1]))});
    setTimeout(()=>{if(updShown)location.replace(location.pathname+'?v='+encodeURIComponent(m[1]))},8000)}}catch(x){}}
 setTimeout(checkUpdate,3000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkUpdate()});
-['gesturestart','gesturechange'].forEach(n=>document.addEventListener(n,e=>e.preventDefault(),{passive:false}));
+
 render();
 
 /* ---------- live sync ---------- */
