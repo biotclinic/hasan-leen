@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-25.29">
+<meta name="app-ver" content="2026-11-25.30">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -351,7 +351,11 @@ textarea.in{min-height:84px;resize:vertical}
 .mbtn svg{width:22px;height:22px}.mbtn .mx{display:none}.mbtn.off .mx{display:inline}.mbtn.off .w1,.mbtn.off .w2{display:none}.mbtn.off{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
 .mbtn:active{transform:scale(.9)}
 
-.mbtn.chb{position:relative}
+.chpill{position:relative;display:inline-flex;align-items:center;gap:7px;height:44px;padding:0 15px 0 13px;border-radius:99px;background:linear-gradient(135deg,var(--rose),color-mix(in srgb,var(--rose) 60%,var(--gold)));color:var(--on);font-weight:800;font-size:15px;box-shadow:0 6px 18px -6px color-mix(in srgb,var(--rose) 80%,transparent),inset 0 0 0 1px rgba(255,255,255,.25);transition:transform .15s}
+.chpill svg{width:22px;height:22px;flex:none}
+.chpill:active{transform:scale(.93)}
+.chpill.new{animation:chping 2.2s ease-in-out infinite}
+@keyframes chping{0%,100%{box-shadow:0 6px 18px -6px color-mix(in srgb,var(--rose) 80%,transparent),0 0 0 0 color-mix(in srgb,var(--rose) 55%,transparent)}50%{box-shadow:0 6px 18px -6px color-mix(in srgb,var(--rose) 80%,transparent),0 0 0 9px transparent}}
 .chbadge{position:absolute;top:-3px;inset-inline-end:-3px;min-width:20px;height:20px;padding:0 5px;border-radius:99px;background:#ff3b6b;color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;box-shadow:0 0 0 2px rgba(0,0,0,.15);animation:kpop .35s ease both}
 @keyframes kpop{from{transform:scale(.3)}to{transform:scale(1)}}
 .ch{position:fixed;left:0;right:0;top:0;height:100%;z-index:72;display:none;flex-direction:column;background:radial-gradient(120% 60% at 50% 0%,color-mix(in srgb,var(--rose) 10%,transparent),transparent 70%),radial-gradient(90% 50% at 100% 100%,color-mix(in srgb,var(--gold) 12%,transparent),transparent 70%),var(--bg);color:var(--ink);transition:background .8s}
@@ -506,7 +510,7 @@ textarea.in{min-height:84px;resize:vertical}
  <div class="sky" id="sky" aria-hidden="true"></div>
  <div class="wrap">
   <div class="top">
-   <div style="display:flex;gap:8px;align-items:center"><button class="me" id="meBtn">مين أنا؟</button><button class="mbtn chb" id="chBtn" aria-label="محادثتنا"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 20.5l1.6-5.2A8.4 8.4 0 1 1 21 11.5z"/><path d="M12 14.6c-.2 0-3.2-1.8-3.2-3.7 0-1 .8-1.7 1.6-1.7.7 0 1.2.4 1.6 1 .4-.6.9-1 1.6-1 .8 0 1.6.7 1.6 1.7 0 1.9-3 3.7-3.2 3.7z" fill="currentColor" stroke="none"/></svg><span class="chbadge" id="chBadge" hidden></span></button><button class="mbtn" id="musBtn" aria-label="الموسيقى"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="w1" d="M15.5 9a4 4 0 0 1 0 6"/><path class="w2" d="M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="mx" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button></div>
+   <div style="display:flex;gap:8px;align-items:center"><button class="me" id="meBtn">مين أنا؟</button><button class="chpill" id="chBtn" aria-label="محادثتنا"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 20.5l1.6-5.2A8.4 8.4 0 1 1 21 11.5z"/><path d="M12 14.6c-.2 0-3.2-1.8-3.2-3.7 0-1 .8-1.7 1.6-1.7.7 0 1.2.4 1.6 1 .4-.6.9-1 1.6-1 .8 0 1.6.7 1.6 1.7 0 1.9-3 3.7-3.2 3.7z" fill="currentColor" stroke="none"/></svg><b>محادثتنا</b><span class="chbadge" id="chBadge" hidden></span></button><button class="mbtn" id="musBtn" aria-label="الموسيقى"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="w1" d="M15.5 9a4 4 0 0 1 0 6"/><path class="w2" d="M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="mx" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button></div>
    <button class="gear" id="setBtn" aria-label="الإعدادات"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
   </div>
   <div class="pic">
@@ -767,7 +771,7 @@ const hm=t=>new Date(t).toLocaleTimeString(L,{hour:'numeric',minute:'2-digit'});
 function dayLbl(t){const d=new Date(t),n=new Date();const a=new Date(d.getFullYear(),d.getMonth(),d.getDate()),b=new Date(n.getFullYear(),n.getMonth(),n.getDate());const k=Math.round((b-a)/864e5);
  return k===0?'اليوم':k===1?'مبارح':k<7?d.toLocaleDateString(L,{weekday:'long'}):d.toLocaleDateString(L,{day:'numeric',month:'long',year:a.getFullYear()===b.getFullYear()?undefined:'numeric'})}
 function chUnread(){if(!me)return 0;const r=(chMeta[me]||{}).read||0,o=other(me);return chat.filter(m=>m.by===o&&!m.del&&(m.t||0)>r).length}
-function chBadge(){const n=chOpen?0:chUnread(),b=$('#chBadge');b.hidden=!n;b.textContent=n>99?'99+':n}
+function chBadge(){const n=chOpen?0:chUnread(),b=$('#chBadge');b.hidden=!n;b.textContent=n>99?'99+':n;$('#chBtn').classList.toggle('new',!!n)}
 function chStatus(){const o=other(me),om=chMeta[o]||{};const typing=om.typing&&Date.now()-om.typing<5000;const el=$('#chst');
  el.className=typing?'ty':'';el.textContent=typing?(o==='leen'?'عم تكتب…':'عم يكتب…'):(om.seen&&Date.now()-om.seen<60000?(o==='leen'?'هلّق جوّا المحادثة 💛':'هلّق جوّا المحادثة 💛'):'')}
 function chMsgHtml(m,prevBy,oread){const mine=m.by===me;let inner='';
