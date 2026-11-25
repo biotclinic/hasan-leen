@@ -2,7 +2,9 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-25.20">
+<meta name="app-ver" content="2026-11-25.24">
+<script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
+<style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>حسن ولين</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -326,6 +328,24 @@ textarea.in{min-height:84px;resize:vertical}
 .mbtn{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center;color:#fff;transition:transform .15s,background .3s}
 .mbtn svg{width:22px;height:22px}.mbtn .mx{display:none}.mbtn.off .mx{display:inline}.mbtn.off .w1,.mbtn.off .w2{display:none}.mbtn.off{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
 .mbtn:active{transform:scale(.9)}
+.splash{position:fixed;inset:0;z-index:85;display:flex;align-items:center;justify-content:center;background:#0b0e24;color:#fff;overflow:hidden;transition:opacity .7s cubic-bezier(.32,.72,0,1),transform .7s cubic-bezier(.32,.72,0,1)}
+.splash.out{opacity:0;transform:scale(1.06);pointer-events:none}.splash.gone{display:none}
+.spsky{position:absolute;inset:0}.spsky svg{position:absolute;inset:0;width:100%;height:100%}
+.splash::after{content:"";position:absolute;inset:0;background:radial-gradient(70% 50% at 50% 55%,rgba(8,8,30,.35),transparent 75%),linear-gradient(to bottom,transparent 55%,rgba(8,8,30,.45));pointer-events:none}
+.spin{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:calc(env(safe-area-inset-top) + 20px) 24px calc(env(safe-area-inset-bottom) + 24px);gap:6px;max-width:460px}
+.splogo{height:min(34vh,230px);width:auto;filter:drop-shadow(0 0 22px rgba(255,220,150,.45)) drop-shadow(0 8px 14px rgba(0,0,0,.35));animation:splogo 1.1s cubic-bezier(.2,.9,.3,1.2) both}
+.spnames{font-family:"Aref Ruqaa",serif;font-weight:700;font-size:clamp(34px,10vw,48px);color:#fff1d6;text-shadow:0 2px 16px rgba(20,10,50,.5);margin-top:6px;animation:rise .7s .35s both}
+.spgreet{font-size:clamp(26px,7.4vw,34px);font-weight:800;line-height:1.3;margin:10px 0 0;color:#fff;text-shadow:0 2px 14px rgba(20,10,50,.55);animation:rise .7s .55s both}
+.spsub{margin:4px 0 0;font-size:17px;font-weight:700;opacity:.92;text-shadow:0 1px 10px rgba(20,10,50,.5);animation:rise .7s .7s both}
+.spdays{margin:2px 0 18px;font-size:15px;font-weight:700;opacity:.8;animation:rise .7s .8s both}
+.spgo{min-height:56px;padding:0 30px;border-radius:99px;font-size:18px;font-weight:800;color:#fff;border:1.5px solid rgba(255,255,255,.5);animation:rise .7s 1s both,spglow 2.6s 1.8s ease-in-out infinite}
+.splash[data-ph=morning] .spgo{background:linear-gradient(135deg,#ff9a8b,#d6457a)}
+.splash[data-ph=day] .spgo{background:linear-gradient(135deg,#7fa2ff,#3a58c0)}
+.splash[data-ph=evening] .spgo{background:linear-gradient(135deg,#ffb36b,#e0505f)}
+.splash[data-ph=night] .spgo{background:linear-gradient(135deg,#f1cf83,#c98a2a);color:#1a1230}
+.spgo:active{transform:scale(.95)}
+@keyframes splogo{0%{opacity:0;transform:scale(.6) translateY(20px)}60%{opacity:1;transform:scale(1.06)}100%{transform:scale(1)}}
+@keyframes spglow{0%,100%{box-shadow:0 8px 24px rgba(0,0,0,.25),0 0 0 0 rgba(255,255,255,.35)}50%{box-shadow:0 8px 24px rgba(0,0,0,.25),0 0 0 12px rgba(255,255,255,0)}}
 .signs{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 .sg{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(241,207,131,.16),rgba(255,255,255,.05));border:1px solid rgba(241,207,131,.28);border-radius:16px;padding:6px 12px 6px 8px;color:#fff;text-align:start;min-height:52px}
 .sg .cst{width:40px;height:40px;flex:none}
@@ -449,6 +469,10 @@ textarea.in{min-height:84px;resize:vertical}
  <div class="vimg" id="vimg"><img id="vi" alt=""><button class="vbtn vnav p" id="vp" aria-label="اللي قبل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></button><button class="vbtn vnav n" id="vn" aria-label="اللي بعد"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 6l-6 6 6 6"/></svg></button></div>
  <div class="vcap"><p id="vc"></p><span id="vm"></span></div>
 </div>
+<div class="splash" id="splash" role="dialog" aria-label="أهلاً"><div class="spsky" id="spsky"></div><div class="spin">
+<img class="splogo" id="splogo" alt=""><div class="spnames">حسن ولين</div>
+<h1 class="spgreet" id="spgreet"></h1><p class="spsub" id="spsub" hidden></p><p class="spdays" id="spdays"></p>
+<button class="spgo" id="spgo"></button></div></div>
 <div class="kissfx" id="kissfx" aria-live="polite"></div>
 <div class="tv" id="tv" aria-hidden="true"><div class="tvtop"><button class="vbtn" id="tvx" aria-label="سكّر"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="tvh"><b>لمسة عن بعد</b><span id="tvp"></span></div><span class="tvn" id="tvn"></span></div>
 <div class="tva" id="tva"><div class="tvhint" id="tvhint">حطّ إصبعك عالشاشة وحرّكو…</div><span class="tg me" id="tgMe"></span><span class="tg ot" id="tgOt"></span><div class="tvfx" id="tvfx"></div></div></div>
@@ -482,7 +506,7 @@ function hideToast(){$('#toast').classList.remove('on')}
 function banner(msg){const b=$('#banner');b.textContent=msg||'';b.classList.toggle('on',!!msg)}
 
 /* ---------- header ---------- */
-function renderHead(){
+function renderHead(){try{window.__fillSplash&&window.__fillSplash()}catch(x){}
  $('#meBtn').textContent=me?(me==='hassan'?'أهلا حسون 🤍':'أهلا لولو 🤍'):'مين أنا؟';renderSigns();
  const d=$('#days');
  if(settings.start){const n=Math.max(0,Math.floor((pd(today())-pd(settings.start))/864e5));d.innerHTML='سوا من <b>'+n.toLocaleString(L)+'</b> يوم'}
@@ -548,7 +572,7 @@ const KISS_SND='data:audio/mpeg;base64,SUQzBAAAAAACDVRYWFgAAAASAAADY29tbWVudABLa
 function unlockAudio(){try{if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();Music.boot();
  if(!kissBuf&&!decoding){decoding=true;const b=atob(KISS_SND.split(',')[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);
   actx.decodeAudioData(u.buffer,buf=>{kissBuf=buf},()=>{decoding=false})}}catch(x){}}
-['pointerdown','touchend'].forEach(n=>document.addEventListener(n,unlockAudio,{passive:true}));
+['pointerdown','touchstart','touchend','click'].forEach(n=>document.addEventListener(n,unlockAudio,{passive:true,capture:true}));
 function kissSound(){try{if(navigator.vibrate)navigator.vibrate(30);
  if(actx&&kissBuf){if(actx.state==='suspended')actx.resume();const src=actx.createBufferSource(),g=actx.createGain();g.gain.value=1;src.buffer=kissBuf;src.connect(g).connect(actx.destination);src.start()}
  else{const a=new Audio(KISS_SND);a.play().catch(()=>{})}}catch(x){}}
@@ -573,7 +597,7 @@ async function sendKiss(){if(needMe())return;if(Date.now()-(window.__lastKiss||0
  unlockAudio();sendFx();
  try{await db.collection('kisses').add({from:me,to:other(me),createdAt:Date.now(),seenAt:0})}catch(x){setTimeout(()=>toast('ما قدرنا نبعت البوسة. تأكد من الإنترنت'),2200)}}
 $('#kissBtn').onclick=sendKiss;
-async function checkKisses(){if(!me||!kissLoaded)return;const pend=kisses.filter(k=>k.to===me&&!k.seenAt);if(!pend.length)return;
+async function checkKisses(){if(!me||!kissLoaded||!window.__spDone)return;const pend=kisses.filter(k=>k.to===me&&!k.seenAt);if(!pend.length)return;
  if(document.hidden)return;showKiss(pend[0].from,pend.length);for(const k of pend){try{await db.collection('kisses').doc(k.id).update({seenAt:Date.now()})}catch(x){}}}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkKisses()});
 
@@ -666,7 +690,7 @@ const Music=(()=>{
    if(first||Math.random()<c.prob){first=false;const idx=(s8+Math.floor(beat/8))%ch.length,m=ch[idx]+c.oct[(s8>>1)%c.oct.length];
     voice(mf(m),nextT,c.bell?2:1.3,c.pl*(s8%2?.75:1),c.wave,c.bell?3800:2600);if(c.bell&&s8%4===0)voice(mf(m)*2,nextT,1,c.pl*.22,'sine',5000)}
    nextT+=st;beat++}}
- function start(){if(!booted)return;if(on)return;on=true;beat=0;nextT=ctx.currentTime+.05;clearInterval(timer);timer=setInterval(tick,150);first=true;tick();fade(level(),.7);setBtn()}
+ function start(){if(!booted)return;if(on)return;on=true;beat=0;nextT=ctx.currentTime+.02;clearInterval(timer);timer=setInterval(tick,150);first=true;tick();fade(level(),.25);setBtn()}
  function stop(){if(!on){setBtn();return}on=false;fade(0,.8);setTimeout(()=>{if(!on)clearInterval(timer)},900);setBtn()}
  function setBtn(){const b=document.getElementById('musBtn');if(b)b.classList.toggle('off',!pref())}
  function toggle(){const n=!pref();try{localStorage.setItem('hl-music',n?'on':'off')}catch(x){}unlockAudio();if(n)start();else stop();setBtn();toast(n?'الموسيقى اشتغلت':'الموسيقى انطفت')}
@@ -685,7 +709,6 @@ const Music=(()=>{
  return {boot,start,stop,toggle,setPhase,duck,sfx:S,get on(){return on}};
 })();
 $('#musBtn').onclick=e=>{e.stopPropagation();Music.toggle()};
-setTimeout(unlockAudio,1000);
 
 /* ---------- today feed ---------- */
 const VB={add:['زاد','زادت'],log:['سجّل','سجّلت'],give:['عطى','عطت'],send:['بعت','بعتت'],write:['كتب','كتبت'],open:['فتح','فتحت'],reply:['ردّ','ردّت'],fav:['حبّ','حبّت']};
@@ -1296,7 +1319,7 @@ function openWho(){
 }
 function resolveMe(){
  const k=db.who||'';
- if(k!==me){me=k;render();setTimeout(notifyOpened,800);setTimeout(checkKisses,1200)}
+ if(k!==me){me=k;try{localStorage.setItem('hl-me-cache',k)}catch(x){}render();setTimeout(notifyOpened,800);setTimeout(checkKisses,1200)}
  if(!me&&!askedWho&&db.who!==undefined){askedWho=true;banner('هالحساب مش معروف بالتطبيق.')}
  if(me&&profilesLoaded&&!profiles[me]){const c=(settings.fit||{})[me];const b=(settings.bday||{})[me];if(c||b){profiles[me]={...(c||{}),bday:b||''};db.doc('profiles/'+me).set(profiles[me]).catch(()=>{})}}
 }
@@ -1381,6 +1404,27 @@ function paintSky(force){const ph=window.__skyForce||phaseOf(new Date().getHours
  requestAnimationFrame(()=>requestAnimationFrame(()=>{l.style.opacity='1'}));
  [...sky.children].slice(0,-1).forEach(x=>setTimeout(()=>x.remove(),1700))}
 window.__sky=p=>{window.__skyForce=p;paintSky(true)};
+/* ---------- welcome screen ---------- */
+const PET={hassan:['حسن'],leen:['لولو','لولية','أم اللول الأمور','لينو','قمر حسن','لولّا']};
+const GREET={morning:{h:'صباح الخير يا NAME ☀️🌸',f:'يومك حلو وناعم متلك 🤍',m:'يومك حلو ومشرق متلك 🤍',go:'يلا نبلّش يومنا ☀️'},
+ day:{h:'نهارك سعيد يا NAME 🌤️💙',f:'اشتقنالك من الصبح 🥰',m:'اشتقنالك من الصبح 🥰',go:'يلا ندخل 💙'},
+ evening:{h:'مسا الورد يا NAME 🌅🧡',f:'المغرب أحلى وإنتِ فيه ✨',m:'المغرب أحلى وإنت فيه ✨',go:'يلا عالسهرة 🧡'},
+ night:{h:'مسا الخير يا NAME 🌙✨',f:'النجوم ما بتلمع قدّ عيونك 💫',m:'النجوم ما بتلمع قدّ عيونك 💫',go:{f:'فوتي لعنّا 🌙',m:'فوت لعنّا 🌙'}}};
+let spDone=false;
+function fillSplash(){const sp=$('#splash');if(!sp||spDone)return;const ph=window.__skyForce||phaseOf(new Date().getHours());
+ let who=me;if(!who){try{who=localStorage.getItem('hl-me-cache')||''}catch(x){}}
+ if(sp.dataset.ph!==ph){sp.dataset.ph=ph;$('#spsky').innerHTML=skySvg(ph)}
+ if(who==='hassan'){spDone=true;window.__spDone=true;sp.classList.add('gone');document.documentElement.classList.add('nosp');setTimeout(()=>{try{checkKisses()}catch(x){}},600);return}
+ const g=GREET[ph],fem=who==='leen';
+ if(sp.dataset.who!==who){sp.dataset.who=who;const list=PET[who]||[''];const nm=list[Math.floor(Math.random()*list.length)];
+  $('#spgreet').textContent=who?g.h.replace('NAME',nm):g.h.replace(' يا NAME','');
+  $('#spsub').textContent='';$('#spgo').textContent=typeof g.go==='string'?g.go:(fem?g.go.f:g.go.m)}
+ if(settings.start){const n=Math.max(0,Math.floor((pd(today())-pd(settings.start))/864e5));$('#spdays').textContent='سوا من '+n.toLocaleString(L)+' يوم 💞'}}
+window.__fillSplash=fillSplash;
+{const lg=document.querySelector('#hero .logo');if(lg)$('#splogo').src=lg.getAttribute('src');}
+fillSplash();
+function enterApp(){if(spDone)return;spDone=true;window.__spDone=true;unlockAudio();setTimeout(()=>{try{checkKisses()}catch(x){}},900);const sp=$('#splash');sp.classList.add('out');setTimeout(()=>{sp.classList.add('gone');animateTab(tab)},720)}
+$('#splash').addEventListener('click',enterApp);
 paintSky();setInterval(()=>paintSky(),60000);
 try{new IntersectionObserver(es=>es.forEach(en=>hero.classList.toggle('still',!en.isIntersecting))).observe(hero)}catch(x){}document.addEventListener('visibilitychange',()=>{if(!document.hidden)paintSky()});
 }
