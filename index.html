@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-25.33">
+<meta name="app-ver" content="2026-11-25.34">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -444,6 +444,29 @@ textarea.in{min-height:84px;resize:vertical}
 .chreply{font-weight:600}
 .chmenu .pv{font-weight:700}
 .chread{font-weight:700}
+
+.chstk{max-height:270px;overflow-y:auto;padding:0 2px 4px}
+.chstk .tabs{display:flex;gap:6px;margin-bottom:8px;position:sticky;top:0;z-index:1;background:var(--card);padding:4px 0}
+.chstk .tabs button{flex:1;height:36px;border-radius:12px;background:var(--soft);color:var(--mute);font-weight:800;font-size:14px}
+.chstk .tabs button[aria-pressed=true]{background:var(--rose);color:var(--on)}
+.stkgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.stkgrid button{aspect-ratio:1;border-radius:16px;display:grid;place-items:center;padding:4px;transition:transform .12s}
+.stkgrid button:active{transform:scale(.9)}
+.stkgrid svg,.stkgrid img{width:100%;height:100%;object-fit:contain}
+.stkgrid .add{border:2px dashed var(--line);color:var(--mute);font-weight:800;font-size:13px;line-height:1.4}
+.stkgrid .add b{display:block;font-size:26px;color:var(--rose)}
+.cb.stk{background:none!important;border:0!important;padding:0;box-shadow:none}
+.cb.stk .sk{display:block;width:150px;height:150px;animation:stkin .45s cubic-bezier(.3,1.6,.5,1) both}
+.cb.stk .sk svg,.cb.stk .sk img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.18))}
+.cb.stk .tm{color:var(--mute);opacity:1;float:none;display:block;text-align:center;margin:0}
+@keyframes stkin{from{transform:scale(.4) rotate(-8deg);opacity:0}to{transform:none;opacity:1}}
+.stked{position:fixed;inset:0;z-index:76;background:rgba(10,8,25,.7);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:grid;place-items:center;padding:20px;animation:kfade .2s ease both}
+.stked .box{width:100%;max-width:360px;background:var(--card);color:var(--ink);border-radius:26px;padding:18px;text-align:center}
+.stked h3{font-size:19px;margin-bottom:10px}
+.stked canvas{width:220px;height:220px;margin:0 auto 10px;display:block;background:repeating-conic-gradient(var(--soft) 0 25%,transparent 0 50%) 50%/20px 20px;border-radius:16px}
+.stked .chips{justify-content:center;margin-bottom:10px}
+.stked .in{margin-bottom:12px}
+.stked .acts{display:flex;gap:8px}.stked .acts .btn{flex:1;white-space:nowrap;font-size:15px;padding:0 8px}
 .chempty{text-align:center;color:var(--mute);font-weight:600;padding:60px 20px;font-size:16px}
 .chempty b{display:block;font-size:44px;margin-bottom:10px}
 
@@ -608,8 +631,8 @@ textarea.in{min-height:84px;resize:vertical}
 <div class="dvbar"><div class="dvcols" id="dvcols"></div><div class="dvtools"><button class="sz" data-sz="0" aria-label="رفيع"><i style="width:6px;height:6px"></i></button><button class="sz" data-sz="1" aria-label="وسط"><i style="width:11px;height:11px"></i></button><button class="sz" data-sz="2" aria-label="عريض"><i style="width:18px;height:18px"></i></button><span class="sep"></span><button id="dvundo" aria-label="رجّع آخر خط">↩️</button><button id="dvclr" aria-label="امسح اللوحة">🗑️</button><button id="dvsave" aria-label="احفظ بألبومنا">📸</button></div></div></div>
 <div class="ch" id="ch" aria-hidden="true"><div class="chtop"><button class="x" id="chx" aria-label="رجوع"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button><div class="chav" id="chav"></div><div class="nm"><b id="chnm"></b><span id="chst"></span></div></div>
 <div class="chlist" id="chlist"></div>
-<div class="chbar"><button class="chjump" id="chjump" hidden aria-label="لآخر رسالة">⬇️</button><div class="chreply" id="chrp" hidden><div id="chrpt"></div><button id="chrpx" aria-label="إلغاء الرد">✕</button></div><div class="chquick" id="chq"></div><div class="chemo" id="chemo" hidden></div>
-<div class="chrow"><button class="ib" id="chemob" aria-label="إيموجي">😊</button><button class="ib" id="chpic" aria-label="صورة"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></svg></button><textarea id="chin" rows="1" placeholder="اكتب رسالة…" maxlength="2000"></textarea><button class="chmic" id="chmic" aria-label="سجّل رسالة صوتية"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></button><button class="chsend hid" id="chsend" aria-label="ابعت"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5L3.6 10.6c-.8.3-.8 1.5.1 1.7l6.3 1.7 1.7 6.3c.2.9 1.4 1 1.7.1L20.5 3.5z" transform="scale(-1,1) translate(-24,0)"/></svg></button></div>
+<div class="chbar"><button class="chjump" id="chjump" hidden aria-label="لآخر رسالة">⬇️</button><div class="chreply" id="chrp" hidden><div id="chrpt"></div><button id="chrpx" aria-label="إلغاء الرد">✕</button></div><div class="chquick" id="chq"></div><div class="chemo" id="chemo" hidden></div><div class="chstk" id="chstk" hidden></div><input type="file" id="stkfile" accept="image/*" hidden>
+<div class="chrow"><button class="ib" id="chemob" aria-label="إيموجي">😊</button><button class="ib" id="chstkb" aria-label="ستيكرات"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 21H8a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v6.5z"/><path d="M14.5 21v-3.5a3 3 0 0 1 3-3H21"/><circle cx="9" cy="10" r=".9" fill="currentColor"/><circle cx="15" cy="10" r=".9" fill="currentColor"/><path d="M8.8 13.6c1.6 1.3 4 1.3 5.4 0"/></svg></button><button class="ib" id="chpic" aria-label="صورة"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></svg></button><textarea id="chin" rows="1" placeholder="اكتب رسالة…" maxlength="2000"></textarea><button class="chmic" id="chmic" aria-label="سجّل رسالة صوتية"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></button><button class="chsend hid" id="chsend" aria-label="ابعت"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5L3.6 10.6c-.8.3-.8 1.5.1 1.7l6.3 1.7 1.7 6.3c.2.9 1.4 1 1.7.1L20.5 3.5z" transform="scale(-1,1) translate(-24,0)"/></svg></button></div>
 <div class="chrec" id="chrec" hidden><button class="ib" id="chrecx" aria-label="إلغاء" style="width:44px;height:44px;font-size:20px">🗑️</button><div class="recst"><i class="rdot"></i><span id="chrect">0:00</span><span class="lv" id="chlv"></span></div><button class="chsend" id="chrecs" aria-label="ابعت الصوت"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5L3.6 10.6c-.8.3-.8 1.5.1 1.7l6.3 1.7 1.7 6.3c.2.9 1.4 1 1.7.1L20.5 3.5z" transform="scale(-1,1) translate(-24,0)"/></svg></button></div>
 <input type="file" id="chfile" accept="image/*" multiple hidden></div></div>
 <div class="toast" id="toast"><span id="tmsg"></span><button id="tbtn"></button></div>
@@ -808,7 +831,7 @@ function chMsgHtml(m,prevBy,oread){const mine=m.by===me;let inner='';
   const im=m.img?'<img alt="صورة" data-cimg="'+esc(m.id)+'" src="'+m.img+'"'+imgDim(m)+'>':'';
   const au=m.aud?audHtml(m):'';
   const tk=mine?(m._p?'<span class="tk pd">🕓</span>':'<span class="tk'+((oread||0)>=(m.t||0)?' rd':'')+'">✓✓</span>'):'';
-  inner='<div class="cb'+(big?' big':'')+'" data-chm="'+esc(m.id)+'">'+rp+im+au+(m.text?linkify(esc(m.text)):'')+'<span class="tm">'+hm(m.t)+' '+tk+'</span></div>'}
+  inner=m.stk?'<div class="cb stk" data-chm="'+esc(m.id)+'">'+(m.reply?rp:'')+'<span class="sk">'+stkHtml(m.stk)+'</span>'+'<span class="tm">'+hm(m.t)+' '+tk+'</span></div>':'<div class="cb'+(big?' big':'')+'" data-chm="'+esc(m.id)+'">'+rp+im+au+(m.text?linkify(esc(m.text)):'')+'<span class="tm">'+hm(m.t)+' '+tk+'</span></div>'}
  const rx=m.react&&!m.del?Object.values(m.react).filter(Boolean):[];
  return '<div class="cm '+(mine?'cme':'cot')+(rx.length?' hasr':'')+'"'+(prevBy===m.by?'':' style="margin-top:10px"')+'>'+inner+(rx.length?'<span class="crx">'+rx.join('')+'</span>':'')+'</div>'}
 function renderChat(){chBadge();if(!chOpen)return;if(swBusy){swPend=true;return}
@@ -835,7 +858,7 @@ function chMarkRead(){if(!chOpen||document.hidden||!me||!db)return;const last=ch
 function onChat(docs){const before=chSeenIds;chat=docs.sort((a,b)=>(a.t||0)-(b.t||0));
  if(before){const fresh=chat.filter(m=>!before.has(m.id)&&m.by&&m.by!==me&&!m.del&&(m.t||0)>chLoadT);
   if(fresh.length){try{Music.sfx.pop()}catch(x){}if(chOpen&&!chStick)chNew+=fresh.length;const m=fresh[fresh.length-1];
-   if(!chOpen)toast('💬 '+(WHO[m.by]||'')+': '+(m.aud?'🎤 رسالة صوتية':m.img?'📷 صورة':(m.text||'').slice(0,40)),'افتح',openChat)}}
+   if(!chOpen)toast('💬 '+(WHO[m.by]||'')+': '+(m.stk?'🌟 ستيكر':m.aud?'🎤 رسالة صوتية':m.img?'📷 صورة':(m.text||'').slice(0,40)),'افتح',openChat)}}
  chSeenIds=new Set(chat.map(m=>m.id));renderChat()}
 function onChatMeta(docs){chMeta={};docs.forEach(d=>chMeta[d.id]=d);if(chOpen){chStatus();renderChat()}else chBadge()}
 function fitCh(){const vv=window.visualViewport,c=$('#ch');if(!vv||!chOpen)return;c.style.height=vv.height+'px';c.style.top=vv.offsetTop+'px'}
@@ -843,20 +866,20 @@ if(window.visualViewport){visualViewport.addEventListener('resize',()=>{fitCh();
 let chLockY=0;
 function chLock(on){const b=document.body;if(on){chLockY=window.scrollY;b.style.position='fixed';b.style.top=-chLockY+'px';b.style.left='0';b.style.right='0';b.style.overflow='hidden'}else{b.style.position='';b.style.top='';b.style.left='';b.style.right='';b.style.overflow='';window.scrollTo(0,chLockY)}}
 {let ty=0;const C=$('#ch');C.addEventListener('touchstart',e=>{ty=e.touches[0].clientY},{passive:true});
- C.addEventListener('touchmove',e=>{if(e.touches.length>1)return;if(e.target.closest('textarea,#chq'))return;const sc=e.target.closest('#chlist,#chemo');if(!sc){e.preventDefault();return}
+ C.addEventListener('touchmove',e=>{if(e.touches.length>1)return;if(e.target.closest('textarea,#chq'))return;const sc=e.target.closest('#chlist,#chemo,#chstk');if(!sc){e.preventDefault();return}
   const dy=e.touches[0].clientY-ty;if((dy>0&&sc.scrollTop<=0)||(dy<0&&sc.scrollTop+sc.clientHeight>=sc.scrollHeight-1))e.preventDefault()},{passive:false})}
 function openChat(){if(needMe())return;chOpen=true;chFirst=true;chStick=true;chNew=0;try{const d=localStorage.getItem('hl-chat-draft');if(d&&!chin.value){chin.value=d;setTimeout(chGrow,0)}}catch(x){}const c=$('#ch');c.classList.add('on');c.setAttribute('aria-hidden','false');chLock(true);fitCh();renderChat();chBadge();
  if(db)db.doc('chatmeta/'+me).set({...(chMeta[me]||{}),seen:Date.now()}).catch(()=>{});try{Music.hush(true)}catch(x){}}
-function closeChat(){if(recMR)stopRec(true);if(auEl){auEl.pause();auEl=null;auId=''}chOpen=false;const c=$('#ch');c.classList.remove('on');c.setAttribute('aria-hidden','true');chLock(false);$('#chemo').hidden=true;chin.blur();setReply(null);chBadge();try{Music.hush(false);Music.duck(tab==='games')}catch(x){}}
+function closeChat(){if(recMR)stopRec(true);if(auEl){auEl.pause();auEl=null;auId=''}chOpen=false;const c=$('#ch');c.classList.remove('on');c.setAttribute('aria-hidden','true');chLock(false);$('#chemo').hidden=true;$('#chstk').hidden=true;chin.blur();setReply(null);chBadge();try{Music.hush(false);Music.duck(tab==='games')}catch(x){}}
 $('#chBtn').onclick=e=>{e.stopPropagation();openChat()};$('#chx').onclick=closeChat;
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&chOpen)chMarkRead()});
 setInterval(()=>{if(chOpen)chStatus()},2000);
-function setReply(m){chReply=m?{id:m.id,by:m.by,text:m.aud?'🎤 رسالة صوتية':m.img&&!m.text?'📷 صورة':(m.text||'').slice(0,120)}:null;$('#chrp').hidden=!chReply;if(chReply)$('#chrpt').innerHTML='<b>ردّ على '+esc(WHO[m.by]||'')+'</b> · '+esc(chReply.text)}
+function setReply(m){chReply=m?{id:m.id,by:m.by,text:m.stk?'🌟 ستيكر':m.aud?'🎤 رسالة صوتية':m.img&&!m.text?'📷 صورة':(m.text||'').slice(0,120)}:null;$('#chrp').hidden=!chReply;if(chReply)$('#chrpt').innerHTML='<b>ردّ على '+esc(WHO[m.by]||'')+'</b> · '+esc(chReply.text)}
 $('#chrpx').onclick=()=>setReply(null);
 function chGrow(){chin.style.height='44px';chin.style.height=Math.min(120,chin.scrollHeight+2)+'px';const has=!!chin.value.trim();$('#chsend').classList.toggle('hid',!has);$('#chmic').classList.toggle('hid',has)}
 chin.addEventListener('input',()=>{chGrow();try{localStorage.setItem('hl-chat-draft',chin.value)}catch(x){}if(db&&me&&Date.now()-chTypT>2500&&chin.value.trim()){chTypT=Date.now();db.doc('chatmeta/'+me).set({...(chMeta[me]||{}),typing:Date.now(),seen:Date.now()}).catch(()=>{})}});
-chin.addEventListener('focus',()=>{$('#chemo').hidden=true;setTimeout(()=>chl.scrollTop=chl.scrollHeight,300)});
-async function chSend(text,img,extra){text=(text||'').trim();if(!text&&!img&&!(extra&&extra.aud))return;if(needMe())return;
+chin.addEventListener('focus',()=>{$('#chemo').hidden=true;$('#chstk').hidden=true;setTimeout(()=>chl.scrollTop=chl.scrollHeight,300)});
+async function chSend(text,img,extra){text=(text||'').trim();if(!text&&!img&&!(extra&&(extra.aud||extra.stk)))return;if(needMe())return;
  const m={by:me,text,t:Date.now(),...(extra||{})};if(chReply)m.reply=chReply;if(img)m.img=img;
  const tmp={...m,id:'tmp'+m.t,_p:1};chat.push(tmp);setReply(null);renderChat();chl.scrollTop=chl.scrollHeight;try{Music.sfx.tick()}catch(x){}
  try{await db.collection('chat').add(m);if(chMeta[me]&&chMeta[me].typing)db.doc('chatmeta/'+me).set({...chMeta[me],typing:0}).catch(()=>{})}
@@ -864,13 +887,64 @@ async function chSend(text,img,extra){text=(text||'').trim();if(!text&&!img&&!(e
 $('#chsend').onclick=()=>{const t=chin.value;chin.value='';chGrow();try{localStorage.removeItem('hl-chat-draft')}catch(x){}chStick=true;chSend(t);chin.focus()};
 chin.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!('ontouchstart' in window)){e.preventDefault();$('#chsend').click()}});
 $('#chq').onclick=e=>{const b=e.target.closest('[data-qe]');if(b)chSend(b.dataset.qe)};
-$('#chemob').onclick=()=>{const p=$('#chemo');p.hidden=!p.hidden;if(!p.hidden){chin.blur();setTimeout(()=>chl.scrollTop=chl.scrollHeight,50)}};
+$('#chemob').onclick=()=>{const p=$('#chemo');p.hidden=!p.hidden;$('#chstk').hidden=true;if(!p.hidden){chin.blur();setTimeout(()=>chl.scrollTop=chl.scrollHeight,50)}};
 $('#chemo').onclick=e=>{const b=e.target.closest('[data-ee]');if(!b)return;const st=chin.selectionStart??chin.value.length;chin.value=chin.value.slice(0,st)+b.dataset.ee+chin.value.slice(chin.selectionEnd??st);chGrow();try{Music.sfx.tick()}catch(x){}};
 $('#chpic').onclick=()=>$('#chfile').click();
 $('#chfile').onchange=async e=>{const fs=[...(e.target.files||[])].slice(0,10);e.target.value='';if(!fs.length)return;let cap=chin.value;chin.value='';chGrow();
  for(let i=0;i<fs.length;i++){toast(fs.length>1?'عم نبعت '+(i+1)+' من '+fs.length+'…':'عم نبعت الصورة…');
   try{const full=await shrink(fs[i],1600,.82,850000,false),th=await shrink(fs[i],520,.7,90000,false);const dim=await new Promise(r=>{const im=new Image();im.onload=()=>r([im.naturalWidth,im.naturalHeight]);im.onerror=()=>r([0,0]);im.src=th});const ref=db.collection('chatimg').doc();await ref.set({data:full});chStick=true;await chSend(i===0?cap:'',th,{imgId:ref.id,iw:dim[0],ih:dim[1]})}
   catch(x){toast(x&&x.code==='permission-denied'?'لازم نزيد «chatimg» لقواعد Firestore':'ما قدرنا نبعت هالصورة')}}};
+
+
+/* stickers */
+const STK=[['❤️','بحبك','#ff7aa2','#ff2d55','heart'],['🥺','اشتقتلك','#b9a3ff','#7c5cf0','blob'],['☀️','صباح الخير','#ffd86b','#ff9a3c','sun'],['🌙','نوم الهنا','#6f7fe6','#2b2f77','cloud'],
+ ['😘','بوسة','#ff9ab9','#ff4f8b','circle'],['🤗','حضن كبير','#ffbf96','#ff7a59','blob'],['👀','وينك؟','#8fdcff','#3b82f6','circle'],['😍','يا عمري','#ff8a9c','#e11d48','heart'],
+ ['💭','عم فكّر فيك','#d2c6ff','#8b5cf6','cloud'],['😤','زعلت منك','#ffb0b0','#ef4444','blob'],['🌹','سامحني','#ffb3bf','#be123c','circle'],['🍕','جوعانين','#ffc58a','#f97316','blob'],
+ ['😂','موّتني ضحك','#ffe45c','#f59e0b','circle'],['🥰','بتجنّن','#ffb3dc','#ec4899','heart'],['⏳','ناطرك','#a7f3e4','#14b8a6','blob'],['🙏','شكراً حبي','#c3f7d3','#22c55e','circle'],
+ ['💍','إلي وبس','#ffe08a','#d4a017','heart'],['✨','قمري','#e3e8ff','#6366f1','cloud'],['🏃','جايي','#b8f0ff','#0ea5e9','sun'],['💪','قدّها','#ffd2a8','#ea580c','circle']];
+const SHP={heart:'M100 180C34 136 10 100 20 62 30 24 78 18 100 52 122 18 170 24 180 62 190 100 166 136 100 180Z',
+ blob:'M100 14c42 0 80 24 86 64 6 46-22 92-70 104-50 12-98-14-104-60C6 74 50 14 100 14z',
+ cloud:'M56 166c-30 0-48-22-48-46 0-24 18-40 38-42 4-32 30-52 58-52 28 0 48 18 54 42 28 2 42 24 42 48 0 28-20 50-50 50z',
+ circle:'M100 12a88 88 0 1 1 0 176a88 88 0 1 1 0-176z',
+ sun:'M100 4l14 30 30-14 0 34 33 4-18 28 26 22-32 12 10 32-34-6-6 34-23-24-23 24-6-34-34 6 10-32-32-12 26-22-18-28 33-4 0-34 30 14z'};
+let stkN=0,stkCustom=[],stkTab='b';
+function stkSvg(i){const d=STK[i];if(!d)return '';const id='sk'+(++stkN),[e,t,c1,c2,sh]=d;const ty=sh==='heart'?118:sh==='cloud'?140:148,ey=sh==='heart'?92:sh==='cloud'?104:98;
+ return '<svg viewBox="0 0 200 200" aria-label="'+esc(t)+'"><defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient></defs>'+
+ '<path d="'+SHP[sh]+'" fill="url(#'+id+')" stroke="#fff" stroke-width="10" stroke-linejoin="round"/>'+
+ '<path d="'+SHP[sh]+'" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="3" transform="translate(100 100) scale(.86) translate(-100 -100)"/>'+
+ '<text x="100" y="'+ey+'" text-anchor="middle" dominant-baseline="middle" font-size="'+(sh==='heart'?54:60)+'">'+e+'</text>'+
+ '<text x="100" y="'+ty+'" text-anchor="middle" dominant-baseline="middle" font-family="Tajawal,sans-serif" font-weight="800" font-size="'+(t.length>8?22:27)+'" fill="#fff" stroke="rgba(40,10,40,.45)" stroke-width="5" paint-order="stroke" direction="rtl">'+esc(t)+'</text></svg>'}
+function stkHtml(k){if(!k)return '';if(k.startsWith('b:'))return stkSvg(+k.slice(2));const c=stkCustom.find(x=>'c:'+x.id===k);return c?'<img alt="ستيكر" src="'+c.data+'">':'<span style="font-size:60px;display:grid;place-items:center;height:100%">🌟</span>'}
+function renderStk(){const el=$('#chstk');if(!el||el.hidden)return;
+ el.innerHTML='<div class="tabs"><button data-st="b" aria-pressed="'+(stkTab==='b')+'">✨ ستيكراتنا</button><button data-st="c" aria-pressed="'+(stkTab==='c')+'">📸 عملناها ('+stkCustom.length+')</button></div><div class="stkgrid">'+
+ (stkTab==='b'?STK.map((_,i)=>'<button data-sk="b:'+i+'">'+stkSvg(i)+'</button>').join(''):'<button class="add" id="stkadd"><b>＋</b>ستيكر من صورة</button>'+stkCustom.map(c=>'<button data-sk="c:'+esc(c.id)+'" data-skc="'+esc(c.id)+'"><img alt="" src="'+c.data+'"></button>').join(''))+'</div>'}
+function onStickers(docs){stkCustom=docs.sort((a,b)=>(b.t||0)-(a.t||0));renderStk();if(chOpen&&chat.some(m=>m.stk&&m.stk.startsWith('c:')))renderChat()}
+$('#chstkb').onclick=()=>{const p=$('#chstk');p.hidden=!p.hidden;$('#chemo').hidden=true;if(!p.hidden){chin.blur();renderStk();p.scrollTop=0;setTimeout(()=>chl.scrollTop=chl.scrollHeight,50)}};
+let skLp=0;
+$('#chstk').addEventListener('click',e=>{const t=e.target.closest('[data-st]');if(t){stkTab=t.dataset.st;renderStk();return}
+ if(e.target.closest('#stkadd')){$('#stkfile').click();return}
+ const b=e.target.closest('[data-sk]');if(!b||b.dataset.lp)return;chStick=true;chSend('',null,{stk:b.dataset.sk});try{navigator.vibrate&&navigator.vibrate(10)}catch(x){}});
+$('#chstk').addEventListener('touchstart',e=>{const b=e.target.closest('[data-skc]');if(!b)return;delete b.dataset.lp;clearTimeout(skLp);skLp=setTimeout(()=>{b.dataset.lp=1;const c=stkCustom.find(x=>x.id===b.dataset.skc);if(!c)return;
+ if(c.by&&c.by!==me){toast('هاد الستيكر عملو '+(WHO[c.by]||'')+'، هوّي بس بيقدر يحذفو');return}toast('بدك تحذف هالستيكر؟','احذف',()=>db.collection('stickers').doc(c.id).delete().catch(()=>{}));setTimeout(()=>delete b.dataset.lp,800)},550)},{passive:true});
+$('#chstk').addEventListener('touchend',()=>clearTimeout(skLp));$('#chstk').addEventListener('touchmove',()=>clearTimeout(skLp),{passive:true});
+$('#stkfile').onchange=async e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;
+ let img;try{const u=await shrink(f,900,.9,2000000,false);img=await new Promise((r,j)=>{const i=new Image();i.onload=()=>r(i);i.onerror=j;i.src=u})}catch(x){toast('ما قدرنا نفتح هالصورة');return}
+ const w=document.createElement('div');w.className='stked';
+ w.innerHTML='<div class="box"><h3>اعمل ستيكر 🌟</h3><canvas width="320" height="320"></canvas><div class="chips" id="skshape"><button type="button" class="chip" data-s="heart" aria-pressed="true">💗 قلب</button><button type="button" class="chip" data-s="circle" aria-pressed="false">⚪ دائرة</button><button type="button" class="chip" data-s="square" aria-pressed="false">⬜ مربّع</button></div>'+
+ '<input class="in" id="sktx" maxlength="18" placeholder="كلمة عالستيكر (مش ضروري)"><div class="acts"><button class="btn" data-a="x">إلغاء</button><button class="btn" data-a="save">احفظ</button><button class="btn pri" data-a="send">احفظ وابعت</button></div></div>';
+ document.body.appendChild(w);const cv=w.querySelector('canvas'),g=cv.getContext('2d');let shape='heart',zoom=1;
+ const draw=()=>{g.clearRect(0,0,320,320);g.save();g.scale(1.6,1.6);const P=shape==='square'?null:new Path2D(SHP[shape]);
+  const clip=()=>{g.beginPath();if(P)return P;g.roundRect?g.roundRect(14,14,172,172,34):g.rect(14,14,172,172);return null};
+  g.save();const p1=clip();p1?g.clip(p1):g.clip();const sc=Math.max(200/img.width,200/img.height)*zoom,iw=img.width*sc,ih=img.height*sc;g.drawImage(img,(200-iw)/2,(200-ih)/2,iw,ih);g.restore();
+  g.lineWidth=11;g.strokeStyle='#fff';g.lineJoin='round';const p2=clip();p2?g.stroke(p2):g.stroke();g.restore();
+  const tx=w.querySelector('#sktx').value.trim();if(tx){g.save();g.font='800 '+(tx.length>10?30:38)+'px Tajawal, sans-serif';g.textAlign='center';g.direction='rtl';g.lineJoin='round';g.lineWidth=9;g.strokeStyle='rgba(40,10,40,.7)';const y=shape==='heart'?232:270;g.strokeText(tx,160,y);g.fillStyle='#fff';g.fillText(tx,160,y);g.restore()}};
+ w.querySelector('#skshape').addEventListener('click',ev=>{const b=ev.target.closest('[data-s]');if(!b)return;w.querySelectorAll('#skshape [data-s]').forEach(x=>x.setAttribute('aria-pressed',x===b));shape=b.dataset.s;draw()});w.querySelector('#sktx').addEventListener('input',draw);
+ try{await document.fonts.load('800 30px Tajawal')}catch(x){}draw();
+ w.onclick=async ev=>{const a=ev.target.closest('[data-a]');if(!a){if(ev.target===w)w.remove();return}if(a.dataset.a==='x'){w.remove();return}
+  const data=cv.toDataURL('image/png');w.remove();
+  try{const ref=db.collection('stickers').doc();await ref.set({data,by:me,t:Date.now()});stkCustom.unshift({id:ref.id,data,by:me,t:Date.now()});stkTab='c';renderStk();
+   if(a.dataset.a==='send'){chStick=true;await chSend('',null,{stk:'c:'+ref.id})}else toast('انحفظ الستيكر 🌟')}
+  catch(x){toast(x&&x.code==='permission-denied'?'لازم نزيد «stickers» لقواعد Firestore':'ما انحفظ الستيكر')}}};
 
 /* voice notes */
 const chFull={},chAud={};let recMR=null,recChunks=[],recT0=0,recTick=0,recStream=null,recAn=null,recCancel=false,auEl=null,auId='';
@@ -882,7 +956,7 @@ async function startRec(){if(needMe())return;if(!navigator.mediaDevices||!window
  const mt=['audio/mp4','audio/aac','audio/webm;codecs=opus','audio/webm'].find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
  try{recMR=new MediaRecorder(recStream,mt?{mimeType:mt,audioBitsPerSecond:40000}:{})}catch(x){recMR=new MediaRecorder(recStream)}
  recChunks=[];recCancel=false;recMR.ondataavailable=e=>{if(e.data&&e.data.size)recChunks.push(e.data)};recMR.onstop=finishRec;recMR.start(250);recT0=Date.now();
- $('#chrec').hidden=false;document.querySelector('.chrow').hidden=true;$('#chq').hidden=true;$('#chemo').hidden=true;$('#chlv').innerHTML='';
+ $('#chrec').hidden=false;document.querySelector('.chrow').hidden=true;$('#chq').hidden=true;$('#chemo').hidden=true;$('#chstk').hidden=true;$('#chlv').innerHTML='';
  try{unlockAudio();if(actx){const src=actx.createMediaStreamSource(recStream);recAn=actx.createAnalyser();recAn.fftSize=256;src.connect(recAn)}}catch(x){recAn=null}
  clearInterval(recTick);recTick=setInterval(()=>{const s=(Date.now()-recT0)/1000;$('#chrect').textContent=fmtDur(s);
   let lv=.3;if(recAn){const a=new Uint8Array(recAn.fftSize);recAn.getByteTimeDomainData(a);let m=0;for(const v of a)m=Math.max(m,Math.abs(v-128));lv=Math.min(1,m/60+.1)}
@@ -932,7 +1006,7 @@ chl.addEventListener('click',async e=>{const i=e.target.closest('[data-cimg]');i
  bs[1].onclick=()=>{try{saveFiles([dataToFile(src,'hassan-leen-chat-'+(m.t||0)+'.jpg')])}catch(x){toast('ما قدرنا ننزّلها')}}});
 function chMenu(id){const m=chat.find(x=>x.id===id);if(!m||m.del||!m.id||m._p)return;const mine=m.by===me;const my=(m.react||{})[me]||'';
  const w=document.createElement('div');w.className='chmenu';
- w.innerHTML='<div class="rx">'+CREACT.map(r=>'<button data-r="'+r+'" class="'+(r===my?'on':'')+'">'+r+'</button>').join('')+'</div><div class="pv">'+(m.aud?'🎤 رسالة صوتية ':'')+(m.img?'📷 صورة ':'')+esc((m.text||'').slice(0,200))+'</div><div class="ac"><button data-a="reply">↩️ ردّ</button>'+(m.text?'<button data-a="copy">📋 انسخ</button>':'')+(mine?'<button data-a="del" class="dl">🗑️ احذف</button>':'')+'</div>';
+ w.innerHTML='<div class="rx">'+CREACT.map(r=>'<button data-r="'+r+'" class="'+(r===my?'on':'')+'">'+r+'</button>').join('')+'</div><div class="pv">'+(m.stk?'🌟 ستيكر ':'')+(m.aud?'🎤 رسالة صوتية ':'')+(m.img?'📷 صورة ':'')+esc((m.text||'').slice(0,200))+'</div><div class="ac"><button data-a="reply">↩️ ردّ</button>'+(m.text?'<button data-a="copy">📋 انسخ</button>':'')+(mine?'<button data-a="del" class="dl">🗑️ احذف</button>':'')+'</div>';
  document.body.appendChild(w);
  w.onclick=async e=>{const r=e.target.closest('[data-r]'),a=e.target.closest('[data-a]');
   if(r){w.remove();const nv=r.dataset.r===my?'':r.dataset.r;m.react={...(m.react||{}),[me]:nv};renderChat();try{Music.sfx.pop()}catch(x){}try{await db.collection('chat').doc(m.id).update({['react.'+me]:nv})}catch(x){try{await db.collection('chat').doc(m.id).update({react:m.react})}catch(y){}}return}
@@ -1817,6 +1891,7 @@ render();
  db.doc('wyr/current').onSnapshot(s=>{wyr=s.exists?{...s.data()}:null;wyrMaybeLog();renderGames()},err);
  db.collection('wyrlog').onSnapshot(s=>{wyrLog=s.docs.map(d=>({...d.data(),id:d.id}));renderGames()},err);
  subChat();
+ db.collection('stickers').onSnapshot(s=>onStickers(s.docs.map(d=>({...d.data(),id:d.id}))),()=>{});
  db.collection('chatmeta').onSnapshot(s=>onChatMeta(s.docs.map(d=>({...d.data(),id:d.id}))),()=>{});
  db.collection('drawlive').onSnapshot(s=>{drawLive={};s.docs.forEach(d=>drawLive[d.id]=d.data());onDrawLive()},()=>{});
  db.collection('touch').onSnapshot(s=>{touchDocs={};s.docs.forEach(d=>touchDocs[d.id]=d.data());onTouchDocs()},err);
