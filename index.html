@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-25.27">
+<meta name="app-ver" content="2026-11-25.28">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -31,13 +31,13 @@
    LAYOUT: phone-first single column, hero band, tab content, floating add button, bottom sheets */
 :root{color-scheme:light dark;
 --bg:light-dark(#f5f3fa,#0b0e24);--card:light-dark(#ffffff,#151a38);--ink:light-dark(#151a3a,#f4efe2);
---mute:light-dark(#696c8c,#a7a5c3);--line:light-dark(#e3e1ef,#272c52);--rose:light-dark(#a8721a,#efc466);--on:light-dark(#fff,#14112c);
+--mute:light-dark(#4c5072,#cdcbe3);--line:light-dark(#e3e1ef,#272c52);--rose:light-dark(#a8721a,#efc466);--on:light-dark(#fff,#14112c);
 --plum:#1a2052;--plum2:#090c24;--soft:light-dark(#f4ecda,#231f45);--gold:#f1cf83}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
-:root[data-phase=morning]{color-scheme:light;--bg:#fff4ef;--card:#ffffff;--ink:#3b1d3a;--mute:#73546a;--line:#f2dcd7;--rose:#b23d5c;--soft:#fde4e1;--on:#ffffff;--gold:#ffb08a}
-:root[data-phase=day]{color-scheme:light;--bg:#f3f6ff;--card:#ffffff;--ink:#1c2850;--mute:#525e88;--line:#dde4f7;--rose:#3a58c0;--soft:#e5ebfd;--on:#ffffff;--gold:#9db8ff}
-:root[data-phase=evening]{color-scheme:dark;--bg:#1d1230;--card:#2a1b43;--ink:#fbe9ef;--mute:#c7a8c6;--line:#432f5e;--rose:#ff8f6b;--soft:#3a2553;--on:#2a1020;--gold:#ffb86b}
-:root[data-phase=night]{color-scheme:dark;--bg:#0b0e24;--card:#151a38;--ink:#f4efe2;--mute:#a7a5c3;--line:#272c52;--rose:#efc466;--soft:#231f45;--on:#14112c;--gold:#f1cf83}
+:root[data-phase=morning]{color-scheme:light;--bg:#fff4ef;--card:#ffffff;--ink:#3b1d3a;--mute:#5a3851;--line:#f2dcd7;--rose:#b23d5c;--soft:#fde4e1;--on:#ffffff;--gold:#ffb08a}
+:root[data-phase=day]{color-scheme:light;--bg:#f3f6ff;--card:#ffffff;--ink:#1c2850;--mute:#3c4875;--line:#dde4f7;--rose:#3a58c0;--soft:#e5ebfd;--on:#ffffff;--gold:#9db8ff}
+:root[data-phase=evening]{color-scheme:dark;--bg:#1d1230;--card:#2a1b43;--ink:#fbe9ef;--mute:#e2cde0;--line:#432f5e;--rose:#ff8f6b;--soft:#3a2553;--on:#2a1020;--gold:#ffb86b}
+:root[data-phase=night]{color-scheme:dark;--bg:#0b0e24;--card:#151a38;--ink:#f4efe2;--mute:#cdcbe3;--line:#272c52;--rose:#efc466;--soft:#231f45;--on:#14112c;--gold:#f1cf83}
 body{transition:background-color 1.2s ease,color 1.2s ease}
 :root[data-phase=morning] .hero .names,:root[data-phase=day] .hero .names{color:#fff6e8}
 :root[data-phase=morning] .hero .days b,:root[data-phase=day] .hero .days b,:root[data-phase=morning] .sg b,:root[data-phase=day] .sg b,:root[data-phase=morning] .ev b,:root[data-phase=day] .ev b{color:#fff6e8}
@@ -418,6 +418,13 @@ textarea.in{min-height:84px;resize:vertical}
 .fab{transition:transform .2s cubic-bezier(.2,.9,.25,1),box-shadow .2s}
 .fab.hide{transform:scale(0)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+
+/* clearer secondary text */
+.meta,.month,.small,.hint,.date span,.grid .wd,.evr .cd,.pp .chg,.paper small,label.l,.empty,.gmeta,.who2,.goal .sub,.wstat,.gcard p,.tvh span,.conv{font-weight:600}
+.meta{font-size:14.5px;line-height:1.55}
+.small,.hint,.paper small{font-size:14px}
+.date span,.grid .wd{font-size:13px}
+.evr .cd{font-size:13px}
 </style>
 </head>
 <body>
