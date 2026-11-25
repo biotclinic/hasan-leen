@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-25.40">
+<meta name="app-ver" content="2026-11-25.41">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -422,12 +422,15 @@ textarea.in{min-height:84px;resize:vertical}
 .chrec .lv{flex:1;display:flex;align-items:center;gap:2px;height:28px;overflow:hidden;justify-content:flex-end}
 .chrec .lv canvas{width:100%;height:28px;display:block;color:var(--rose)}
 .chrec #chrect{min-width:38px}
-.cau{display:flex;align-items:center;gap:8px;min-width:210px;padding:2px 0}
+.cau{display:flex;align-items:center;gap:8px;min-width:240px;padding:2px 0}
 .cau .pl{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.22);font-size:16px}
 .cm.cot .cau .pl{background:var(--rose);color:var(--on)}
 .cau .wv{flex:1;display:flex;align-items:center;gap:2px;height:30px;direction:ltr}
 .cau .wv i{flex:1;border-radius:2px;background:currentColor;opacity:.35;transition:opacity .15s}
 .cau .wv i.on{opacity:1}
+.cau .sp{flex:none;min-width:40px;height:26px;padding:0 7px;border-radius:99px;background:rgba(255,255,255,.2);color:inherit;font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums;transition:background .2s}
+.cm.cot .cau .sp{background:var(--soft)}
+.cau .sp.on{background:var(--gold);color:#2a1f05}
 .cau .du{font-size:12.5px;font-weight:700;opacity:.85;min-width:30px;font-variant-numeric:tabular-nums}
 .swr{position:absolute;top:50%;width:30px;height:30px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-size:15px;opacity:0;pointer-events:none}
 .cm{touch-action:pan-y}
@@ -989,10 +992,12 @@ $('#stkfile').onchange=async e=>{const f=e.target.files&&e.target.files[0];e.tar
   catch(x){toast(x&&x.code==='permission-denied'?'لازم نزيد «stickers» لقواعد Firestore':'ما انحفظ الستيكر')}}};
 
 /* voice notes */
+let auRate=1;try{auRate=+localStorage.getItem('hl-au-rate')||1}catch(x){}const AU_RATES=[1,1.5,2,3];
 const chFull={},chAud={};let recMR=null,recChunks=[],recT0=0,recTick=0,recStream=null,recAn=null,recCancel=false,auEl=null,auId='';
 const fmtDur=s=>{s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
 function audBars(id){let h=0;for(const c of String(id))h=(h*31+c.charCodeAt(0))>>>0;const o=[];for(let i=0;i<28;i++){h=(h*1103515245+12345)>>>0;o.push(25+((h>>16)%75))}return o}
-function audHtml(m){return '<div class="cau" data-aud="'+esc(m.id)+'"><button class="pl" aria-label="شغّل">▶</button><span class="wv">'+audBars(m.id).map(v=>'<i style="height:'+v+'%"></i>').join('')+'</span><span class="du">'+fmtDur(m.dur||0)+'</span></div>'}
+function audHtml(m){return '<div class="cau" data-aud="'+esc(m.id)+'"><button class="pl" aria-label="شغّل">▶</button><span class="wv">'+audBars(m.id).map(v=>'<i style="height:'+v+'%"></i>').join('')+'</span><span class="du">'+fmtDur(m.dur||0)+'</span><button class="sp'+(auRate!==1?' on':'')+'" aria-label="سرعة التشغيل">'+spTxt(auRate)+'</button></div>'}
+function spTxt(r){return '\u2066'+(r===1?'1':r)+'×\u2069'}
 let recRaf=0,recLv=0,recBars=[],recLastPush=0,recSec=-1,recUI=false;
 function recShow(on){const rec=$('#chrec'),row=document.querySelector('.chrow'),q=$('#chq');if(on===recUI)return;recUI=on;
  [rec,row,q].forEach(e=>e.getAnimations().forEach(a=>a.cancel()));
@@ -1028,6 +1033,11 @@ async function finishRec(){clearInterval(recTick);cancelAnimationFrame(recRaf);c
  const data=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(blob)});
  try{const ref=db.collection('chataudio').doc(),CH=900000,n=Math.ceil(data.length/CH);for(let i=0;i<n;i++)await db.doc('chataudio/'+(i?ref.id+'_'+i:ref.id)).set({data:data.slice(i*CH,(i+1)*CH),i,n});chAud[ref.id]=data;chStick=true;await chSend('',null,{aud:ref.id,dur:Math.round(dur),parts:n})}
  catch(x){toast(x&&x.code==='permission-denied'?'لازم نزيد «chataudio» لقواعد Firestore':'ما انبعت الصوت، جرّب كمان مرة')}}
+chl.addEventListener('click',e=>{const b=e.target.closest('.cau .sp');if(!b)return;e.stopPropagation();
+ auRate=AU_RATES[(AU_RATES.indexOf(auRate)+1)%AU_RATES.length];try{localStorage.setItem('hl-au-rate',auRate)}catch(x){}
+ if(auEl){auEl.playbackRate=auRate;auEl.defaultPlaybackRate=auRate}
+ chl.querySelectorAll('.cau .sp').forEach(x=>{x.textContent=spTxt(auRate);x.classList.toggle('on',auRate!==1)});
+ b.animate([{transform:'scale(.8)'},{transform:'scale(1.12)'},{transform:'none'}],{duration:260,easing:'cubic-bezier(.3,1.5,.5,1)'});try{navigator.vibrate&&navigator.vibrate(8)}catch(x){}},true);
 $('#chmic').onclick=startRec;$('#chrecx').onclick=()=>{if(recMR)stopRec(true);else recShow(false)};$('#chrecs').onclick=()=>stopRec(false);
 function auUI(id,playing,p){const w=chl.querySelector('[data-aud="'+CSS.escape(id)+'"]');if(!w)return;w.querySelector('.pl').textContent=playing?'⏸':'▶';const bars=w.querySelectorAll('.wv i');const n=Math.round((p||0)*bars.length);bars.forEach((b,i)=>b.classList.toggle('on',i<n));
  if(auEl&&playing)w.querySelector('.du').textContent=fmtDur(auEl.currentTime)}
@@ -1036,7 +1046,7 @@ chl.addEventListener('click',async e=>{const b=e.target.closest('.cau .pl');if(!
  if(auEl){auEl.pause();const old=auId;const om=chat.find(x=>x.id===old);auUI(old,false,0);if(om){const ow=chl.querySelector('[data-aud="'+CSS.escape(old)+'"] .du');if(ow)ow.textContent=fmtDur(om.dur)}}
  let d=chAud[m.aud];if(!d){b.textContent='…';try{const n=m.parts||1,ps=await Promise.all([...Array(n)].map((_,i)=>db.doc('chataudio/'+(i?m.aud+'_'+i:m.aud)).get()));if(ps.every(x=>x.exists)){d=ps.map(x=>x.data().data).join('');chAud[m.aud]=d}}catch(y){}}
  if(!d){b.textContent='▶';toast('ما قدرنا نجيب الصوت');return}
- auEl=new Audio(d);auId=id;auEl.onplay=()=>auUI(id,true,auEl.currentTime/(auEl.duration||m.dur||1));auEl.onpause=()=>auUI(id,false,auEl.currentTime/(auEl.duration||m.dur||1));
+ auEl=new Audio(d);auId=id;auEl.preservesPitch=true;auEl.webkitPreservesPitch=true;auEl.playbackRate=auRate;auEl.defaultPlaybackRate=auRate;auEl.onplay=()=>auUI(id,true,auEl.currentTime/(auEl.duration||m.dur||1));auEl.onpause=()=>auUI(id,false,auEl.currentTime/(auEl.duration||m.dur||1));
  auEl.ontimeupdate=()=>{const D=isFinite(auEl.duration)?auEl.duration:(m.dur||1);auUI(id,!auEl.paused,auEl.currentTime/D)};
  auEl.onended=()=>{auUI(id,false,0);const du=chl.querySelector('[data-aud="'+CSS.escape(id)+'"] .du');if(du)du.textContent=fmtDur(m.dur);auEl=null;auId=''};
  auEl.play().catch(()=>toast('ما قدرنا نشغّل الصوت'))});
