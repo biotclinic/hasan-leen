@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-25.19">
+<meta name="app-ver" content="2026-11-25.20">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>حسن ولين</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -221,19 +221,24 @@ textarea.in{min-height:84px;resize:vertical}
 .sky{position:absolute;inset:0;z-index:0;pointer-events:none}
 .sky>div{position:absolute;inset:0;transition:opacity 1.6s ease}
 .sky svg .sk-tw,.sky svg .sk-halo,.sky svg .sk-cloud,.sky svg .sk-float,.sky svg .sk-shoot{transform-box:fill-box;transform-origin:center;will-change:transform,opacity}
-.sky svg .sk-tw{animation:sktw 6s ease-in-out infinite}
-.sky svg .sk-halo{animation:skhalo 9s ease-in-out infinite}
-.sky svg .sk-cloud{animation:skcloud 70s ease-in-out infinite alternate}
-.sky svg .sk-cloud.c2{animation-duration:95s;animation-direction:alternate-reverse}
-.sky svg .sk-float{animation:skfloat 8s ease-in-out infinite}
-.sky svg .sk-float.f2{animation-duration:11s;animation-delay:-4s}
-.sky svg .sk-shoot{opacity:0;animation:skshoot 16s linear infinite;animation-delay:6s}
+.sky svg .sk-tw{animation:sktw 4.5s ease-in-out infinite}
+.sky svg .sk-halo{animation:skhalo 6s ease-in-out infinite}
+.sky svg .sk-cloud{animation:skcloud 38s ease-in-out infinite alternate}
+.sky svg .sk-cloud.c2{animation-duration:52s;animation-direction:alternate-reverse}
+.sky svg .sk-float{animation:skfloat 6s ease-in-out infinite}
+.sky svg .sk-float.f2{animation-duration:8s;animation-delay:-3s}
+.sky svg .sk-bird{animation:skbird 26s linear infinite;transform-box:view-box;will-change:transform}
+.sky svg .sk-bird.b2{animation-duration:34s;animation-delay:-14s}
+.sky svg .sk-bird path{animation:skflap .9s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.sky svg .sk-shoot{opacity:0;animation:skshoot 9s linear infinite;animation-delay:3s}
 .hero.still .sky svg *{animation-play-state:paused!important}
-@keyframes sktw{0%,100%{opacity:1}50%{opacity:.25}}
-@keyframes skhalo{0%,100%{opacity:.85;transform:scale(.97)}50%{opacity:1;transform:scale(1.04)}}
-@keyframes skcloud{from{transform:translateX(-28px)}to{transform:translateX(28px)}}
-@keyframes skfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-@keyframes skshoot{0%{opacity:0;transform:translate(0,0)}1%{opacity:1}6%{opacity:0;transform:translate(170px,75px)}100%{opacity:0;transform:translate(170px,75px)}}
+@keyframes sktw{0%,100%{opacity:1}50%{opacity:.12}}
+@keyframes skhalo{0%,100%{opacity:.7;transform:scale(.92)}50%{opacity:1;transform:scale(1.12)}}
+@keyframes skcloud{from{transform:translateX(-75px)}to{transform:translateX(75px)}}
+@keyframes skfloat{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-15px) rotate(6deg)}}
+@keyframes skbird{from{transform:translate(-60px,0)}to{transform:translate(470px,-40px)}}
+@keyframes skflap{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.45)}}
+@keyframes skshoot{0%{opacity:0;transform:translate(0,0)}1%{opacity:1}9%{opacity:0;transform:translate(170px,75px)}100%{opacity:0;transform:translate(170px,75px)}}
 .sky svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 .hero>.wrap{position:relative;z-index:1}
 .hero[data-phase=morning] .names,.hero[data-phase=day] .names,.hero[data-phase=evening] .names{text-shadow:0 2px 14px rgba(20,10,50,.45)}
@@ -1361,11 +1366,12 @@ function skySvg(ph){
  let o='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">'+c.g.map((v,i)=>'<stop offset="'+(i/(c.g.length-1))+'" stop-color="'+v+'"/>').join('')+'</linearGradient>'+
   '<radialGradient id="sun" r="50%"><stop offset="0" stop-color="'+(c.sun?c.sun[3]:'#fff')+'"/><stop offset=".35" stop-color="'+(c.sun?c.sun[4]:'#fff')+'" stop-opacity=".55"/><stop offset="1" stop-color="'+(c.sun?c.sun[4]:'#fff')+'" stop-opacity="0"/></radialGradient></defs>'+
   '<rect width="'+W+'" height="'+H+'" fill="url(#sg)"/>';
- if(c.stars){for(let i=0;i<70;i++){const x=rnd()*W,y=rnd()*H*.85,r=rnd()<.12?1.4:.5+rnd()*.7;const tw=i%6===0;o+='<circle'+(tw?' class="sk-tw" style="animation-delay:'+(-(i%7)*1.3).toFixed(1)+'s;animation-duration:'+(5+(i%5)).toFixed(0)+'s"':'')+' cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+r.toFixed(2)+'" fill="'+(rnd()<.3?'#ffe6aa':'#fff')+'" opacity="'+((.35+rnd()*.6)*c.stars).toFixed(2)+'"/>'}}
+ if(c.stars){for(let i=0;i<70;i++){const x=rnd()*W,y=rnd()*H*.85,r=rnd()<.12?1.4:.5+rnd()*.7;const tw=i%4===0;o+='<circle'+(tw?' class="sk-tw" style="animation-delay:'+(-(i%7)*1.3).toFixed(1)+'s;animation-duration:'+(5+(i%5)).toFixed(0)+'s"':'')+' cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+r.toFixed(2)+'" fill="'+(rnd()<.3?'#ffe6aa':'#fff')+'" opacity="'+((.35+rnd()*.6)*c.stars).toFixed(2)+'"/>'}}
  if(ph==='night'){o+=moonSvg(176,38,42,window.__moonF!=null?window.__moonF:moonPhase(Date.now()))+'<g class="sk-float"><path d="'+heartPath(150,40,7)+'" fill="#f1cf83" opacity=".5"/></g><g class="sk-float f2"><path d="'+heartPath(340,150,5)+'" fill="#f1cf83" opacity=".35"/></g>'+'<defs><linearGradient id="ssg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".9"/></linearGradient></defs><g class="sk-shoot"><line x1="150" y1="12" x2="200" y2="34" stroke="url(#ssg)" stroke-width="1.6" stroke-linecap="round"/></g>'}
  if(c.sun){const[x,y,r]=c.sun;o+='<circle class="sk-halo" cx="'+x+'" cy="'+y+'" r="'+(r*3)+'" fill="url(#sun)"/><circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="'+c.sun[3]+'" opacity=".85"/>'}
  if(c.clouds){o+='<g class="sk-cloud">'+cloud(ph==='day'?90:300,ph==='morning'?120:ph==='evening'?80:150,26,ph==='day'?.55:.22)+'</g><g class="sk-cloud c2">'+cloud(ph==='day'?250:140,ph==='day'?205:200,18,ph==='day'?.4:.16)+'</g><g class="sk-float">'+
   '<path d="'+heartPath(ph==='evening'?320:120,ph==='day'?60:70,9)+'" fill="#fff" opacity="'+(ph==='day'?.5:.3)+'"/><path d="'+heartPath(ph==='evening'?350:155,ph==='day'?42:52,5)+'" fill="#fff" opacity="'+(ph==='day'?.4:.22)+'"/></g>'}
+ if(ph==='morning'||ph==='evening'||ph==='day'){const bc=ph==='day'?'#ffffff':'#2a1a3a',bird=(x,y,sc)=>'<path d="M'+(x-6*sc)+' '+y+'q'+(3*sc)+' '+(-3*sc)+' '+(6*sc)+' 0q'+(3*sc)+' '+(-3*sc)+' '+(6*sc)+' 0" fill="none" stroke="'+bc+'" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>';o+='<g class="sk-bird">'+bird(0,62,1.3)+bird(18,71,1)+bird(30,57,.8)+'</g><g class="sk-bird b2">'+bird(0,92,1)+bird(14,100,.8)+'</g>'}
  if(ph!=='night')o+='<rect width="'+W+'" height="'+H+'" fill="url(#ov)"/><defs><linearGradient id="ov" x1="0" y1="0" x2="0" y2="1"><stop offset=".35" stop-color="#0b0e30" stop-opacity="0"/><stop offset="1" stop-color="#0b0e30" stop-opacity="'+(ph==='day'?.45:.35)+'"/></linearGradient></defs>';
  return o+'</svg>';
 }
