@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-26.49">
+<meta name="app-ver" content="2026-11-26.50">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -638,6 +638,12 @@ body.kbopen .bnav{transform:translateY(120%)}
 .mgrid button{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 4px;border-radius:20px;background:var(--soft);color:var(--ink);font-weight:800;font-size:14px}
 .mgrid button .ti{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:23px;color:#fff}
 .mgrid button[aria-current=page]{box-shadow:inset 0 0 0 2px var(--rose)}
+#chBtn.act{color:var(--rose)}#chBtn.act span{animation:actp 1.4s ease-in-out infinite}
+@keyframes actp{50%{opacity:.45}}
+.tyb.recb{gap:7px;color:var(--rose);font-weight:800;font-size:14px}
+.tyb.recb svg{width:18px;height:18px;flex:none;animation:actp 1.2s ease-in-out infinite}
+.tyb.recb i{width:6px!important;height:6px!important}
+#chst.rec::before{content:'🎤 '}
 body.chat-open .bnav{z-index:73;background:var(--card)}
 @media (display-mode: standalone){html{min-height:min(100lvh,calc(100% + env(safe-area-inset-top)))}}
 html:has(body.chat-open),body.chat-open{overscroll-behavior:none}
@@ -934,9 +940,12 @@ const linkify=t=>t.replace(/(https?:\/\/[^\s<]+[^\s<.,!?؟،)])/g,u=>'<a href="'
 function imgDim(m){if(!(m.iw>0&&m.ih>0))return '';let w=Math.min(220,300*m.iw/m.ih);const h=Math.round(w*m.ih/m.iw);return ' width="'+Math.round(w)+'" height="'+h+'" style="width:'+Math.round(w)+'px;height:'+h+'px;object-fit:cover"'}
 function chUnread(){if(!me)return 0;const r=(chMeta[me]||{}).read||0,o=other(me);return chat.filter(m=>m.by===o&&!m.del&&(m.t||0)>r).length}
 function chBadge(){const n=chOpen?0:chUnread(),b=$('#chBadge');b.hidden=!n;b.textContent=n>99?'99+':n;$('#chBtn').classList.toggle('new',!!n)}
-function chStatus(fromRender){const o=other(me),om=chMeta[o]||{};const typing=!!(om.typing&&Date.now()-om.typing<5000);const el=$('#chst');
- if(typing!==chTypingShown){chTypingShown=typing;if(!fromRender&&chOpen)setTimeout(renderChat,0)}
- el.className=typing?'ty':'';el.textContent=typing?(o==='leen'?'عم تكتب…':'عم يكتب…'):(om.seen&&Date.now()-om.seen<60000?(o==='leen'?'هلّق جوّا المحادثة 💛':'هلّق جوّا المحادثة 💛'):'')}
+function chAct(){const o=other(me),om=chMeta[o]||{},n=Date.now();return om.rec&&n-om.rec<7000?'rec':om.typing&&n-om.typing<5000?'ty':''}
+function chActTxt(a){const f=other(me)==='leen';return a==='rec'?(f?'عم تسجّل رسالة صوتية…':'عم يسجّل رسالة صوتية…'):a==='ty'?(f?'عم تكتب…':'عم يكتب…'):''}
+function navAct(){const b=$('#chBtn');if(!b||!me)return;const a=chOpen?'':chAct(),sp=b.querySelector('span');b.classList.toggle('act',!!a);sp.textContent=a==='rec'?'عم تسجّل…':a==='ty'?(other(me)==='leen'?'عم تكتب…':'عم يكتب…'):'محادثتنا';if(a==='rec'&&other(me)!=='leen')sp.textContent='عم يسجّل…'}
+function chStatus(fromRender){const o=other(me),om=chMeta[o]||{};const act=chAct(),typing=!!act;const el=$('#chst');
+ if(act!==chTypingShown){chTypingShown=act;if(!fromRender&&chOpen)setTimeout(renderChat,0)}
+ el.className=act==='rec'?'ty rec':act?'ty':'';el.textContent=typing?chActTxt(act):(om.seen&&Date.now()-om.seen<60000?(o==='leen'?'هلّق جوّا المحادثة 💛':'هلّق جوّا المحادثة 💛'):'')}
 function chMsgHtml(m,prevBy,oread){const mine=m.by===me;let inner='';
  if(m.del)inner='<div class="cb del">🚫 انحذفت هالرسالة</div>';
  else{const big=!m.img&&!m.aud&&!m.reply&&isBigEmo(m.text);
@@ -948,7 +957,8 @@ function chMsgHtml(m,prevBy,oread){const mine=m.by===me;let inner='';
  const rx=m.react&&!m.del?Object.values(m.react).filter(Boolean):[];
  if(rx.length)inner=inner.replace(/<\/div>$/,'<span class="crx">'+rx.join('')+'</span></div>');
  return '<div class="cm '+(mine?'cme':'cot')+(rx.length?' hasr':'')+'"'+(prevBy===m.by?'':' style="margin-top:10px"')+'>'+inner+'</div>'}
-let chUnreadKey='',chTypingShown=false;
+let chUnreadKey='',chTypingShown='',chRecIv=0;
+function chRecPing(on){clearInterval(chRecIv);chRecIv=0;if(!db||!me)return;const w=()=>{try{db.doc('chatmeta/'+me).set({...(chMeta[me]||{}),rec:on?Date.now():0,typing:0})}catch(x){}};w();if(on)chRecIv=setInterval(w,3000)}
 const kOf=m=>m.cid||m.id;
 function chMk(it){const t=document.createElement('template');t.innerHTML=it.h;const el=t.content.firstElementChild;el.dataset.k=it.k;el.__h=it.h;return el}
 function chPatch(items,anim){
@@ -972,7 +982,7 @@ function renderChat(){chBadge();if(!chOpen)return;if(swBusy){swPend=true;return}
   const k=kOf(m);if(chUnreadKey&&k===chUnreadKey)items.push({k:'unread',h:'<div class="chunread"><span>رسائل جديدة</span></div>'});
   items.push({k:'m:'+k,h:chMsgHtml(m,prevBy,oread),a:1});
   if(lastRead&&m===lastRead)items.push({k:'read',h:'<div class="chread">تمت القراءة ✓✓</div>',a:1});prevBy=m.by});
- if(chTypingShown)items.push({k:'typing',h:'<div class="cm cot tyrow"><div class="cb tyb"><i></i><i></i><i></i></div></div>',a:1});
+ if(chTypingShown)items.push({k:'typing',h:chTypingShown==='rec'?'<div class="cm cot tyrow"><div class="cb tyb recb"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>عم '+(other(me)==='leen'?'تسجّل':'يسجّل')+' رسالة صوتية</span><i></i><i></i><i></i></div></div>':'<div class="cm cot tyrow"><div class="cb tyb"><i></i><i></i><i></i></div></div>',a:1});
  const first=chFirst;chPatch(items,!first);
  if(chKeep){chl.scrollTop=chl.scrollHeight-chKeep;chKeep=0}
  else if(first){chFirst=false;chNew=0;const u=chUnreadKey&&chl.querySelector('[data-k="unread"]');if(u&&u.offsetTop>chl.clientHeight*.5){chl.scrollTop=u.offsetTop-70;chStick=false}else chl.scrollTop=chl.scrollHeight}
@@ -993,7 +1003,7 @@ function onChat(docs){const before=chSeenIds;chat=docs.sort((a,b)=>(a.t||0)-(b.t
   if(fresh.length){try{Music.sfx.pop()}catch(x){}if(chOpen&&!chStick)chNew+=fresh.length;const m=fresh[fresh.length-1];
    if(!chOpen)toast('💬 '+(WHO[m.by]||'')+': '+(m.stk?'🌟 ستيكر':m.aud?'🎤 رسالة صوتية':m.img?'📷 صورة':(m.text||'').slice(0,40)),'افتح',openChat)}}
  chSeenIds=new Set(chat.map(m=>m.id));renderChat()}
-function onChatMeta(docs){chMeta={};docs.forEach(d=>chMeta[d.id]=d);if(chOpen){chStatus();renderChat()}else chBadge()}
+function onChatMeta(docs){chMeta={};docs.forEach(d=>chMeta[d.id]=d);if(chOpen){chStatus();renderChat()}else chBadge();navAct()}
 let fitRaf=0,fitH=0,fitT=-1,maxVH=window.innerHeight;
 addEventListener('resize',()=>{maxVH=Math.max(maxVH,window.innerHeight)});
 function kbOpen(){const vv=window.visualViewport;return !!vv&&document.activeElement===chin&&maxVH-vv.height>120}
@@ -1049,7 +1059,7 @@ function closeChat(){if(!chOpen)return;document.body.classList.remove('chat-open
  {const u=chl.querySelector('[data-k="unread"]');if(u)u.remove()}['chemo','chstk'].forEach(id=>{const e=$('#'+id);e.getAnimations().forEach(a=>a.cancel());e.hidden=true;delete e.dataset.closing;const b=$('#'+PBTN[id]);if(b)b.setAttribute('aria-pressed','false')});chin.blur();setReply(null);chBadge();try{Music.hush(false);Music.duck(tab==='games')}catch(x){}}
 $('#chBtn').onclick=e=>{e.stopPropagation();openChat()};$('#chx').onclick=closeChat;
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&chOpen)chMarkRead()});
-setInterval(()=>{if(chOpen)chStatus()},2000);
+setInterval(()=>{if(chOpen)chStatus();navAct()},1500);
 function setReply(m){chReply=m?{id:m.id,by:m.by,text:m.stk?'🌟 ستيكر':m.aud?'🎤 رسالة صوتية':m.img&&!m.text?'📷 صورة':(m.text||'').slice(0,120)}:null;$('#chrp').hidden=!chReply;if(chReply)$('#chrpt').innerHTML='<b>ردّ على '+esc(WHO[m.by]||'')+'</b> · '+esc(chReply.text)}
 $('#chrpx').onclick=()=>setReply(null);
 function chGrow(){chin.style.height='44px';chin.style.height=Math.min(120,chin.scrollHeight+2)+'px';const has=!!chin.value.trim();$('#chsend').classList.toggle('hid',!has);$('#chmic').classList.toggle('hid',has)}
@@ -1153,11 +1163,11 @@ async function startRec(){if(needMe()||recMR)return;if(!navigator.mediaDevices||
  try{recStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}catch(x){recShow(false);toast('لازم تسمح للتطبيق يستعمل المايك');return}
  const mt=['audio/mp4','audio/aac','audio/webm;codecs=opus','audio/webm'].find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
  try{recMR=new MediaRecorder(recStream,mt?{mimeType:mt,audioBitsPerSecond:40000}:{})}catch(x){recMR=new MediaRecorder(recStream)}
- recChunks=[];recCancel=false;recMR.ondataavailable=e=>{if(e.data&&e.data.size)recChunks.push(e.data)};recMR.onstop=finishRec;recMR.start(250);recT0=Date.now();
+ recChunks=[];recCancel=false;recMR.ondataavailable=e=>{if(e.data&&e.data.size)recChunks.push(e.data)};recMR.onstop=finishRec;recMR.start(250);recT0=Date.now();chRecPing(true);
  try{unlockAudio();if(actx){const src=actx.createMediaStreamSource(recStream);recAn=actx.createAnalyser();recAn.fftSize=512;recAn.smoothingTimeConstant=.6;src.connect(recAn)}}catch(x){recAn=null}
  cancelAnimationFrame(recRaf);recLastPush=0;recDraw();try{navigator.vibrate&&navigator.vibrate(20)}catch(x){}}
 function stopRec(cancel){if(!recMR)return;recCancel=!!cancel;try{recMR.stop()}catch(x){finishRec()}}
-async function finishRec(){clearInterval(recTick);cancelAnimationFrame(recRaf);const dur=(Date.now()-recT0)/1000;const mr=recMR;recMR=null;try{recStream&&recStream.getTracks().forEach(t=>t.stop())}catch(x){}recStream=null;recAn=null;
+async function finishRec(){chRecPing(false);clearInterval(recTick);cancelAnimationFrame(recRaf);const dur=(Date.now()-recT0)/1000;const mr=recMR;recMR=null;try{recStream&&recStream.getTracks().forEach(t=>t.stop())}catch(x){}recStream=null;recAn=null;
  recShow(false);
  if(recCancel||!recChunks.length)return;if(dur<0.8){toast('الرسالة قصيرة كتير');return}
  const blob=new Blob(recChunks,{type:(mr&&mr.mimeType)||'audio/mp4'});if(blob.size>4000000){toast('الرسالة طويلة كتير');return}
@@ -1256,7 +1266,10 @@ function pushBanner(){const b=$('#chpush');if(!b)return;if(pushOffLocal()){b.hid
  b.hidden=!need||Date.now()-dis<3*864e5||(pushOK()&&Notification.permission==='denied'&&Date.now()-dis<30*864e5);
  if(!pushOK())$('#chpusht').textContent='لتوصلك الإشعارات، افتح التطبيق من أيقونته عالشاشة الرئيسية';}
 $('#chpushb').onclick=enablePush;$('#chpushx').onclick=()=>{try{localStorage.setItem('hl-push-later',Date.now())}catch(x){}$('#chpush').hidden=true};
-function notifyOther(title,body,tag){try{const o=other(me),ps=pushSubs[o];if(!ps||!ps.sub||!PUSH_URL.startsWith('https'))return;
+function fgPing(on){if(!db||!me)return;const v={fg:on?Date.now():0},d=db.doc('chatmeta/'+me);try{Promise.resolve(d.update(v)).catch(()=>d.set({...(chMeta[me]||{}),...v}))}catch(x){try{d.set({...(chMeta[me]||{}),...v})}catch(y){}}}
+setInterval(()=>{if(!document.hidden)fgPing(true)},15000);setTimeout(()=>fgPing(!document.hidden),2500);
+document.addEventListener('visibilitychange',()=>fgPing(!document.hidden));addEventListener('pagehide',()=>fgPing(false));
+function notifyOther(title,body,tag){try{const o=other(me),ps=pushSubs[o];if(!ps||!ps.sub||!PUSH_URL.startsWith('https'))return;{const f=(chMeta[o]||{}).fg;if(f&&Date.now()-f<25000)return}
  fetch(PUSH_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sub:ps.sub,title,body,tag:tag||'chat',url:'./?open=chat'}),keepalive:true})
  .then(r=>r.json()).then(j=>{if(j&&j.gone)db.doc('push/'+o).delete().catch(()=>{})}).catch(()=>{})}catch(x){}}
 function onPushDocs(docs){pushSubs={};docs.forEach(d=>pushSubs[d.id]=d);pushRefresh()}
