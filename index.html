@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-26.55">
+<meta name="app-ver" content="2026-11-26.56">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1214,7 +1214,7 @@ function recDraw(){recRaf=requestAnimationFrame(recDraw);const cv=$('#chlvc');if
   g.globalAlpha=Math.max(.25,1-x/w*.75);g.beginPath();g.roundRect?g.roundRect(x,(h-bh)/2,bw,bh,1.5):g.rect(x,(h-bh)/2,bw,bh);g.fill()}
  const s=Math.floor((Date.now()-recT0)/1000);if(s!==recSec){recSec=s;$('#chrect').textContent=fmtDur(s);if(s>=180)stopRec(false)}}
 let recDict=false;
-async function startRec(dict){if(needMe()||recMR)return;recDict=dict===true;$('#chrec').classList.toggle('dict',recDict);if(!navigator.mediaDevices||!window.MediaRecorder){toast('التلفون ما بيدعم التسجيل هون');return}
+async function startRec(dict){if(needMe()||recMR)return;try{if(auEl&&!auEl.paused)auEl.pause()}catch(x){}recDict=dict===true;$('#chrec').classList.toggle('dict',recDict);if(!navigator.mediaDevices||!window.MediaRecorder){toast('التلفون ما بيدعم التسجيل هون');return}
  chClosePanels();recBars=[];recLv=0;recSec=-1;$('#chrect').textContent='0:00';recT0=Date.now();recShow(true);
  try{recStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}catch(x){recShow(false);toast('لازم تسمح للتطبيق يستعمل المايك');return}
  const mt=['audio/mp4','audio/aac','audio/webm;codecs=opus','audio/webm'].find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
