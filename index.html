@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-26.57">
+<meta name="app-ver" content="2026-11-26.58">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -639,6 +639,7 @@ body.kbopen .bnav{transform:translateY(120%)}
 .mgrid button .ti{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:23px;color:#fff}
 .mgrid button[aria-current=page]{box-shadow:inset 0 0 0 2px var(--rose)}
 .tm .ed{font-style:normal;opacity:.8;font-size:.92em}
+.chmenu,.chmenu *,.ch :not(input):not(textarea),.bnav,.bnav *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .aum{display:inline-grid;place-items:center;width:18px;height:18px;margin-inline-start:4px;opacity:.55;flex:none}
 .aum svg{width:15px;height:15px}
 .aum.on{color:#3fa9f5;opacity:1}
@@ -1304,7 +1305,7 @@ chl.addEventListener('click',async e=>{const i=e.target.closest('[data-cimg]');i
 function chMenu(id){const m=chat.find(x=>x.id===id);if(!m||m.del||!m.id||m._p)return;const mine=m.by===me;const my=(m.react||{})[me]||'';
  const w=document.createElement('div');w.className='chmenu';
  w.innerHTML='<div class="rx">'+CREACT.map(r=>'<button data-r="'+r+'" class="'+(r===my?'on':'')+'">'+r+'</button>').join('')+'</div><div class="pv">'+(m.stk?'🌟 ستيكر ':'')+(m.aud?'🎤 رسالة صوتية ':'')+(m.img?'📷 صورة ':'')+esc((m.text||'').slice(0,200))+'</div><div class="ac"><button data-a="reply">↩️ ردّ</button>'+(m.text?'<button data-a="copy">📋 انسخ</button>':'')+(mine&&m.text&&!m.aud&&!m.stk?'<button data-a="edit">✏️ عدّل</button>':'')+(mine?'<button data-a="del" class="dl">🗑️ احذف</button>':'')+'</div>';
- document.body.appendChild(w);
+ document.body.appendChild(w);['contextmenu','selectstart'].forEach(n=>w.addEventListener(n,e=>e.preventDefault()));
  w.onclick=async e=>{const r=e.target.closest('[data-r]'),a=e.target.closest('[data-a]');
   if(r){w.remove();const nv=r.dataset.r===my?'':r.dataset.r;m.react={...(m.react||{}),[me]:nv};renderChat();try{Music.sfx.pop()}catch(x){}try{await db.collection('chat').doc(m.id).update({['react.'+me]:nv})}catch(x){try{await db.collection('chat').doc(m.id).update({react:m.react})}catch(y){}}return}
   if(a){w.remove();if(a.dataset.a==='reply'){setReply(m);chin.focus()}
