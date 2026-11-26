@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-26.52">
+<meta name="app-ver" content="2026-11-26.53">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -638,6 +638,18 @@ body.kbopen .bnav{transform:translateY(120%)}
 .mgrid button{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 4px;border-radius:20px;background:var(--soft);color:var(--ink);font-weight:800;font-size:14px}
 .mgrid button .ti{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:23px;color:#fff}
 .mgrid button[aria-current=page]{box-shadow:inset 0 0 0 2px var(--rose)}
+
+.chinw{flex:1;min-width:0;position:relative;display:flex}
+.chinw textarea{padding-left:46px!important}
+.chdict{position:absolute;left:4px;bottom:4px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:var(--rose);background:color-mix(in srgb,var(--rose) 12%,transparent);transition:transform .15s,background .2s}
+.chdict:active{transform:scale(.86)}
+.chdict svg{width:21px;height:21px}
+.chdict .spin{display:none;position:absolute;inset:3px;border-radius:50%;border:2.5px solid color-mix(in srgb,var(--rose) 25%,transparent);border-top-color:var(--rose);animation:dspin .8s linear infinite}
+.chdict.busy svg{opacity:.35}.chdict.busy .spin{display:block}
+@keyframes dspin{to{transform:rotate(360deg)}}
+.dictl{display:none;font-size:14px;font-weight:800;color:var(--rose);white-space:nowrap}
+.chrec.dict .dictl{display:inline}
+#chrecs .ck{display:none}.chrec.dict #chrecs .ck{display:block}.chrec.dict #chrecs .pl{display:none}
 #chBtn.act{color:var(--rose)}#chBtn.act span{animation:actp 1.4s ease-in-out infinite}
 @keyframes actp{50%{opacity:.45}}
 .tyb.recb{gap:7px;color:var(--rose);font-weight:800;font-size:14px}
@@ -748,8 +760,8 @@ body.chat-open.kbopen main,body.chat-open.kbopen header,body.chat-open.kbopen .f
 <div class="chpush" id="chpush" hidden><span>🔔</span><div id="chpusht">فعّل الإشعارات لتوصلك الرسائل حتى لو التطبيق مسكّر</div><button id="chpushb">فعّل</button><button class="x" id="chpushx" aria-label="لاحقاً">✕</button></div>
 <div class="chlist" id="chlist"></div>
 <div class="chbar"><button class="chjump" id="chjump" hidden aria-label="لآخر رسالة">⬇️</button><div class="chreply" id="chrp" hidden><div id="chrpt"></div><button id="chrpx" aria-label="إلغاء الرد">✕</button></div><div class="chquick" id="chq"></div><div class="chemo" id="chemo" hidden></div><div class="chstk" id="chstk" hidden></div><input type="file" id="stkfile" accept="image/*" hidden>
-<div class="chrow"><button class="ib" id="chemob" aria-label="إيموجي">😊</button><button class="ib" id="chstkb" aria-label="ستيكرات"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 21H8a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v6.5z"/><path d="M14.5 21v-3.5a3 3 0 0 1 3-3H21"/><circle cx="9" cy="10" r=".9" fill="currentColor"/><circle cx="15" cy="10" r=".9" fill="currentColor"/><path d="M8.8 13.6c1.6 1.3 4 1.3 5.4 0"/></svg></button><button class="ib" id="chpic" aria-label="صورة"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></svg></button><textarea id="chin" rows="1" placeholder="اكتب رسالة…" maxlength="2000"></textarea><button class="chmic" id="chmic" aria-label="سجّل رسالة صوتية"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></button><button class="chsend hid" id="chsend" aria-label="ابعت"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5L3.6 10.6c-.8.3-.8 1.5.1 1.7l6.3 1.7 1.7 6.3c.2.9 1.4 1 1.7.1L20.5 3.5z" transform="scale(-1,1) translate(-24,0)"/></svg></button></div>
-<div class="chrec" id="chrec" hidden><button class="ib" id="chrecx" aria-label="إلغاء" style="width:44px;height:44px;font-size:20px">🗑️</button><div class="recst"><i class="rdot"></i><span id="chrect">0:00</span><span class="lv" id="chlv"><canvas id="chlvc"></canvas></span></div><button class="chsend" id="chrecs" aria-label="ابعت الصوت"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5L3.6 10.6c-.8.3-.8 1.5.1 1.7l6.3 1.7 1.7 6.3c.2.9 1.4 1 1.7.1L20.5 3.5z" transform="scale(-1,1) translate(-24,0)"/></svg></button></div>
+<div class="chrow"><button class="ib" id="chemob" aria-label="إيموجي">😊</button><button class="ib" id="chstkb" aria-label="ستيكرات"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 21H8a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v6.5z"/><path d="M14.5 21v-3.5a3 3 0 0 1 3-3H21"/><circle cx="9" cy="10" r=".9" fill="currentColor"/><circle cx="15" cy="10" r=".9" fill="currentColor"/><path d="M8.8 13.6c1.6 1.3 4 1.3 5.4 0"/></svg></button><button class="ib" id="chpic" aria-label="صورة"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></svg></button><div class="chinw"><textarea id="chin" rows="1" placeholder="اكتب رسالة…" maxlength="2000"></textarea><button class="chdict" id="chdict" type="button" aria-label="حوّل كلامك لكتابة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="2.5" width="7" height="12" rx="3.5"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5"/><path d="M19.5 2.5v3M18 4h3" stroke-width="1.6"/></svg><i class="spin"></i></button></div><button class="chmic" id="chmic" aria-label="سجّل رسالة صوتية"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></button><button class="chsend hid" id="chsend" aria-label="ابعت"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5L3.6 10.6c-.8.3-.8 1.5.1 1.7l6.3 1.7 1.7 6.3c.2.9 1.4 1 1.7.1L20.5 3.5z" transform="scale(-1,1) translate(-24,0)"/></svg></button></div>
+<div class="chrec" id="chrec" hidden><button class="ib" id="chrecx" aria-label="إلغاء" style="width:44px;height:44px;font-size:20px">🗑️</button><div class="recst"><i class="rdot"></i><b class="dictl">عم اسمعك…</b><span id="chrect">0:00</span><span class="lv" id="chlv"><canvas id="chlvc"></canvas></span></div><button class="chsend" id="chrecs" aria-label="ابعت الصوت"><svg class="ck" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><svg class="pl" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5L3.6 10.6c-.8.3-.8 1.5.1 1.7l6.3 1.7 1.7 6.3c.2.9 1.4 1 1.7.1L20.5 3.5z" transform="scale(-1,1) translate(-24,0)"/></svg></button></div>
 <input type="file" id="chfile" accept="image/*" multiple hidden></div></div>
 <div class="toast" id="toast"><span id="tmsg"></span><button id="tbtn"></button></div>
 
@@ -1158,18 +1170,36 @@ function recDraw(){recRaf=requestAnimationFrame(recDraw);const cv=$('#chlvc');if
  for(let k=0;k<n;k++){const age=n-1-k,x=6+(age+frac)*gap;if(x>w)continue;const lv=recBars[k],bh=Math.max(3,(.12+lv*.88)*h);
   g.globalAlpha=Math.max(.25,1-x/w*.75);g.beginPath();g.roundRect?g.roundRect(x,(h-bh)/2,bw,bh,1.5):g.rect(x,(h-bh)/2,bw,bh);g.fill()}
  const s=Math.floor((Date.now()-recT0)/1000);if(s!==recSec){recSec=s;$('#chrect').textContent=fmtDur(s);if(s>=180)stopRec(false)}}
-async function startRec(){if(needMe()||recMR)return;if(!navigator.mediaDevices||!window.MediaRecorder){toast('التلفون ما بيدعم التسجيل هون');return}
+let recDict=false;
+async function startRec(dict){if(needMe()||recMR)return;recDict=dict===true;$('#chrec').classList.toggle('dict',recDict);if(!navigator.mediaDevices||!window.MediaRecorder){toast('التلفون ما بيدعم التسجيل هون');return}
  chClosePanels();recBars=[];recLv=0;recSec=-1;$('#chrect').textContent='0:00';recT0=Date.now();recShow(true);
  try{recStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}catch(x){recShow(false);toast('لازم تسمح للتطبيق يستعمل المايك');return}
  const mt=['audio/mp4','audio/aac','audio/webm;codecs=opus','audio/webm'].find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
  try{recMR=new MediaRecorder(recStream,mt?{mimeType:mt,audioBitsPerSecond:40000}:{})}catch(x){recMR=new MediaRecorder(recStream)}
- recChunks=[];recCancel=false;recMR.ondataavailable=e=>{if(e.data&&e.data.size)recChunks.push(e.data)};recMR.onstop=finishRec;recMR.start(250);recT0=Date.now();chRecPing(true);
+ recChunks=[];recCancel=false;recMR.ondataavailable=e=>{if(e.data&&e.data.size)recChunks.push(e.data)};recMR.onstop=finishRec;recMR.start(250);recT0=Date.now();if(!recDict)chRecPing(true);
  try{unlockAudio();if(actx){const src=actx.createMediaStreamSource(recStream);recAn=actx.createAnalyser();recAn.fftSize=512;recAn.smoothingTimeConstant=.6;src.connect(recAn)}}catch(x){recAn=null}
  cancelAnimationFrame(recRaf);recLastPush=0;recDraw();try{navigator.vibrate&&navigator.vibrate(20)}catch(x){}}
+function toWav16k(au){const sr=16000,ch=au.numberOfChannels,len=au.length,src=new Float32Array(len);for(let c=0;c<ch;c++){const d=au.getChannelData(c);for(let i=0;i<len;i++)src[i]+=d[i]/ch}
+ const ratio=au.sampleRate/sr,n=Math.floor(len/ratio),buf=new ArrayBuffer(44+n*2),v=new DataView(buf),w=(o,t)=>{for(let i=0;i<t.length;i++)v.setUint8(o+i,t.charCodeAt(i))};
+ w(0,'RIFF');v.setUint32(4,36+n*2,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,sr,true);v.setUint32(28,sr*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*2,true);
+ let pk=0;for(let i=0;i<len;i++)pk=Math.max(pk,Math.abs(src[i]));const g=pk>0.001?Math.min(8,0.9/pk):1;
+ for(let i=0;i<n;i++){const x=i*ratio,j=Math.floor(x),f=x-j,a=src[j]||0,b=src[j+1]||a;v.setInt16(44+i*2,Math.max(-1,Math.min(1,(a+(b-a)*f)*g))*32767,true)}
+ return new Blob([buf],{type:'audio/wav'})}
+let dictBusy=false;
+async function chDictate(blob){const btn=$('#chdict'),ph=chin.placeholder;dictBusy=true;btn.classList.add('busy');chin.placeholder='عم حوّل كلامك لكتابة…';
+ try{const ab=await blob.arrayBuffer();let c=null;try{unlockAudio()}catch(x){}c=actx||new (window.AudioContext||window.webkitAudioContext)();
+  const au=await new Promise((res,rej)=>{const p=c.decodeAudioData(ab.slice(0),res,rej);if(p&&p.then)p.then(res,rej)});
+  const r=await fetch(PUSH_URL+'/stt',{method:'POST',headers:{'Content-Type':'audio/wav'},body:toWav16k(au)});const j=await r.json().catch(()=>({}));
+  if(!r.ok||j.error)throw new Error(j.error||r.status);
+  const t=String(j.text||'').trim();if(!t){toast('ما سمعت شي واضح، جرّب كمان مرة');return}
+  const cur=chin.value;chin.value=cur+(cur&&!/\s$/.test(cur)?' ':'')+t;chin.dispatchEvent(new Event('input',{bubbles:true}));try{chin.setSelectionRange(chin.value.length,chin.value.length)}catch(x){}
+ }catch(x){toast('ما قدرت حوّل الصوت لكتابة، جرّب كمان مرة')}
+ finally{dictBusy=false;btn.classList.remove('busy');chin.placeholder=ph}}
+$('#chdict').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(dictBusy||recMR)return;chin.blur();startRec(true)});
 function stopRec(cancel){if(!recMR)return;recCancel=!!cancel;try{recMR.stop()}catch(x){finishRec()}}
-async function finishRec(){chRecPing(false);clearInterval(recTick);cancelAnimationFrame(recRaf);const dur=(Date.now()-recT0)/1000;const mr=recMR;recMR=null;try{recStream&&recStream.getTracks().forEach(t=>t.stop())}catch(x){}recStream=null;recAn=null;
+async function finishRec(){const dict=recDict;recDict=false;if(!dict)chRecPing(false);clearInterval(recTick);cancelAnimationFrame(recRaf);const dur=(Date.now()-recT0)/1000;const mr=recMR;recMR=null;try{recStream&&recStream.getTracks().forEach(t=>t.stop())}catch(x){}recStream=null;recAn=null;
  recShow(false);
- if(recCancel||!recChunks.length)return;if(dur<0.8){toast('الرسالة قصيرة كتير');return}
+ if(recCancel||!recChunks.length)return;if(dict){if(dur<0.6)return;return chDictate(new Blob(recChunks,{type:(mr&&mr.mimeType)||'audio/mp4'}))}if(dur<0.8){toast('الرسالة قصيرة كتير');return}
  const blob=new Blob(recChunks,{type:(mr&&mr.mimeType)||'audio/mp4'});if(blob.size>4000000){toast('الرسالة طويلة كتير');return}
  const data=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(blob)});
  try{const ref=db.collection('chataudio').doc(),CH=900000,n=Math.ceil(data.length/CH);for(let i=0;i<n;i++)await db.doc('chataudio/'+(i?ref.id+'_'+i:ref.id)).set({data:data.slice(i*CH,(i+1)*CH),i,n});chAud[ref.id]=data;chStick=true;await chSend('',null,{aud:ref.id,dur:Math.round(dur),parts:n})}
@@ -1188,9 +1218,10 @@ async function playAud(id,frac,toggle){const w=chl.querySelector('[data-aud="'+C
  if(auEl){auEl.pause();const old=auId;const om=chat.find(x=>x.id===old);auUI(old,false,0);if(om){const ow=chl.querySelector('[data-aud="'+CSS.escape(old)+'"] .du');if(ow)ow.textContent=fmtDur(om.dur)}}
  let d=chAud[m.aud];if(!d){b.innerHTML=IC_LOAD;try{const n=m.parts||1,ps=await Promise.all([...Array(n)].map((_,i)=>db.doc('chataudio/'+(i?m.aud+'_'+i:m.aud)).get()));if(ps.every(x=>x.exists)){d=ps.map(x=>x.data().data).join('');chAud[m.aud]=d}}catch(y){}}
  if(!d){b.innerHTML=IC_PLAY;toast('ما قدرنا نجيب الصوت');return}
- auEl=new Audio(d);auId=id;auEl.preservesPitch=true;auEl.webkitPreservesPitch=true;auEl.playbackRate=auRate;auEl.defaultPlaybackRate=auRate;auEl.onplay=()=>auUI(id,true,auEl.currentTime/(auEl.duration||m.dur||1));auEl.onpause=()=>auUI(id,false,auEl.currentTime/(auEl.duration||m.dur||1));
+ auEl=playAud._reuse||new Audio();playAud._reuse=null;auEl.src=d;auId=id;auEl.preservesPitch=true;auEl.webkitPreservesPitch=true;auEl.playbackRate=auRate;auEl.defaultPlaybackRate=auRate;auEl.onplay=()=>auUI(id,true,auEl.currentTime/(auEl.duration||m.dur||1));auEl.onpause=()=>auUI(id,false,auEl.currentTime/(auEl.duration||m.dur||1));
  auEl.ontimeupdate=()=>{const D=isFinite(auEl.duration)?auEl.duration:(m.dur||1);auUI(id,!auEl.paused,auEl.currentTime/D)};
- auEl.onended=()=>{auUI(id,false,0);const du=chl.querySelector('[data-aud="'+CSS.escape(id)+'"] .du');if(du)du.textContent=fmtDur(m.dur);auEl=null;auId=''};
+ auEl.onended=()=>{auUI(id,false,0);const du=chl.querySelector('[data-aud="'+CSS.escape(id)+'"] .du');if(du)du.textContent=fmtDur(m.dur);const el=auEl;auEl=null;auId='';
+  const i=chat.findIndex(x=>x.id===id),nx=i>=0?chat[i+1]:null;if(nx&&nx.aud&&!nx.del&&chOpen){playAud._reuse=el;const nw=chl.querySelector('[data-aud="'+CSS.escape(nx.id)+'"]');if(nw)nw.scrollIntoView({block:'nearest',behavior:'smooth'});playAud(nx.id)}};
  if(frac!=null){const go=()=>{const D=isFinite(auEl.duration)&&auEl.duration>0?auEl.duration:(m.dur||1);auEl.currentTime=Math.min(D-.05,frac*D)};if(auEl.readyState>=1)go();else auEl.addEventListener('loadedmetadata',go,{once:true})}
  auEl.play().catch(()=>toast('ما قدرنا نشغّل الصوت'))}
 /* seek on waveform */
