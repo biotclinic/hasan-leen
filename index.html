@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-26.54">
+<meta name="app-ver" content="2026-11-26.55">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1008,7 +1008,7 @@ function renderChat(){chBadge();if(!chOpen)return;if(swBusy){swPend=true;return}
  chat.forEach(m=>{const d=dayLbl(m.t||0);if(d!==lastDay){items.push({k:'day:'+d,h:'<div class="chday"><span>'+d+'</span></div>'});lastDay=d;prevBy=''}
   const k=kOf(m);if(chUnreadKey&&k===chUnreadKey)items.push({k:'unread',h:'<div class="chunread"><span>رسائل جديدة</span></div>'});
   items.push({k:'m:'+k,h:chMsgHtml(m,prevBy,oread),a:1});
-  if(lastRead&&m===lastRead)items.push({k:'read',h:'<div class="chread">تمت القراءة ✓✓</div>',a:1});prevBy=m.by});
+  if(lastRead&&m===lastRead)items.push({k:'read',h:'<div class="chread">'+(m.aud?(m.played?'تمت القراءة والاستماع ✓✓':'تمت القراءة ✓✓ · لسّا ما انسمعت'):'تمت القراءة ✓✓')+'</div>',a:1});prevBy=m.by});
  if(chTypingShown)items.push({k:'typing',h:chTypingShown==='rec'?'<div class="cm cot tyrow"><div class="cb tyb recb"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>عم '+(other(me)==='leen'?'تسجّل':'يسجّل')+' رسالة صوتية</span><i></i><i></i><i></i></div></div>':'<div class="cm cot tyrow"><div class="cb tyb"><i></i><i></i><i></i></div></div>',a:1});
  const first=chFirst;chPatch(items,!first);
  if(chKeep){chl.scrollTop=chl.scrollHeight-chKeep;chKeep=0}
