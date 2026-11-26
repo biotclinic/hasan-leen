@@ -1,4 +1,4 @@
-// Hassan & Leen service worker: push notifications only (no caching)
+// Hassan & Leen service worker: push notifications only (no caching) v2
 self.addEventListener('install',()=>self.skipWaiting());
 self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));
 self.addEventListener('push',e=>{
@@ -15,7 +15,8 @@ self.addEventListener('notificationclick',e=>{
   const url=new URL((e.notification.data&&e.notification.data.url)||'./',self.registration.scope).href;
   e.waitUntil((async()=>{
     const all=await self.clients.matchAll({type:'window',includeUncontrolled:true});
-    for(const c of all){if(c.url.startsWith(self.registration.scope)){try{await c.focus()}catch(x){}c.postMessage({open:'chat'});return}}
+    const tg=new URL(url).searchParams.get('open')||'chat';
+    for(const c of all){if(c.url.startsWith(self.registration.scope)){try{await c.focus()}catch(x){}c.postMessage({open:tg});return}}
     await self.clients.openWindow(url);
   })());
 });

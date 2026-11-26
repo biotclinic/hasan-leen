@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-26.60">
+<meta name="app-ver" content="2026-11-26.61">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -639,6 +639,8 @@ body.kbopen .bnav{transform:translateY(120%)}
 .mgrid button .ti{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:23px;color:#fff}
 .mgrid button[aria-current=page]{box-shadow:inset 0 0 0 2px var(--rose)}
 .tm .ed{font-style:normal;opacity:.8;font-size:.92em}
+.fi.go{cursor:pointer;transition:transform .15s,background .2s}.fi.go:active{transform:scale(.98);background:var(--soft)}
+.gflash{animation:gflash 1.6s ease}@keyframes gflash{0%,100%{box-shadow:0 0 0 0 transparent}20%,60%{box-shadow:0 0 0 3px var(--rose),0 0 22px color-mix(in srgb,var(--rose) 45%,transparent)}}
 body.chat-open #sky,body.chat-open #sky *,#sky.off,#sky.off *{animation-play-state:paused!important}
 .chmenu,.ch,.bnav{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.ch input,.ch textarea{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
 .aum{display:inline-grid;place-items:center;width:18px;height:18px;margin-inline-start:4px;opacity:.55;flex:none}
@@ -916,7 +918,7 @@ function sendFx(){const fx=$('#kissfx'),b=$('#kissBtn').getBoundingClientRect();
  fx.classList.add('on','send');setTimeout(kissSound,780);kissT=setTimeout(hideKiss,2150)}
 async function sendKiss(){if(needMe())return;if(Date.now()-(window.__lastKiss||0)<2200)return;window.__lastKiss=Date.now();
  unlockAudio();sendFx();
- try{await db.collection('kisses').add({from:me,to:other(me),createdAt:Date.now(),seenAt:0});notifyOther('💋 '+(WHO[me]||''),me==='leen'?'بعتتلك بوسة قويّة 😘':'بعتلك بوسة قويّة 😘','kiss')}catch(x){setTimeout(()=>toast('ما قدرنا نبعت البوسة. تأكد من الإنترنت'),2200)}}
+ try{await db.collection('kisses').add({from:me,to:other(me),createdAt:Date.now(),seenAt:0});notifyOther('💋 '+(WHO[me]||''),me==='leen'?'بعتتلك بوسة قويّة 😘':'بعتلك بوسة قويّة 😘','kiss','kiss')}catch(x){setTimeout(()=>toast('ما قدرنا نبعت البوسة. تأكد من الإنترنت'),2200)}}
 $('#kissBtn').onclick=sendKiss;
 async function checkKisses(){if(!me||!kissLoaded||!window.__spDone)return;const pend=kisses.filter(k=>k.to===me&&!k.seenAt);if(!pend.length)return;
  if(document.hidden)return;showKiss(pend[0].from,pend.length);for(const k of pend){try{await db.collection('kisses').doc(k.id).update({seenAt:Date.now()})}catch(x){}}}
@@ -1331,7 +1333,7 @@ let pushSubs={},swReg=null;
 const pushOK=()=>'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window;
 const isStandalone=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').then(r=>{swReg=r;pushRefresh()}).catch(()=>{});
- navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.open==='chat')setTimeout(()=>{try{openChat()}catch(x){}},300)})}
+ navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.open)setTimeout(()=>goTarget(e.data.open),300)})}
 function u8(b64){b64=b64.replace(/-/g,'+').replace(/_/g,'/');while(b64.length%4)b64+='=';const r=atob(b64),a=new Uint8Array(r.length);for(let i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return a}
 async function pushSave(sub){if(!db||!me||!sub)return;const j=sub.toJSON();const cur=pushSubs[me];if(cur&&cur.endpoint===j.endpoint&&Date.now()-(cur.t||0)<7*864e5)return;
  try{await db.doc('push/'+me).set({sub:j,endpoint:j.endpoint,t:Date.now(),ua:navigator.userAgent.slice(0,120)})}catch(x){}}
@@ -1360,12 +1362,12 @@ $('#chpushb').onclick=enablePush;$('#chpushx').onclick=()=>{try{localStorage.set
 function fgPing(on){if(!db||!me)return;const v={fg:on?Date.now():0,ver:document.querySelector('meta[name=app-ver]').content},d=db.doc('chatmeta/'+me);try{Promise.resolve(d.update(v)).catch(()=>d.set({...(chMeta[me]||{}),...v}))}catch(x){try{d.set({...(chMeta[me]||{}),...v})}catch(y){}}}
 setInterval(()=>{if(!document.hidden)fgPing(true)},15000);setTimeout(()=>fgPing(!document.hidden),2500);
 document.addEventListener('visibilitychange',()=>fgPing(!document.hidden));addEventListener('pagehide',()=>fgPing(false));
-const gNot={};function notifyGame(g,name){const n=Date.now();if(gNot[g]&&n-gNot[g]<600000)return;gNot[g]=n;const f=me==='leen';notifyOther('🎮 '+(WHO[me]||''),(f?'فاتت':'فات')+' على لعبة «'+name+'»، '+(f?'تعال العب معها':'تعالي العبي معو'),'game-'+g)}
-function notifyOther(title,body,tag){try{const o=other(me),ps=pushSubs[o];if(!ps||!ps.sub||!PUSH_URL.startsWith('https'))return;{const om=chMeta[o]||{},n=Date.now();if((om.fg&&n-om.fg<25000)||(om.seen&&n-om.seen<20000&&om.fg!==0))return}
- fetch(PUSH_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sub:ps.sub,title,body,tag:tag||'chat',url:'./?open=chat'}),keepalive:true})
+const gNot={};function notifyGame(g,name){const n=Date.now();if(gNot[g]&&n-gNot[g]<600000)return;gNot[g]=n;const f=me==='leen';notifyOther('🎮 '+(WHO[me]||''),(f?'فاتت':'فات')+' على لعبة «'+name+'»، '+(f?'تعال العب معها':'تعالي العبي معو'),'game-'+g,g)}
+function notifyOther(title,body,tag,target){try{const o=other(me),ps=pushSubs[o];if(!ps||!ps.sub||!PUSH_URL.startsWith('https'))return;{const om=chMeta[o]||{},n=Date.now();if((om.fg&&n-om.fg<25000)||(om.seen&&n-om.seen<20000&&om.fg!==0))return}
+ fetch(PUSH_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sub:ps.sub,title,body,tag:tag||'chat',url:'./?open='+encodeURIComponent(target||'chat')}),keepalive:true})
  .then(r=>r.json()).then(j=>{if(j&&j.gone)db.doc('push/'+o).delete().catch(()=>{})}).catch(()=>{})}catch(x){}}
 function onPushDocs(docs){pushSubs={};docs.forEach(d=>pushSubs[d.id]=d);pushRefresh()}
-if(/[?&]open=chat/.test(location.search)){const t0=Date.now(),iv=setInterval(()=>{if(me&&db&&(window.__spDone||me==='hassan')){clearInterval(iv);try{openChat()}catch(x){}}else if(Date.now()-t0>15000)clearInterval(iv)},400)}
+{const om=location.search.match(/[?&]open=([a-z:0-9_-]+)/i);if(om){const tg=decodeURIComponent(om[1]),t0=Date.now(),iv=setInterval(()=>{if(me&&db&&(window.__spDone||me==='hassan')){clearInterval(iv);setTimeout(()=>goTarget(tg),tg==='chat'?0:900);try{history.replaceState(null,'',location.pathname)}catch(x){}}else if(Date.now()-t0>15000)clearInterval(iv)},400)}}
 
 /* draw together */
 const DCOL=['#1d1b2e','#e0336a','#ff8a5c','#f5c542','#2bb39a','#3a8dde','#8b5cf6','#8a5a3c'],DSZ=[.006,.013,.026];
@@ -1507,25 +1509,25 @@ const vb=(k,w)=>VB[k][w==='leen'?1:0];
 let feedT=0;function queueFeed(){clearTimeout(feedT);feedT=setTimeout(renderFeed,60)}
 function feedItems(){
  const since=Date.now()-7*864e5,out=[],q=t=>'«'+esc(t||'')+'»';
- const push=(t,who,ic,txt)=>{t=Number(t)||0;if(t>since&&t<=Date.now()+6e4&&(who==='hassan'||who==='leen'||who==='both'))out.push({t,who,ic,txt})};
- moments.forEach(m=>{if(m.cat==='sport')push(m.createdAt,m.by,'fit',vb('log',m.by)+' تمرين '+q(m.title));else push(m.createdAt,m.by,'heart',vb('add',m.by)+' لحظة '+q(m.title))});
+ const push=(t,who,ic,txt,go)=>{t=Number(t)||0;if(t>since&&t<=Date.now()+6e4&&(who==='hassan'||who==='leen'||who==='both'))out.push({t,who,ic,txt,go})};
+ moments.forEach(m=>{if(m.cat==='sport')push(m.createdAt,m.by,'fit',vb('log',m.by)+' تمرين '+q(m.title),'moment:'+m.id);else push(m.createdAt,m.by,'heart',vb('add',m.by)+' لحظة '+q(m.title),'moment:'+m.id)});
  const ph={};photos.forEach(p=>{const t=Number(p.createdAt)||0,k=(p.by||'')+':'+Math.floor(t/6e5);(ph[k]=ph[k]||{t,who:p.by,n:0}).n++;ph[k].t=Math.max(ph[k].t,t)});
- Object.values(ph).forEach(g=>push(g.t,g.who,'img',vb('add',g.who)+' '+(g.n===1?'صورة للألبوم':g.n+' صور للألبوم')));
- weights.forEach(w=>push(w.createdAt,w.by||w.who,'fit',vb('log',w.by||w.who)+' وزن جديد'));
- plans.forEach(p=>{push(p.createdAt,p.by,'flag',vb('add',p.by)+' خطة '+q(p.title));if(p.done)push(p.doneAt,'both','flag','خلّصتوا '+q(p.title)+' سوا')});
- events.forEach(e=>push(e.createdAt,e.by,'cal',vb('add',e.by)+' موعد '+q(e.title)+' · '+pd(e.date).toLocaleDateString(L,{day:'numeric',month:'short'})));
- points.forEach(x=>push(x.createdAt,x.from,'star',vb('give',x.from)+' '+WHO[x.to]+' '+sgn(Number(x.pts)||0)+(x.reason?' · '+esc(x.reason):'')));
- notes.forEach(n=>{push(n.createdAt,n.from,'msg',vb('send',n.from)+(n.kind==='thanks'?' كلمة شكر':' ملاحظة'));if(n.ok)push(n.okAt,n.to,'msg',vb('reply',n.to)+' على '+(n.kind==='thanks'?'كلمة الشكر':'الملاحظة'))});
- letters.forEach(l=>{push(l.createdAt,l.from,'env',vb('write',l.from)+' رسالة للمستقبل');if(l.openedAt)push(l.openedAt,l.to,'env',vb('open',l.to)+' رسالة '+q(l.title))});
+ Object.values(ph).forEach(g=>push(g.t,g.who,'img',vb('add',g.who)+' '+(g.n===1?'صورة للألبوم':g.n+' صور للألبوم'),'album'));
+ weights.forEach(w=>push(w.createdAt,w.by||w.who,'fit',vb('log',w.by||w.who)+' وزن جديد','fit'));
+ plans.forEach(p=>{push(p.createdAt,p.by,'flag',vb('add',p.by)+' خطة '+q(p.title),'plan:'+p.id);if(p.done)push(p.doneAt,'both','flag','خلّصتوا '+q(p.title)+' سوا','plan:'+p.id)});
+ events.forEach(e=>push(e.createdAt,e.by,'cal',vb('add',e.by)+' موعد '+q(e.title)+' · '+pd(e.date).toLocaleDateString(L,{day:'numeric',month:'short'}),'cal'));
+ points.forEach(x=>push(x.createdAt,x.from,'star',vb('give',x.from)+' '+WHO[x.to]+' '+sgn(Number(x.pts)||0)+(x.reason?' · '+esc(x.reason):''),'points'));
+ notes.forEach(n=>{push(n.createdAt,n.from,'msg',vb('send',n.from)+(n.kind==='thanks'?' كلمة شكر':' ملاحظة'),'notes');if(n.ok)push(n.okAt,n.to,'msg',vb('reply',n.to)+' على '+(n.kind==='thanks'?'كلمة الشكر':'الملاحظة'),'notes')});
+ letters.forEach(l=>{push(l.createdAt,l.from,'env',vb('write',l.from)+' رسالة للمستقبل','letters');if(l.openedAt)push(l.openedAt,l.to,'env',vb('open',l.to)+' رسالة '+q(l.title),'letters')});
  const kg={};kisses.forEach(k=>{const t=Number(k.createdAt)||0,key=k.from+':'+Math.floor(t/6e5);(kg[key]=kg[key]||{t,who:k.from,to:k.to,n:0}).n++;kg[key].t=Math.max(kg[key].t,t)});
- Object.values(kg).forEach(g=>push(g.t,g.who,'kiss',vb('send',g.who)+' '+(g.n===1?'بوسة':g.n===2?'بوستين':g.n+' بوسات')+' '+LI(g.to)));
+ Object.values(kg).forEach(g=>push(g.t,g.who,'kiss',vb('send',g.who)+' '+(g.n===1?'بوسة':g.n===2?'بوستين':g.n+' بوسات')+' '+LI(g.to),'kiss'));
  return out.sort((a,b)=>b.t-a.t);
 }
 const FIC={kiss:'<use href="#lips" x="1" y="6" width="22" height="14"/>',heart:'<path d="M12 20s-7-4.4-8.6-8.6C2.2 8.2 4.2 5 7.4 5c1.9 0 3.3 1 4.6 2.6C13.3 6 14.7 5 16.6 5c3.2 0 5.2 3.2 4 6.4C19 15.6 12 20 12 20z"/>',img:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 9"/>',fit:'<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/>',flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',cal:'<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',star:'<path d="M12 3l2.6 5.5 6 .8-4.4 4.2 1.1 6L12 16.6 6.7 19.5l1.1-6L3.4 9.3l6-.8z"/>',msg:'<path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 3.5V17A2.5 2.5 0 0 1 4 14.5z"/>',env:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7l8 6 8-6"/>'};
 const feedSeen=()=>{try{return Number(localStorage.getItem('hl-feed-seen'))||0}catch(x){return 0}};
 const tAgo=t=>{const d=new Date(t),td=pd(today());if(d>=td)return d.toLocaleTimeString(L,{hour:'numeric',minute:'2-digit'});if(d>=new Date(td-864e5))return 'مبارح';return d.toLocaleDateString(L,{weekday:'short',day:'numeric'})};
 function feedRow(it,seen){const fresh=it.who!==me&&it.who!=='both'&&it.t>seen;
- return '<div class="fi'+(fresh?' new':'')+'"><span class="fav '+it.who+'">'+(it.who==='both'?'<svg viewBox="0 0 24 24"><use href="#h"/></svg>':it.who==='hassan'?'ح':'ل')+'</span><div class="ft"><b>'+(it.who==='both'?'':WHO[it.who]+' ')+'</b>'+it.txt+'</div><span class="fw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+FIC[it.ic]+'</svg>'+tAgo(it.t)+'</span></div>'}
+ return '<div class="fi'+(fresh?' new':'')+(it.go?' go':'')+'"'+(it.go?' data-fgo="'+esc(it.go)+'" role="button"':'')+'><span class="fav '+it.who+'">'+(it.who==='both'?'<svg viewBox="0 0 24 24"><use href="#h"/></svg>':it.who==='hassan'?'ح':'ل')+'</span><div class="ft"><b>'+(it.who==='both'?'':WHO[it.who]+' ')+'</b>'+it.txt+'</div><span class="fw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+FIC[it.ic]+'</svg>'+tAgo(it.t)+'</span></div>'}
 function renderFeed(){try{renderHome()}catch(x){}
  const el=$('#feed');if(!el)return;
  const all=feedItems(),td=pd(today()).getTime(),todays=all.filter(i=>i.t>=td),seen=feedSeen();
@@ -1543,7 +1545,8 @@ function openFeed(){
  open('<h2>آخر المستجدات</h2><p class="hint" style="margin-top:0">كل شي صار خلال آخر ٧ أيام.</p><div class="feed flat">'+(html||'<p class="hint">لسّا ما في شي.</p>')+'</div>');
  try{localStorage.setItem('hl-feed-seen',String(Date.now()))}catch(x){}setTimeout(renderFeed,400);
 }
-$('#feed').addEventListener('click',e=>{if(e.target.closest('#feedAll')||e.target.closest('.fh'))openFeed()});
+$('#feed').addEventListener('click',e=>{const g=e.target.closest('[data-fgo]');if(g){goTarget(g.dataset.fgo);return}if(e.target.closest('#feedAll')||e.target.closest('.fh'))openFeed()});
+document.addEventListener('click',e=>{const g=e.target.closest('.feed.flat [data-fgo]');if(g){close();setTimeout(()=>goTarget(g.dataset.fgo),280)}});
 
 /* ---------- plans ---------- */
 function renderPlans(){queueFeed();
@@ -1974,7 +1977,7 @@ function openPoints(){
  $('#ptf').addEventListener('submit',async e=>{e.preventDefault();const reason=$('#pt-r').value.trim();if(!reason)return;
   const pts=Number(val('#pval','data-v'))||1,t=to;close();
   await write(()=>db.collection('points').add({to:t,from:me,pts,reason,createdAt:Date.now()}),(pts>0?'انبعتت '+sgn(pts)+' لـ':'انسحبت '+(-pts)+' من ')+WHO[t]);
-  if(t===other(me)){const f=me==='leen',k=Math.abs(pts),u=k===1?'نقطة':k===2?'نقطتين':k+' نقاط';try{notifyOther((pts>0?'⭐ ':'🔻 ')+(WHO[me]||''),(pts>0?(f?'عطتك ':'عطاكي ')+u:(f?'نقّصتلك ':'نقّصلك ')+u)+' · '+reason,'points')}catch(x){}}});
+  if(t===other(me)){const f=me==='leen',k=Math.abs(pts),u=k===1?'نقطة':k===2?'نقطتين':k+' نقاط';try{notifyOther((pts>0?'⭐ ':'🔻 ')+(WHO[me]||''),(pts>0?(f?'عطتك ':'عطاكي ')+u:(f?'نقّصتلك ':'نقّصلك ')+u)+' · '+reason,'points','points')}catch(x){}}});
  setTimeout(()=>$('#pt-r')?.focus(),50);
 }
 function openNote(n){
@@ -1988,7 +1991,7 @@ function openNote(n){
  $('#nf').addEventListener('submit',async e=>{e.preventDefault();const text=$('#n-t').value.trim();if(!text)return;
   const doc={from:n.from||me,to,kind:val('#nkind','data-k')||'note',text,ok:!!n.ok,reply:n.reply||'',createdAt:n.createdAt||Date.now(),updatedAt:Date.now()};close();
   await write(()=>n.id?db.collection('notes').doc(n.id).set(doc):db.collection('notes').add(doc),n.id?'انحفظ':'انبعتت الملاحظة');
-  if(!n.id&&to===other(me)){const f=me==='leen';try{notifyOther((doc.kind==='thanks'?'💐 ':'📝 ')+(WHO[me]||''),(doc.kind==='thanks'?(f?'بعتتلك شكر: ':'بعتلك شكر: '):(f?'كتبتلك ملاحظة: ':'كتبلك ملاحظة: '))+text.slice(0,120),'note')}catch(x){}}});
+  if(!n.id&&to===other(me)){const f=me==='leen';try{notifyOther((doc.kind==='thanks'?'💐 ':'📝 ')+(WHO[me]||''),(doc.kind==='thanks'?(f?'بعتتلك شكر: ':'بعتلك شكر: '):(f?'كتبتلك ملاحظة: ':'كتبلك ملاحظة: '))+text.slice(0,120),'note','notes')}catch(x){}}});
  const d=$('#ndel');if(d)d.onclick=async()=>{const copy={...n};delete copy.id;close();await write(()=>db.collection('notes').doc(n.id).delete());toast('انحذفت','تراجع',()=>write(()=>db.collection('notes').doc(n.id).set(copy),'رجعت'))};
 }
 function openOk(n){
@@ -2158,6 +2161,24 @@ function syncNav(titleOnly){const h=$('#hero'),pt=$('#ptitle');
 function openMore(){open('<h2 style="text-align:center;margin-bottom:6px">المزيد</h2><div class="mgrid">'+MORE.map(t=>'<button data-mg="'+t+'"'+(tab===t?' aria-current="page"':'')+'><span class="ti g-'+t+'">'+PG[t][1]+'</span>'+PG[t][0]+'</button>').join('')+'<button data-mg="set"><span class="ti g-stats">⚙️</span>الإعدادات</button></div>');
  sheet.querySelector('.mgrid').addEventListener('click',e=>{const b=e.target.closest('[data-mg]');if(!b)return;close();const g=b.dataset.mg;if(g==='set')setTimeout(openSettings,250);else goTab(g)})}
 try{const sk=$('#sky');if(sk&&window.IntersectionObserver)new IntersectionObserver(es=>es.forEach(e=>sk.classList.toggle('off',!e.isIntersecting))).observe(sk)}catch(x){}
+function secByTitle(t){const hs=[...document.querySelectorAll('main h2')].filter(h=>h.textContent.includes(t));const h=hs.find(x=>x.offsetParent)||hs[0];return h?(h.closest('.sec,.card,section>div')||h):null}
+function flashTo(get,delay){setTimeout(()=>{const el=typeof get==='function'?get():get;if(!el)return;el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.remove('gflash');void el.offsetWidth;el.classList.add('gflash');setTimeout(()=>el.classList.remove('gflash'),1800)},delay||380)}
+function goTarget(t){t=String(t||'');const i=t.indexOf(':'),a=i<0?t:t.slice(0,i),id=i<0?'':t.slice(i+1);
+ try{if(a!=='chat'&&chOpen)closeChat()}catch(x){}try{if(sheet&&sheet.closest&&document.querySelector('.scrim.on'))close()}catch(x){}
+ switch(a){
+  case 'chat':try{openChat()}catch(x){}return;
+  case 'kiss':case 'home':goTab('home');window.scrollTo({top:0,behavior:'smooth'});return;
+  case 'notes':goTab('us');flashTo(()=>secByTitle('ملاحظات لبعض'));return;
+  case 'points':goTab('us');flashTo(()=>secByTitle('نقاطنا'));return;
+  case 'letters':goTab('us');flashTo(()=>secByTitle('رسائل للمستقبل'));return;
+  case 'draw':goTab('games');setTimeout(()=>{try{openDraw()}catch(x){}},300);return;
+  case 'touch':goTab('games');setTimeout(()=>{try{openTouch()}catch(x){}},300);return;
+  case 'wyr':goTab('games');flashTo(()=>secByTitle('بتفضّل'));return;
+  case 'moment':goTab('moments');if(id)flashTo(()=>{const b=document.querySelector('#v-moments [data-edit="'+CSS.escape(id)+'"]');return b&&(b.closest('article,.card')||b)});return;
+  case 'weight':goTab('fit');return;
+  case 'plan':goTab('plans');if(id)flashTo(()=>{const b=document.querySelector('#v-plans [data-tog="'+CSS.escape(id)+'"],#v-plans [data-edit="'+CSS.escape(id)+'"]');return b&&(b.closest('article,.card')||b)});return;
+  case 'event':goTab('cal');return;
+  default:if(PG[a])goTab(a)}}
 function bnSize(){const b=$('#bnav');if(b&&b.offsetHeight)document.documentElement.style.setProperty('--bnh',b.offsetHeight+'px')}
 addEventListener('resize',bnSize);setTimeout(bnSize,0);
 function navGo(g){if(chOpen){closeChat();if(g===tab)return}if(g==='more')return openMore();if(g===tab){window.scrollTo({top:0,behavior:'smooth'});return}goTab(g)}
