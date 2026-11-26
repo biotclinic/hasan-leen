@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-26.46">
+<meta name="app-ver" content="2026-11-26.47">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -638,6 +638,9 @@ body.typing-in .bnav{transform:translateY(120%)}
 .mgrid button{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 4px;border-radius:20px;background:var(--soft);color:var(--ink);font-weight:800;font-size:14px}
 .mgrid button .ti{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:23px;color:#fff}
 .mgrid button[aria-current=page]{box-shadow:inset 0 0 0 2px var(--rose)}
+body.chat-open .bnav{z-index:73;background:var(--card)}
+body.chat-open:not(.typing-in) #ch{bottom:var(--bnh,64px)}
+body.chat-open:not(.typing-in) .chbar{padding-bottom:6px}
 </style>
 </head>
 <body>
@@ -993,7 +996,7 @@ function kbOpen(){const vv=window.visualViewport;return !!vv&&document.activeEle
 function fitCh(){if(fitRaf)return;fitRaf=requestAnimationFrame(()=>{fitRaf=0;const vv=window.visualViewport,c=$('#ch');if(!vv||!chOpen)return;
  if(vv.offsetTop>0||window.scrollY>0)window.scrollTo(0,0);
  const kb=kbOpen(),h=kb?Math.round(vv.height):0;if(h===fitH)return;const stick=chStick;fitH=h;
- if(kb){c.style.bottom='auto';c.style.height=h+'px'}else{c.style.bottom='0';c.style.height='auto'}c.style.transform='';if(stick)chl.scrollTop=chl.scrollHeight})}
+ if(kb){c.style.bottom='auto';c.style.height=h+'px'}else{c.style.bottom='';c.style.height='auto'}c.style.transform='';if(stick)chl.scrollTop=chl.scrollHeight})}
 if(window.visualViewport){visualViewport.addEventListener('resize',fitCh);visualViewport.addEventListener('scroll',fitCh)}
 /* iOS standalone bug: after the keyboard closes the web view can stay shorter (dead band at the bottom). Force WebKit to re-measure. */
 function healViewport(){if(maxVH-window.innerHeight<=4)return;const c=$('#ch'),st=chl.scrollTop,wasOn=c.classList.contains('on');
@@ -1034,10 +1037,10 @@ function chLock(on){const b=document.body;if(on){chLockY=window.scrollY;b.style.
   e.preventDefault();const now=performance.now();vx=(t.clientX-lastX)/Math.max(1,now-lastT);lastX=t.clientX;lastT=now;C.style.transform='translateX('+Math.min(0,dx)+'px)'},{passive:false});
  C.addEventListener('touchend',()=>{if(!edg||!drag){edg=false;return}edg=false;drag=false;const cur=new DOMMatrix(getComputedStyle(C).transform).m41;
   if(cur<-innerWidth*.33||vx<-.5)closeChat();else{const an=C.animate([{transform:'translateX('+cur+'px)'},{transform:'translateX(0)'}],{duration:220,easing:'cubic-bezier(.2,.8,.2,1)'});C.style.transform='';}},{passive:true})}
-function openChat(){if(needMe())return;if(chOpen)return;{const r=(chMeta[me]||{}).read||0,o=other(me),f=chat.find(m=>m.by===o&&!m.del&&(m.t||0)>r);chUnreadKey=f?kOf(f):''}
+function openChat(){if(needMe())return;if(chOpen)return;bnSize();document.body.classList.add('chat-open');document.querySelectorAll('#bnav .bn').forEach(b=>b===$('#chBtn')?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current'));{const r=(chMeta[me]||{}).read||0,o=other(me),f=chat.find(m=>m.by===o&&!m.del&&(m.t||0)>r);chUnreadKey=f?kOf(f):''}
  {const c0=$('#ch');c0.getAnimations().forEach(a=>a.cancel());c0.style.transform=''}chOpen=true;pushBanner();pushUI();try{navigator.clearAppBadge&&navigator.clearAppBadge()}catch(x){}fitH=-1;fitT=-1;setTimeout(healViewport,50);chFirst=true;chStick=true;chNew=0;try{const d=localStorage.getItem('hl-chat-draft');if(d&&!chin.value){chin.value=d;setTimeout(chGrow,0)}}catch(x){}const c=$('#ch');c.classList.add('on');c.setAttribute('aria-hidden','false');chLock(true);fitCh();renderChat();chBadge();
  if(db)db.doc('chatmeta/'+me).set({...(chMeta[me]||{}),seen:Date.now()}).catch(()=>{});try{Music.hush(true)}catch(x){}}
-function closeChat(){if(!chOpen)return;if(recMR)stopRec(true);if(auEl){auEl.pause();auEl=null;auId=''}chOpen=false;chUnreadKey='';const c=$('#ch');c.setAttribute('aria-hidden','true');chLock(false);
+function closeChat(){if(!chOpen)return;document.body.classList.remove('chat-open');try{syncNav()}catch(x){}if(recMR)stopRec(true);if(auEl){auEl.pause();auEl=null;auId=''}chOpen=false;chUnreadKey='';const c=$('#ch');c.setAttribute('aria-hidden','true');chLock(false);
  {const from=c.style.transform||'translateX(0)';c.getAnimations().forEach(a=>a.cancel());const an=c.animate([{transform:from},{transform:'translateX(-100%)'}],{duration:270,easing:'cubic-bezier(.4,0,.6,1)',fill:'forwards'});an.onfinish=()=>{if(!chOpen){c.classList.remove('on');c.style.transform='';an.cancel()}}}
  {const u=chl.querySelector('[data-k="unread"]');if(u)u.remove()}['chemo','chstk'].forEach(id=>{const e=$('#'+id);e.getAnimations().forEach(a=>a.cancel());e.hidden=true;delete e.dataset.closing;const b=$('#'+PBTN[id]);if(b)b.setAttribute('aria-pressed','false')});chin.blur();setReply(null);chBadge();try{Music.hush(false);Music.duck(tab==='games')}catch(x){}}
 $('#chBtn').onclick=e=>{e.stopPropagation();openChat()};$('#chx').onclick=closeChat;
@@ -2039,10 +2042,12 @@ function syncNav(titleOnly){const h=$('#hero'),pt=$('#ptitle');
  if(titleOnly)return;
  h.classList.toggle('compact',tab!=='home');
  const nv=MORE.includes(tab)?'more':tab;
- document.querySelectorAll('#bnav [data-go]').forEach(b=>b.dataset.go===nv?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current'))}
+ document.querySelectorAll('#bnav .bn').forEach(b=>b.dataset.go===nv?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current'))}
 function openMore(){open('<h2 style="text-align:center;margin-bottom:6px">المزيد</h2><div class="mgrid">'+MORE.map(t=>'<button data-mg="'+t+'"'+(tab===t?' aria-current="page"':'')+'><span class="ti g-'+t+'">'+PG[t][1]+'</span>'+PG[t][0]+'</button>').join('')+'<button data-mg="set"><span class="ti g-stats">⚙️</span>الإعدادات</button></div>');
  sheet.querySelector('.mgrid').addEventListener('click',e=>{const b=e.target.closest('[data-mg]');if(!b)return;close();const g=b.dataset.mg;if(g==='set')setTimeout(openSettings,250);else goTab(g)})}
-function navGo(g){if(g==='more')return openMore();if(g===tab){window.scrollTo({top:0,behavior:'smooth'});return}goTab(g)}
+function bnSize(){const b=$('#bnav');if(b&&b.offsetHeight)document.documentElement.style.setProperty('--bnh',b.offsetHeight+'px')}
+addEventListener('resize',bnSize);setTimeout(bnSize,0);
+function navGo(g){if(chOpen){closeChat();if(g===tab)return}if(g==='more')return openMore();if(g===tab){window.scrollTo({top:0,behavior:'smooth'});return}goTab(g)}
 $('#bnav').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)navGo(b.dataset.go)});
 $('#htiles').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)navGo(b.dataset.go)});
 document.addEventListener('focusin',e=>{const t=e.target;if(t.matches&&t.matches('input:not([type=checkbox]):not([type=radio]):not([type=file]),textarea,select'))document.body.classList.add('typing-in')});
