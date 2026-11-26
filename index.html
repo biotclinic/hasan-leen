@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-26.53">
+<meta name="app-ver" content="2026-11-26.54">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -638,6 +638,21 @@ body.kbopen .bnav{transform:translateY(120%)}
 .mgrid button{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 4px;border-radius:20px;background:var(--soft);color:var(--ink);font-weight:800;font-size:14px}
 .mgrid button .ti{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:23px;color:#fff}
 .mgrid button[aria-current=page]{box-shadow:inset 0 0 0 2px var(--rose)}
+.aum{display:inline-grid;place-items:center;width:18px;height:18px;margin-inline-start:4px;opacity:.55;flex:none}
+.aum svg{width:15px;height:15px}
+.aum.on{color:#3fa9f5;opacity:1}
+.cot .aum.nw{color:var(--rose);opacity:1}
+.cme .cb .aum.on{color:#9fdcff}
+.chsr{display:flex;align-items:center;gap:6px;padding:8px 10px;background:var(--card);border-bottom:1px solid var(--line)}
+.chsr[hidden]{display:none}
+.chsr input{flex:1;min-width:0;height:40px;border-radius:20px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:0 14px;font:inherit;font-size:16px;font-weight:600;outline:none}
+.chsr #chsn{font-size:13px;font-weight:800;color:var(--mute);white-space:nowrap;min-width:38px;text-align:center}
+.chsr .x{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:var(--ink);background:var(--soft);font-weight:800;flex:none}
+mark.srm{background:#ffd54a;color:#1a1300;border-radius:4px;padding:0 1px}
+.cb.srcur{box-shadow:0 0 0 3px #ffd54a}
+#chlist .cb{touch-action:manipulation}
+.dbh{position:fixed;z-index:90;font-size:76px;line-height:1;pointer-events:none;transform:translate(-50%,-50%) scale(0);animation:dbh .95s cubic-bezier(.2,1.3,.4,1) forwards;filter:drop-shadow(0 6px 14px rgba(0,0,0,.35))}
+@keyframes dbh{0%{transform:translate(-50%,-50%) scale(0);opacity:0}25%{transform:translate(-50%,-50%) scale(1.15);opacity:1}45%{transform:translate(-50%,-50%) scale(.95)}70%{transform:translate(-50%,-60%) scale(1);opacity:1}100%{transform:translate(-50%,-110%) scale(.8);opacity:0}}
 
 .chinw{flex:1;min-width:0;position:relative;display:flex}
 .chinw textarea{padding-left:46px!important}
@@ -756,7 +771,7 @@ body.chat-open.kbopen main,body.chat-open.kbopen header,body.chat-open.kbopen .f
 <div class="dvidea" id="dvi" hidden></div>
 <div class="dva" id="dva"><canvas id="dvc"></canvas><canvas id="dvl"></canvas><div class="dvhint" id="dvhint">ارسموا بإصبعكن هون، كل واحد من تلفونو، وبتشوفوا رسمة التاني وهوّي عم يرسمها ✨</div><span class="dvpen" id="dvpen"></span></div>
 <div class="dvbar"><div class="dvcols" id="dvcols"></div><div class="dvtools"><button class="sz" data-sz="0" aria-label="رفيع"><i style="width:6px;height:6px"></i></button><button class="sz" data-sz="1" aria-label="وسط"><i style="width:11px;height:11px"></i></button><button class="sz" data-sz="2" aria-label="عريض"><i style="width:18px;height:18px"></i></button><span class="sep"></span><button id="dvundo" aria-label="رجّع آخر خط">↩️</button><button id="dvclr" aria-label="امسح اللوحة">🗑️</button><button id="dvsave" aria-label="احفظ بألبومنا">📸</button></div></div></div>
-<div class="ch" id="ch" aria-hidden="true"><div class="chtop"><button class="x" id="chx" aria-label="رجوع"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button><div class="chav" id="chav"></div><div class="nm"><b id="chnm"></b><span id="chst"></span></div><button class="x chbell" id="chbell" aria-label="الإشعارات"></button></div>
+<div class="ch" id="ch" aria-hidden="true"><div class="chtop"><button class="x" id="chx" aria-label="رجوع"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button><div class="chav" id="chav"></div><div class="nm"><b id="chnm"></b><span id="chst"></span></div><button class="x" id="chsrb" aria-label="بحث"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg></button><button class="x chbell" id="chbell" aria-label="الإشعارات"></button></div><div class="chsr" id="chsr" hidden><input id="chsq" type="search" enterkeyhint="search" placeholder="دوّر بالمحادثة…" autocomplete="off"><span id="chsn"></span><button class="x" id="chsup" aria-label="أقدم"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></button><button class="x" id="chsdn" aria-label="أحدث"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><button class="x" id="chsx" aria-label="سكّر البحث">✕</button></div>
 <div class="chpush" id="chpush" hidden><span>🔔</span><div id="chpusht">فعّل الإشعارات لتوصلك الرسائل حتى لو التطبيق مسكّر</div><button id="chpushb">فعّل</button><button class="x" id="chpushx" aria-label="لاحقاً">✕</button></div>
 <div class="chlist" id="chlist"></div>
 <div class="chbar"><button class="chjump" id="chjump" hidden aria-label="لآخر رسالة">⬇️</button><div class="chreply" id="chrp" hidden><div id="chrpt"></div><button id="chrpx" aria-label="إلغاء الرد">✕</button></div><div class="chquick" id="chq"></div><div class="chemo" id="chemo" hidden></div><div class="chstk" id="chstk" hidden></div><input type="file" id="stkfile" accept="image/*" hidden>
@@ -1008,6 +1023,34 @@ $('#chjump').onclick=()=>{chl.scrollTo({top:chl.scrollHeight,behavior:'smooth'})
 chl.addEventListener('click',e=>{if(e.target.closest('#cholder')){chKeep=chl.scrollHeight-chl.scrollTop;chLimit+=300;subChat();return}
  const g=e.target.closest('[data-goto]');if(!g||!g.dataset.goto)return;e.stopPropagation();const t=chl.querySelector('[data-chm="'+CSS.escape(g.dataset.goto)+'"]');
  if(!t){toast('هالرسالة قديمة كتير، طلّع لفوق وكبس «رسائل أقدم»');return}const row=t.closest('.cm');row.scrollIntoView({block:'center',behavior:'smooth'});row.classList.remove('flash');void row.offsetWidth;row.classList.add('flash')});
+/* ---- chat search + double-tap heart (v54) ---- */
+const srN=t=>String(t||'').replace(/[ً-ٰٟـ]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/ؤ/g,'و').replace(/ئ/g,'ي').toLowerCase();
+let srHits=[],srI=0,srQ='',srT=0,srLoaded=false;
+function srOpen(){const b=$('#chsr');if(!b.hidden){$('#chsq').focus();return}try{chClosePanels()}catch(x){}b.hidden=false;b.animate([{opacity:0,transform:'translateY(-8px)'},{opacity:1,transform:'none'}],{duration:220,easing:'cubic-bezier(.2,.85,.25,1)'});$('#chsq').value='';$('#chsn').textContent='';srHits=[];srQ='';$('#chsq').focus();
+ if(!srLoaded&&chat.length>=chLimit){srLoaded=true;chKeep=chl.scrollHeight-chl.scrollTop;chLimit=100000;subChat()}}
+function srClose(){const b=$('#chsr');if(b.hidden)return;b.hidden=true;srHits=[];srQ='';$('#chsq').blur();srMark()}
+function srRun(){srQ=srN($('#chsq').value.trim());srHits=srQ.length<2?[]:chat.filter(m=>!m.del&&m.text&&srN(m.text).includes(srQ)).map(m=>m.id).reverse();srI=0;srShow()}
+function srShow(){const n=$('#chsn');if(!srQ||srQ.length<2){n.textContent='';srMark();return}if(!srHits.length){n.textContent='ما في';srMark();return}
+ n.textContent=(srI+1)+' من '+srHits.length;srMark();const t=chl.querySelector('[data-chm="'+CSS.escape(srHits[srI])+'"]');if(t){const row=t.closest('.cm');row.scrollIntoView({block:'center',behavior:'smooth'});row.classList.remove('flash');void row.offsetWidth;row.classList.add('flash')}}
+function srMark(){chl.querySelectorAll('mark.srm').forEach(mk=>{const p=mk.parentNode;mk.replaceWith(document.createTextNode(mk.textContent));p&&p.normalize()});chl.querySelectorAll('.cb.srcur').forEach(e=>e.classList.remove('srcur'));
+ if(!srQ||srQ.length<2||!srHits.length)return;const set=new Set(srHits);
+ chl.querySelectorAll('[data-chm]').forEach(cb=>{if(!set.has(cb.dataset.chm))return;if(cb.dataset.chm===srHits[srI])cb.classList.add('srcur');
+  const w=document.createTreeWalker(cb,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement.closest('.tm,.crp,.crx,.cau')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});const ns=[];while(w.nextNode())ns.push(w.currentNode);
+  ns.forEach(nd=>{const raw=nd.textContent,nm=srN(raw);if(nm.length!==raw.length)return;let i=nm.indexOf(srQ);if(i<0)return;const f=document.createDocumentFragment();let last=0;
+   while(i>=0){f.appendChild(document.createTextNode(raw.slice(last,i)));const mk=document.createElement('mark');mk.className='srm';mk.textContent=raw.slice(i,i+srQ.length);f.appendChild(mk);last=i+srQ.length;i=nm.indexOf(srQ,last)}
+   f.appendChild(document.createTextNode(raw.slice(last)));nd.replaceWith(f)})})}
+$('#chsrb').addEventListener('click',srOpen);$('#chsx').addEventListener('click',srClose);
+$('#chsq').addEventListener('input',()=>{clearTimeout(srT);srT=setTimeout(srRun,180)});
+$('#chsq').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();if(srHits.length){srI=(srI+1)%srHits.length;srShow()}else srRun()}});
+$('#chsup').addEventListener('click',()=>{if(!srHits.length)return;srI=Math.min(srHits.length-1,srI+1);srShow()});
+$('#chsdn').addEventListener('click',()=>{if(!srHits.length)return;srI=Math.max(0,srI-1);srShow()});
+{const _rc=renderChat;renderChat=function(){const r=_rc.apply(this,arguments);if(srQ&&!$('#chsr').hidden)try{srMark()}catch(x){}return r}}
+let dtLast={id:'',t:0,x:0,y:0};
+chl.addEventListener('click',e=>{const cb=e.target.closest('[data-chm]');if(!cb||e.target.closest('.cau,a,[data-goto],[data-cimg],.crx'))return;const id=cb.dataset.chm,now=Date.now();
+ if(dtLast.id===id&&now-dtLast.t<350&&Math.hypot(e.clientX-dtLast.x,e.clientY-dtLast.y)<30){dtLast={id:'',t:0,x:0,y:0};dtHeart(id,e.clientX,e.clientY)}else dtLast={id,t:now,x:e.clientX,y:e.clientY}});
+function dtHeart(id,x,y){const m=chat.find(z=>z.id===id);if(!m||m.del||m._p||!db)return;const h=document.createElement('div');h.className='dbh';h.textContent='❤️';h.style.left=x+'px';h.style.top=y+'px';document.body.appendChild(h);setTimeout(()=>h.remove(),950);
+ try{navigator.vibrate&&navigator.vibrate(12)}catch(z){}if((m.react||{})[me]==='❤️')return;m.react={...(m.react||{}),[me]:'❤️'};renderChat();try{Music.sfx.pop()}catch(z){}
+ db.collection('chat').doc(m.id).update({['react.'+me]:'❤️'}).catch(()=>db.collection('chat').doc(m.id).update({react:m.react}).catch(()=>{}))}
 function chMarkRead(){if(!chOpen||document.hidden||!me||!db)return;const last=chat.filter(m=>m.by!==me).reduce((a,m)=>Math.max(a,m.t||0),0);const cur=(chMeta[me]||{}).read||0;
  if(last>cur&&Date.now()-chReadT>800){chReadT=Date.now();chMeta[me]={...(chMeta[me]||{}),read:last};db.doc('chatmeta/'+me).set({...(chMeta[me]||{}),read:last,seen:Date.now()}).catch(()=>{});chBadge()}}
 function onChat(docs){const before=chSeenIds;chat=docs.sort((a,b)=>(a.t||0)-(b.t||0));
@@ -1084,7 +1127,7 @@ async function chSend(text,img,extra){text=(text||'').trim();if(!text&&!img&&!(e
  catch(e){chat=chat.filter(x=>x!==tmp);if(text&&!chin.value){chin.value=text;chGrow()}renderChat();toast(e&&e.code==='permission-denied'?'لازم نزيد «chat» لقواعد Firestore':'ما انبعتت الرسالة، جرّب كمان مرة')}}
 $('#chsend').onclick=()=>{const t=chin.value;chin.value='';chGrow();try{localStorage.removeItem('hl-chat-draft')}catch(x){}chStick=true;chSend(t);chin.focus()};
 chin.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!('ontouchstart' in window)){e.preventDefault();$('#chsend').click()}});
-$('#chq').onclick=e=>{const b=e.target.closest('[data-qe]');if(b)chSend(b.dataset.qe)};
+$('#chq').onclick=e=>{const b=e.target.closest('[data-qe]');if(!b)return;const em=b.dataset.qe,st=chin.selectionStart??chin.value.length,en=chin.selectionEnd??st;chin.value=chin.value.slice(0,st)+em+chin.value.slice(en);try{chin.setSelectionRange(st+em.length,st+em.length)}catch(x){}chin.dispatchEvent(new Event('input',{bubbles:true}));try{Music.sfx.tick()}catch(x){}b.animate([{transform:'scale(1.35)'},{transform:'none'}],{duration:220,easing:'cubic-bezier(.2,1.4,.4,1)'})};
 $('#chemob').onclick=()=>{const p=$('#chemo'),op=pOpen(p);panelAnim($('#chstk'),false);if(!op)chin.blur();panelAnim(p,!op)};
 $('#chemo').onclick=e=>{const b=e.target.closest('[data-ee]');if(!b)return;const st=chin.selectionStart??chin.value.length;chin.value=chin.value.slice(0,st)+b.dataset.ee+chin.value.slice(chin.selectionEnd??st);chGrow();try{Music.sfx.tick()}catch(x){}};
 $('#chpic').onclick=()=>$('#chfile').click();
@@ -1149,7 +1192,7 @@ let auRate=1;try{auRate=+localStorage.getItem('hl-au-rate')||1}catch(x){}const A
 const chFull={},chAud={};let recMR=null,recChunks=[],recT0=0,recTick=0,recStream=null,recAn=null,recCancel=false,auEl=null,auId='';
 const fmtDur=s=>{s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
 function audBars(id){let h=0;for(const c of String(id))h=(h*31+c.charCodeAt(0))>>>0;const o=[];for(let i=0;i<28;i++){h=(h*1103515245+12345)>>>0;o.push(25+((h>>16)%75))}return o}
-function audHtml(m){return '<div class="cau" data-aud="'+esc(m.id)+'"><button class="pl" aria-label="شغّل">'+IC_PLAY+'</button><span class="wv">'+audBars(m.id).map(v=>'<i style="height:'+v+'%"></i>').join('')+'</span><span class="du">'+fmtDur(m.dur||0)+'</span><button class="sp'+(auRate!==1?' on':'')+'" aria-label="سرعة التشغيل">'+spTxt(auRate)+'</button></div>'}
+function audHtml(m){return '<div class="cau" data-aud="'+esc(m.id)+'"><button class="pl" aria-label="شغّل">'+IC_PLAY+'</button><span class="wv">'+audBars(m.id).map(v=>'<i style="height:'+v+'%"></i>').join('')+'</span><span class="du">'+fmtDur(m.dur||0)+'</span><span class="aum'+(m.played?' on':m.by!==me?' nw':'')+'"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span><button class="sp'+(auRate!==1?' on':'')+'" aria-label="سرعة التشغيل">'+spTxt(auRate)+'</button></div>'}
 function spTxt(r){return '\u2066'+(r===1?'1':r)+'×\u2069'}
 let recRaf=0,recLv=0,recBars=[],recLastPush=0,recSec=-1,recUI=false;
 function recShow(on){const rec=$('#chrec'),row=document.querySelector('.chrow'),q=$('#chq');if(on===recUI)return;recUI=on;
@@ -1213,7 +1256,7 @@ $('#chmic').onclick=startRec;$('#chrecx').onclick=()=>{if(recMR)stopRec(true);el
 function auUI(id,playing,p){const w=chl.querySelector('[data-aud="'+CSS.escape(id)+'"]');if(!w)return;w.querySelector('.pl').innerHTML=playing?IC_PAUSE:IC_PLAY;w.classList.toggle('playing',!!playing);const bars=w.querySelectorAll('.wv i');const n=Math.round((p||0)*bars.length);bars.forEach((b,i)=>b.classList.toggle('on',i<n));
  if(auEl&&playing)w.querySelector('.du').textContent=fmtDur(auEl.currentTime)}
 chl.addEventListener('click',e=>{const b=e.target.closest('.cau .pl');if(!b)return;const w=b.closest('[data-aud]');playAud(w.dataset.aud,null,true)});
-async function playAud(id,frac,toggle){const w=chl.querySelector('[data-aud="'+CSS.escape(id)+'"]');const b=w&&w.querySelector('.pl');const m=chat.find(x=>x.id===id);if(!m||!m.aud||!b)return;
+async function playAud(id,frac,toggle){const w=chl.querySelector('[data-aud="'+CSS.escape(id)+'"]');const b=w&&w.querySelector('.pl');const m=chat.find(x=>x.id===id);if(!m||!m.aud||!b)return;if(m.by!==me&&!m.played&&db&&m.id){m.played=Date.now();const ai=chl.querySelector('[data-aud="'+CSS.escape(id)+'"] .aum');if(ai){ai.classList.remove('nw');ai.classList.add('on')}db.collection('chat').doc(m.id).update({played:m.played}).catch(()=>{})}
  if(auEl&&auId===id){if(frac!=null){const D=isFinite(auEl.duration)?auEl.duration:(m.dur||1);auEl.currentTime=Math.min(D-.05,frac*D);if(auEl.paused)auEl.play().catch(()=>{});auUI(id,!auEl.paused,frac);return}if(toggle){if(auEl.paused)auEl.play();else auEl.pause()}return}
  if(auEl){auEl.pause();const old=auId;const om=chat.find(x=>x.id===old);auUI(old,false,0);if(om){const ow=chl.querySelector('[data-aud="'+CSS.escape(old)+'"] .du');if(ow)ow.textContent=fmtDur(om.dur)}}
  let d=chAud[m.aud];if(!d){b.innerHTML=IC_LOAD;try{const n=m.parts||1,ps=await Promise.all([...Array(n)].map((_,i)=>db.doc('chataudio/'+(i?m.aud+'_'+i:m.aud)).get()));if(ps.every(x=>x.exists)){d=ps.map(x=>x.data().data).join('');chAud[m.aud]=d}}catch(y){}}
