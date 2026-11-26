@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-26.47">
+<meta name="app-ver" content="2026-11-26.48">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -596,7 +596,7 @@ textarea.in{min-height:84px;resize:vertical}
 .tabs{display:none!important}
 main{padding-bottom:calc(150px + env(safe-area-inset-bottom))}
 .bnav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:space-around;align-items:flex-start;padding:7px max(2vw,6px) calc(6px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--card) 84%,transparent);-webkit-backdrop-filter:blur(22px) saturate(1.4);backdrop-filter:blur(22px) saturate(1.4);border-top:1px solid var(--line);box-shadow:0 -8px 30px -18px rgba(0,0,0,.45);transition:transform .3s cubic-bezier(.2,.9,.25,1),background-color 1.2s ease}
-body.typing-in .bnav{transform:translateY(120%)}
+body.kbopen .bnav{transform:translateY(120%)}
 .bn{flex:1;max-width:92px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0 2px;color:var(--mute);font-size:11.5px;font-weight:800;background:none;position:relative;transition:color .25s}
 .bn svg{width:26px;height:26px;transition:transform .3s cubic-bezier(.2,1.4,.4,1)}
 .bn[aria-current=page]{color:var(--rose)}
@@ -639,8 +639,9 @@ body.typing-in .bnav{transform:translateY(120%)}
 .mgrid button .ti{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:23px;color:#fff}
 .mgrid button[aria-current=page]{box-shadow:inset 0 0 0 2px var(--rose)}
 body.chat-open .bnav{z-index:73;background:var(--card)}
-body.chat-open:not(.typing-in) #ch{bottom:var(--bnh,64px)}
-body.chat-open:not(.typing-in) .chbar{padding-bottom:6px}
+body.chat-open:not(.kbopen) #ch{bottom:var(--bnh,64px)}
+body.chat-open:not(.kbopen) .chbar{padding-bottom:6px}
+body.chat-open.kbopen main,body.chat-open.kbopen header,body.chat-open.kbopen .fab{visibility:hidden}
 </style>
 </head>
 <body>
@@ -2050,8 +2051,11 @@ addEventListener('resize',bnSize);setTimeout(bnSize,0);
 function navGo(g){if(chOpen){closeChat();if(g===tab)return}if(g==='more')return openMore();if(g===tab){window.scrollTo({top:0,behavior:'smooth'});return}goTab(g)}
 $('#bnav').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)navGo(b.dataset.go)});
 $('#htiles').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)navGo(b.dataset.go)});
-document.addEventListener('focusin',e=>{const t=e.target;if(t.matches&&t.matches('input:not([type=checkbox]):not([type=radio]):not([type=file]),textarea,select'))document.body.classList.add('typing-in')});
-document.addEventListener('focusout',()=>setTimeout(()=>{const a=document.activeElement;if(!(a&&a.matches&&a.matches('input,textarea,select')))document.body.classList.remove('typing-in')},60));
+function kbCheck(){const vv=window.visualViewport,a=document.activeElement;const base=Math.max(typeof maxVH==='number'?maxVH:0,window.innerHeight);
+ const open=!!vv&&base-vv.height>120&&!!a&&!!a.matches&&a.matches('input,textarea,select,[contenteditable=true]');document.body.classList.toggle('kbopen',open)}
+if(window.visualViewport)visualViewport.addEventListener('resize',kbCheck);
+document.addEventListener('focusin',()=>{kbCheck();setTimeout(kbCheck,300);setTimeout(kbCheck,700)});
+document.addEventListener('focusout',()=>{setTimeout(kbCheck,80);setTimeout(kbCheck,400);setTimeout(kbCheck,900)});
 const posMem={};
 document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b)return;if(b.dataset.t===tab)return;posMem[tab]=window.scrollY;const stick=$('#hero').offsetHeight,wasStuck=window.scrollY>=stick-2;tab=b.dataset.t;
  document.querySelectorAll('.tabs [data-t]').forEach(x=>x.setAttribute('aria-selected',x===b));try{b.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})}catch(x){}
