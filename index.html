@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-26.73">
+<meta name="app-ver" content="2026-11-26.74">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -716,7 +716,7 @@ mark.srm{background:#ffd54a;color:#1a1300;border-radius:4px;padding:0 1px}
 .tyb.recb i{width:6px!important;height:6px!important}
 #chst.rec::before{content:'🎤 '}
 body.chat-open .bnav{z-index:73;background:var(--card)}
-@media (display-mode: standalone){html{min-height:min(100lvh,calc(100% + env(safe-area-inset-top)))}}
+@media (display-mode: standalone){html:not(.ipad){min-height:min(100lvh,calc(100% + env(safe-area-inset-top)))}}
 html:has(body.chat-open),body.chat-open{overscroll-behavior:none}
 .bnav{touch-action:none;overscroll-behavior:none}
 body.chat-open:not(.kbopen) #ch{bottom:var(--bnh,64px)}
