@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-26.68">
+<meta name="app-ver" content="2026-11-26.69">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1173,14 +1173,14 @@ let callSpk=true,callOut=null,callRemote=null,callEarEl=null,callDbgLog=[];try{c
 function callDbg(k,v){try{callDbgLog.push(k+':'+(typeof v==='string'?v:JSON.stringify(v)));if(callDbgLog.length>40)callDbgLog.shift();db&&me&&db.doc('chatmeta/dbg'+me).set({t:Date.now(),ver:document.querySelector('meta[name=app-ver]').content,ua:navigator.userAgent.slice(0,140),log:callDbgLog.join(' | ')}).catch(()=>{})}catch(x){}}
 function callCtx(){try{if(!callOut){const C=window.AudioContext||window.webkitAudioContext;const ctx=new C();const g=ctx.createGain();g.gain.value=1.6;callOut={ctx,g,src:null,dest:null,mode:''}}if(callOut.ctx.state!=='running')callOut.ctx.resume().catch(()=>{})}catch(x){callDbg('ctxErr',String(x))}return callOut}
 async function callOuts(){try{return (await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==='audiooutput')}catch(x){return []}}
-const isSpkDev=d=>/speaker|hoparl|haut|altavoz|مكبر/i.test(d.label),isBtDev=d=>/bluetooth|airpods|headphone|headset|beats|kulakl|سماع/i.test(d.label);
+const isSpkDev=d=>/speaker|hoparl|haut|altavoz|مكبر/i.test(d.label),isBtDev=d=>/bluetooth|airpods|headphone|headset|beats|buds|kulakl|سماعات|écouteurs/i.test(d.label);
 let callOutList=[],callSinkPend=null;
 function callSilTrack(){try{const o=callCtx();if(!o)return null;if(!o.sil){const src=o.ctx.createConstantSource?o.ctx.createConstantSource():o.ctx.createOscillator(),g=o.ctx.createGain(),d=o.ctx.createMediaStreamDestination();g.gain.value=0;src.connect(g);g.connect(d);src.start();o.sil=d.stream.getAudioTracks()[0]}return o.sil}catch(x){return null}}
 async function callRefreshOuts(){callOutList=await callOuts();return callOutList}
 function callSetStream(tr){if(!callAudioEl)callPrepAudio();const tracks=[tr],sil=callSilTrack();if(sil)tracks.push(sil);callRemote=new MediaStream([tr]);callAudioEl.srcObject=new MediaStream(tracks);callAudioEl.muted=false;callAudioEl.play().catch(()=>{});
  callRefreshOuts().then(()=>callRoute(callSpk,true))}
 const isRcvDev=d=>/receiver|earpiece|alıcı|alici|المستقبل|سماعة الأذن|écouteur|auricular|hörer/i.test(d.label);
-function callPickOut(spk){const L=callOutList;return spk?(L.find(d=>isSpkDev(d)&&d.deviceId!=='default')||L.find(isSpkDev)):(L.find(isRcvDev)||L.find(d=>!isSpkDev(d)&&!isBtDev(d)))}
+function callPickOut(spk){const L=callOutList;return spk?(L.find(d=>isSpkDev(d)&&d.deviceId!=='default')||L.find(isSpkDev)):(L.find(isBtDev)||L.find(isRcvDev)||L.find(d=>!isSpkDev(d)&&d.deviceId!=='default'))}
 function callRoute(spk,quiet){callSpk=spk;try{localStorage.setItem('hl-call-spk2',spk?'1':'0')}catch(x){}$('#callspk').setAttribute('aria-pressed',String(spk));
  const info={spk,quiet:!!quiet,outs:callOutList.map(d=>d.label)};
  if(callEarEl){try{callEarEl.pause();callEarEl.srcObject=null}catch(x){}}
@@ -1193,8 +1193,9 @@ function callRoute(spk,quiet){callSpk=spk;try{localStorage.setItem('hl-call-spk2
   const o=callCtx();if(o){try{o.g.disconnect()}catch(x){}try{o.src&&o.src.disconnect()}catch(x){}o.src=null}
   if(!spk&&o&&callRemote){try{const S=navigator.audioSession;if(S)S.type='play-and-record'}catch(x){}try{o.src=o.ctx.createMediaStreamSource(callRemote);o.src.connect(o.g);o.g.connect(o.ctx.destination);if(el)el.muted=true}catch(x){if(el)el.muted=false}}
   else if(el){el.muted=false}callDbg('route',info)}
- if(!quiet)toast(spk?'🔊 سبيكر':'📱 سماعة الأذن')}
+ if(!quiet)toast(spk?'🔊 سبيكر':dev&&isBtDev(dev)?'🎧 '+dev.label:'📱 سماعة التلفون (حطّه على أذنك)')}
 // apply a pending route on the next tap anywhere (setSinkId needs a gesture on iOS)
+try{navigator.mediaDevices.addEventListener('devicechange',()=>{if(call&&call.state==='connected')callRefreshOuts().then(()=>callRoute(callSpk&&!callOutList.some(isBtDev)?callSpk:false,true))})}catch(x){}
 document.addEventListener('pointerup',()=>{if(callSinkPend!==null&&call&&call.state==='connected'){const v=callSinkPend;callSinkPend=null;callRoute(v,true)}},true);
 /* back from background: iOS stops web mic capture while the app is hidden, so re-acquire it and resume audio */
 async function callResume(){if(!call||!call.pc||call.state!=='connected')return;try{callOut&&callOut.ctx.state!=='running'&&callOut.ctx.resume()}catch(x){}try{callAudioEl&&callAudioEl.play().catch(()=>{})}catch(x){}
