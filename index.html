@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-26.71">
+<meta name="app-ver" content="2026-11-26.72">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -506,6 +506,11 @@ textarea.in{min-height:84px;resize:vertical}
 .chday span{box-shadow:0 2px 10px rgba(0,0,0,.18);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);background:color-mix(in srgb,var(--soft) 85%,transparent)}
 .chunread{text-align:center;margin:12px -10px;padding:6px 0;background:color-mix(in srgb,var(--rose) 14%,transparent)}
 .chunread span{font-size:13px;font-weight:800;color:var(--rose)}
+.chmenu .inf{background:var(--card);border-radius:14px;padding:10px 16px;margin:0;min-width:220px;box-sizing:border-box;font-size:13.5px;display:grid;gap:5px;box-shadow:0 10px 30px -12px rgba(0,0,0,.4)}
+.chmenu .inf div{display:flex;justify-content:space-between;gap:14px}
+.chmenu .inf span{color:var(--mute);font-weight:700}
+.chmenu .inf b{font-weight:800}
+.chmenu .inf b.no{color:var(--rose)}
 .chday span{min-width:104px;background:var(--soft)}
 html.ipad .chtop{padding-top:calc(env(safe-area-inset-top) + 34px)}
 html.ipad .hero .top{margin-top:26px}
@@ -1466,9 +1471,16 @@ chl.addEventListener('click',async e=>{const i=e.target.closest('[data-cimg]');i
  const bs=v.querySelectorAll('button'),vi=v.querySelector('img');let src=m.img;bs[0].onclick=()=>v.remove();vi.onclick=()=>v.remove();
  if(m.imgId){if(chFull[m.imgId]){src=vi.src=chFull[m.imgId]}else{try{const d=await db.doc('chatimg/'+m.imgId).get();const x=d.exists&&d.data().data;if(x){chFull[m.imgId]=x;src=vi.src=x}}catch(y){}}}
  bs[1].onclick=()=>{try{saveFiles([dataToFile(src,'hassan-leen-chat-'+(m.t||0)+'.jpg')])}catch(x){toast('ما قدرنا ننزّلها')}}});
+function chWhen(t){if(!t)return '';const d=new Date(t),n=new Date(),tm=d.toLocaleTimeString('ar',{hour:'numeric',minute:'2-digit'});if(d.toDateString()===n.toDateString())return 'اليوم '+tm;const y=new Date(n);y.setDate(n.getDate()-1);if(d.toDateString()===y.toDateString())return 'مبارح '+tm;return d.toLocaleDateString('ar',{day:'numeric',month:'long'})+' '+tm}
+function chInfo(m){const o=other(me),on=WHO[o]||'',mine=m.by===me,rd=(chMeta[o]||{}).read||0,f=o==='leen';const rows=[];
+ rows.push(['📤 انبعتت',chWhen(m.t)]);
+ if(mine){rows.push(['👀 '+(f?'شافتها':'شافها'),rd>=m.t?'✓✓':'لسّا']);
+  if(m.aud)rows.push(['🎧 '+(f?'سمعتها':'سمعها'),m.played?chWhen(m.played):'لسّا ما '+(f?'سمعتها':'سمعها')])}
+ else if(m.aud)rows.push(['🎧 إنت سمعتها',m.played?chWhen(m.played):'لسّا'])
+ return '<div class="inf">'+rows.map(r=>'<div><span>'+r[0]+'</span><b class="'+(/لسّا/.test(r[1])?'no':'')+'">'+esc(r[1])+'</b></div>').join('')+'</div>'}
 function chMenu(id){const m=chat.find(x=>x.id===id);if(!m||m.del||!m.id||m._p)return;const mine=m.by===me;const my=(m.react||{})[me]||'';
  const w=document.createElement('div');w.className='chmenu';
- w.innerHTML='<div class="rx">'+CREACT.map(r=>'<button data-r="'+r+'" class="'+(r===my?'on':'')+'">'+r+'</button>').join('')+'</div><div class="pv">'+(m.stk?'🌟 ستيكر ':'')+(m.aud?'🎤 رسالة صوتية ':'')+(m.img?'📷 صورة ':'')+esc((m.text||'').slice(0,200))+'</div><div class="ac"><button data-a="reply">↩️ ردّ</button>'+(m.text?'<button data-a="copy">📋 انسخ</button>':'')+(mine&&m.text&&!m.aud&&!m.stk?'<button data-a="edit">✏️ عدّل</button>':'')+(mine?'<button data-a="del" class="dl">🗑️ احذف</button>':'')+'</div>';
+ w.innerHTML='<div class="rx">'+CREACT.map(r=>'<button data-r="'+r+'" class="'+(r===my?'on':'')+'">'+r+'</button>').join('')+'</div><div class="pv">'+(m.stk?'🌟 ستيكر ':'')+(m.aud?'🎤 رسالة صوتية ':'')+(m.img?'📷 صورة ':'')+esc((m.text||'').slice(0,200))+'</div>'+chInfo(m)+'<div class="ac"><button data-a="reply">↩️ ردّ</button>'+(m.text?'<button data-a="copy">📋 انسخ</button>':'')+(mine&&m.text&&!m.aud&&!m.stk?'<button data-a="edit">✏️ عدّل</button>':'')+(mine?'<button data-a="del" class="dl">🗑️ احذف</button>':'')+'</div>';
  document.body.appendChild(w);['contextmenu','selectstart'].forEach(n=>w.addEventListener(n,e=>e.preventDefault()));
  w.onclick=async e=>{const r=e.target.closest('[data-r]'),a=e.target.closest('[data-a]');
   if(r){w.remove();const nv=r.dataset.r===my?'':r.dataset.r;m.react={...(m.react||{}),[me]:nv};renderChat();try{Music.sfx.pop()}catch(x){}try{await db.collection('chat').doc(m.id).update({['react.'+me]:nv})}catch(x){try{await db.collection('chat').doc(m.id).update({react:m.react})}catch(y){}}return}
