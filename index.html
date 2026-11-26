@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-26.51">
+<meta name="app-ver" content="2026-11-26.52">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -913,7 +913,7 @@ function renderGames(){const el=$('#games');if(!el||!me)return;const o=other(me)
 }
 function wyrMaybeLog(){if(!wyr||!wyr.rid||logged[wyr.rid])return;if(!(wyr.a_hassan&&wyr.a_leen))return;logged[wyr.rid]=1;
  db.doc('wyrlog/'+wyr.rid).set({qi:wyr.qi,a_hassan:wyr.a_hassan,a_leen:wyr.a_leen,match:wyr.a_hassan===wyr.a_leen,t:Date.now()}).catch(()=>{})}
-async function wyrNew(){Music.sfx.pop();const recent=new Set(wyrLog.slice().sort((a,b)=>(b.t||0)-(a.t||0)).slice(0,20).map(x=>x.qi));let qi,n=0;do{qi=Math.floor(Math.random()*WYR.length);n++}while((recent.has(qi)||(wyr&&wyr.qi===qi))&&n<60);
+async function wyrNew(){Music.sfx.pop();try{notifyGame('wyr','بتفضّل؟')}catch(x){}const recent=new Set(wyrLog.slice().sort((a,b)=>(b.t||0)-(a.t||0)).slice(0,20).map(x=>x.qi));let qi,n=0;do{qi=Math.floor(Math.random()*WYR.length);n++}while((recent.has(qi)||(wyr&&wyr.qi===qi))&&n<60);
  await write(()=>db.doc('wyr/current').set({qi,rid:Date.now().toString(36),a_hassan:'',a_leen:'',by:me,t:Date.now()}))}
 $('#games').addEventListener('click',e=>{if(e.target.closest('#gDraw'))return openDraw();if(e.target.closest('#gTouch'))return openTouch();if(e.target.closest('#wNew'))return wyrNew();
  const b=e.target.closest('[data-w]');if(b&&wyr&&!wyr['a_'+me])Music.sfx.tick();if(b&&wyr&&!wyr['a_'+me])write(()=>db.doc('wyr/current').update({['a_'+me]:b.dataset.w}))});
@@ -1269,6 +1269,7 @@ $('#chpushb').onclick=enablePush;$('#chpushx').onclick=()=>{try{localStorage.set
 function fgPing(on){if(!db||!me)return;const v={fg:on?Date.now():0,ver:document.querySelector('meta[name=app-ver]').content},d=db.doc('chatmeta/'+me);try{Promise.resolve(d.update(v)).catch(()=>d.set({...(chMeta[me]||{}),...v}))}catch(x){try{d.set({...(chMeta[me]||{}),...v})}catch(y){}}}
 setInterval(()=>{if(!document.hidden)fgPing(true)},15000);setTimeout(()=>fgPing(!document.hidden),2500);
 document.addEventListener('visibilitychange',()=>fgPing(!document.hidden));addEventListener('pagehide',()=>fgPing(false));
+const gNot={};function notifyGame(g,name){const n=Date.now();if(gNot[g]&&n-gNot[g]<600000)return;gNot[g]=n;const f=me==='leen';notifyOther('🎮 '+(WHO[me]||''),(f?'فاتت':'فات')+' على لعبة «'+name+'»، '+(f?'تعال العب معها':'تعالي العبي معو'),'game-'+g)}
 function notifyOther(title,body,tag){try{const o=other(me),ps=pushSubs[o];if(!ps||!ps.sub||!PUSH_URL.startsWith('https'))return;{const om=chMeta[o]||{},n=Date.now();if((om.fg&&n-om.fg<25000)||(om.seen&&n-om.seen<20000&&om.fg!==0))return}
  fetch(PUSH_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sub:ps.sub,title,body,tag:tag||'chat',url:'./?open=chat'}),keepalive:true})
  .then(r=>r.json()).then(j=>{if(j&&j.gone)db.doc('push/'+o).delete().catch(()=>{})}).catch(()=>{})}catch(x){}}
@@ -1310,7 +1311,7 @@ function onDrawLive(){const o=other(me),od=drawLive[o]||{},here=!!(od.here&&Date
  if(here!==dOtherHere){dOtherHere=here;if(!dvOpen)renderGames()}
  if(dvOpen){$('#dvp').textContent=here?WHO[o]+(o==='leen'?' عم ترسم معك 💛':' عم يرسم معك 💛'):'ناطرين '+WHO[o]+(o==='leen'?' تفوت…':' يفوت…');dLive()}
  const id=drawLive.idea;if(id&&id.i!=null&&DIDEAS[id.i]&&Date.now()-(id.t||0)<3*36e5){const k=id.i+':'+id.t;if(k!==dIdeaSeen){dIdeaSeen=k;$('#dvi').textContent='💡 ارسموا: '+DIDEAS[id.i];$('#dvi').hidden=false;if(dvOpen)setTimeout(dSize,30)}}}
-function openDraw(){if(needMe())return;dvOpen=true;try{Music.duck(true)}catch(x){}$('#dv').classList.add('on');$('#dv').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+function openDraw(){if(needMe())return;try{notifyGame('draw','نرسم سوا 🎨')}catch(x){}dvOpen=true;try{Music.duck(true)}catch(x){}$('#dv').classList.add('on');$('#dv').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
  if(!drawSub)drawSub=db.collection('draw').onSnapshot(sn=>onDraw(sn.docs.map(d=>({...d.data(),id:d.id}))),()=>{});
  requestAnimationFrame(()=>{dSize();onDrawLive()});dSend(true);clearInterval(dHb);dHb=setInterval(()=>{dSend(true);onDrawLive()},6000)}
 function closeDraw(){dvOpen=false;dCur=null;$('#dv').classList.remove('on');$('#dv').setAttribute('aria-hidden','true');document.body.style.overflow='';clearInterval(dHb);dSend(true);try{Music.duck(tab==='games')}catch(x){}renderGames()}
@@ -1336,7 +1337,7 @@ function checkMeet(){const o=other(me),od=touchDocs[o]||{};if(!myT.down||!od.dow
   const mx=((myT.x+od.x)/2*100).toFixed(1)+'%',my=((myT.y+od.y)/2*100).toFixed(1)+'%';tva.style.setProperty('--mx',mx);tva.style.setProperty('--my',my);tva.classList.add('meet');setTimeout(()=>tva.classList.remove('meet'),1200);
   const fx=$('#tvfx');fx.innerHTML=burst(16,0,140).replace('class="kburst"','class="kburst" style="left:'+mx+';top:'+my+'"');setTimeout(()=>{fx.innerHTML=''},1500);
   try{navigator.vibrate&&navigator.vibrate([30,60,30])}catch(x){}}}
-function openTouch(){if(needMe())return;tvOpen=true;Music.duck(true);$('#tv').classList.add('on');$('#tv').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';meets=0;$('#tvn').textContent='';$('#tvhint').style.opacity='.6';
+function openTouch(){if(needMe())return;try{notifyGame('touch','لمسة عن بعد 🤍')}catch(x){}tvOpen=true;Music.duck(true);$('#tv').classList.add('on');$('#tv').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';meets=0;$('#tvn').textContent='';$('#tvhint').style.opacity='.6';
  sendTouch(true);clearInterval(hb);hb=setInterval(()=>sendTouch(true),6000);tvPresence();tvOther()}
 function closeTouch(){tvOpen=false;Music.duck(tab==='games');myT.down=false;$('#tv').classList.remove('on');$('#tv').setAttribute('aria-hidden','true');document.body.style.overflow='';clearInterval(hb);tgMe.classList.remove('on');sendTouch(true)}
 $('#tvx').onclick=closeTouch;
@@ -1880,7 +1881,8 @@ function openPoints(){
  pick('#pval','data-v');
  $('#ptf').addEventListener('submit',async e=>{e.preventDefault();const reason=$('#pt-r').value.trim();if(!reason)return;
   const pts=Number(val('#pval','data-v'))||1,t=to;close();
-  await write(()=>db.collection('points').add({to:t,from:me,pts,reason,createdAt:Date.now()}),(pts>0?'انبعتت '+sgn(pts)+' لـ':'انسحبت '+(-pts)+' من ')+WHO[t])});
+  await write(()=>db.collection('points').add({to:t,from:me,pts,reason,createdAt:Date.now()}),(pts>0?'انبعتت '+sgn(pts)+' لـ':'انسحبت '+(-pts)+' من ')+WHO[t]);
+  if(t===other(me)){const f=me==='leen',k=Math.abs(pts),u=k===1?'نقطة':k===2?'نقطتين':k+' نقاط';try{notifyOther((pts>0?'⭐ ':'🔻 ')+(WHO[me]||''),(pts>0?(f?'عطتك ':'عطاكي ')+u:(f?'نقّصتلك ':'نقّصلك ')+u)+' · '+reason,'points')}catch(x){}}});
  setTimeout(()=>$('#pt-r')?.focus(),50);
 }
 function openNote(n){
@@ -1893,7 +1895,8 @@ function openNote(n){
  pick('#nkind','data-k');
  $('#nf').addEventListener('submit',async e=>{e.preventDefault();const text=$('#n-t').value.trim();if(!text)return;
   const doc={from:n.from||me,to,kind:val('#nkind','data-k')||'note',text,ok:!!n.ok,reply:n.reply||'',createdAt:n.createdAt||Date.now(),updatedAt:Date.now()};close();
-  await write(()=>n.id?db.collection('notes').doc(n.id).set(doc):db.collection('notes').add(doc),n.id?'انحفظ':'انبعتت الملاحظة')});
+  await write(()=>n.id?db.collection('notes').doc(n.id).set(doc):db.collection('notes').add(doc),n.id?'انحفظ':'انبعتت الملاحظة');
+  if(!n.id&&to===other(me)){const f=me==='leen';try{notifyOther((doc.kind==='thanks'?'💐 ':'📝 ')+(WHO[me]||''),(doc.kind==='thanks'?(f?'بعتتلك شكر: ':'بعتلك شكر: '):(f?'كتبتلك ملاحظة: ':'كتبلك ملاحظة: '))+text.slice(0,120),'note')}catch(x){}}});
  const d=$('#ndel');if(d)d.onclick=async()=>{const copy={...n};delete copy.id;close();await write(()=>db.collection('notes').doc(n.id).delete());toast('انحذفت','تراجع',()=>write(()=>db.collection('notes').doc(n.id).set(copy),'رجعت'))};
 }
 function openOk(n){
