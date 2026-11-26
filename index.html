@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-26.48">
+<meta name="app-ver" content="2026-11-26.49">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -639,6 +639,9 @@ body.kbopen .bnav{transform:translateY(120%)}
 .mgrid button .ti{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:23px;color:#fff}
 .mgrid button[aria-current=page]{box-shadow:inset 0 0 0 2px var(--rose)}
 body.chat-open .bnav{z-index:73;background:var(--card)}
+@media (display-mode: standalone){html{min-height:min(100lvh,calc(100% + env(safe-area-inset-top)))}}
+html:has(body.chat-open),body.chat-open{overscroll-behavior:none}
+.bnav{touch-action:none;overscroll-behavior:none}
 body.chat-open:not(.kbopen) #ch{bottom:var(--bnh,64px)}
 body.chat-open:not(.kbopen) .chbar{padding-bottom:6px}
 body.chat-open.kbopen main,body.chat-open.kbopen header,body.chat-open.kbopen .fab{visibility:hidden}
@@ -2049,6 +2052,7 @@ function openMore(){open('<h2 style="text-align:center;margin-bottom:6px">الم
 function bnSize(){const b=$('#bnav');if(b&&b.offsetHeight)document.documentElement.style.setProperty('--bnh',b.offsetHeight+'px')}
 addEventListener('resize',bnSize);setTimeout(bnSize,0);
 function navGo(g){if(chOpen){closeChat();if(g===tab)return}if(g==='more')return openMore();if(g===tab){window.scrollTo({top:0,behavior:'smooth'});return}goTab(g)}
+$('#bnav').addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
 $('#bnav').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)navGo(b.dataset.go)});
 $('#htiles').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)navGo(b.dataset.go)});
 function kbCheck(){const vv=window.visualViewport,a=document.activeElement;const base=Math.max(typeof maxVH==='number'?maxVH:0,window.innerHeight);
