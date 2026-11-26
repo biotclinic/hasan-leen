@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-26.64">
+<meta name="app-ver" content="2026-11-26.65">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1143,7 +1143,7 @@ function callLog(kind,dur){try{const txt=kind==='done'?'📞 مكالمة صوت
  if(kind!=='done')notifyOther('📞 '+(WHO[me]||''),'مكالمة فائتة','chat','chat')}catch(x){}}
 function callCleanup(){const c=call;call=null;if(!c)return;callLastId=c.id;clearTimeout(c.to);clearTimeout(c.dc);clearInterval(c.tm);ringStop();
  try{c.stream&&c.stream.getTracks().forEach(t=>t.stop())}catch(x){}try{c.pc&&c.pc.close()}catch(x){}try{c.wl&&c.wl.release()}catch(x){}
- if(callAudioEl){try{callAudioEl.srcObject=null}catch(x){}}try{callSil&&callSil.ctx.close()}catch(x){}callSil=null;try{const S=navigator.audioSession;if(S){S.type='playback';S.type='auto'}}catch(x){}try{Music.hush(!!chOpen)}catch(x){}}
+ if(callAudioEl){try{callAudioEl.srcObject=null}catch(x){}}try{callOut&&callOut.ctx.close()}catch(x){}callOut=null;callRemote=null;if(callAudioEl)callAudioEl.muted=false;try{const S=navigator.audioSession;if(S){S.type='playback';S.type='auto'}}catch(x){}try{Music.hush(!!chOpen)}catch(x){}}
 function callEnd(msg){if(!call)return;const v=$('#callv');callCleanup();v.classList.remove('inc','conn');v.classList.add('end');callTxt(msg||'انتهت المكالمة');setTimeout(()=>{if(!call){v.classList.remove('on','end');setTimeout(()=>{if(!call)v.hidden=true},300)}},1400)}
 function callOnDoc(d){if(!d||!d.cid||!me)return;
  if(call&&d.cid===call.id){
@@ -1153,24 +1153,32 @@ function callOnDoc(d){if(!d||!d.cid||!me)return;
   else if(['ended','cancelled','missed'].includes(d.state))callEnd(d.state==='ended'?'انتهت المكالمة':'المكالمة انلغت');
   return}
  if(!call&&d.to===me&&d.state==='ringing'&&d.cid!==callLastId&&Date.now()-(d.t||0)<45000){call={id:d.cid,role:'in',state:'incoming',from:d.from,offer:d.offer};callShow();callTxt('عم يتصل فيك'+(me==='leen'?'ي':'')+'…');ringPlay('in')}}
-$('#chcall').addEventListener('click',callStart);
+$('#chcall').addEventListener('click',()=>{callCtx();callStart()});
 $('#callend').addEventListener('click',()=>{if(call&&call.role==='in'&&call.state==='incoming')callDecline();else callHang()});
-$('#callok').addEventListener('click',callAccept);
-/* speaker / earpiece */
-let callSpk=false,callSil=null;try{callSpk=localStorage.getItem('hl-call-spk')==='1'}catch(x){}
-function callSetStream(tr){if(!callAudioEl)callPrepAudio();const tracks=[tr];
- try{if(!callSil){const C=window.AudioContext||window.webkitAudioContext,ctx=new C(),o=ctx.createConstantSource?ctx.createConstantSource():ctx.createOscillator(),g=ctx.createGain(),d=ctx.createMediaStreamDestination();g.gain.value=0;o.connect(g);g.connect(d);o.start();callSil={ctx,tr:d.stream.getAudioTracks()[0]}}if(callSil.tr)tracks.push(callSil.tr)}catch(x){}
- callAudioEl.srcObject=new MediaStream(tracks);callAudioEl.play().catch(()=>{});callRoute(callSpk,true)}
-async function callRoute(spk,quiet){callSpk=spk;try{localStorage.setItem('hl-call-spk',spk?'1':'0')}catch(x){}$('#callspk').setAttribute('aria-pressed',String(spk));
- let ok=false;
- try{if(callAudioEl&&callAudioEl.setSinkId&&navigator.mediaDevices.enumerateDevices){const outs=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==='audiooutput');
-  const isSpk=d=>/speaker|مكبر|haut-parleur|hoparl/i.test(d.label),isBt=d=>/bluetooth|airpods|headphone|headset|سماع/i.test(d.label);
-  const tgt=spk?outs.find(isSpk):(outs.find(d=>!isSpk(d)&&!isBt(d)&&/iphone|receiver|earpiece|ipad|ahize/i.test(d.label))||outs.find(d=>!isSpk(d)&&!isBt(d)&&d.deviceId!=='default'));
-  if(tgt){await callAudioEl.setSinkId(tgt.deviceId);ok=true}}}catch(x){}
- if(!ok){try{const S=navigator.audioSession;if(S&&!spk){S.type='play-and-record';ok=true}}catch(x){}}
- if(!ok&&!quiet)toast(spk?'ما قدرت حوّل للسبيكر على هالتلفون':'ما قدرت حوّل لسماعة الأذن على هالتلفون')}
+$('#callok').addEventListener('click',()=>{callCtx();callAccept()});
+/* speaker / earpiece: speaker = <audio> element, earpiece = Web Audio in play-and-record session (iOS routes it to the receiver) */
+let callSpk=true,callOut=null,callRemote=null;try{callSpk=localStorage.getItem('hl-call-spk2')!=='0'}catch(x){}
+function callCtx(){try{if(!callOut){const C=window.AudioContext||window.webkitAudioContext;const ctx=new C();const g=ctx.createGain();g.gain.value=1.8;g.connect(ctx.destination);callOut={ctx,g,src:null}}if(callOut.ctx.state!=='running')callOut.ctx.resume().catch(()=>{})}catch(x){}return callOut}
+function callSetStream(tr){if(!callAudioEl)callPrepAudio();callRemote=new MediaStream([tr]);callAudioEl.srcObject=callRemote;callAudioEl.play().catch(()=>{});callRoute(callSpk,true)}
+async function callRoute(spk,quiet){callSpk=spk;try{localStorage.setItem('hl-call-spk2',spk?'1':'0')}catch(x){}$('#callspk').setAttribute('aria-pressed',String(spk));
+ const o=callCtx();
+ if(spk){try{o&&o.src&&o.src.disconnect()}catch(x){}if(o)o.src=null;if(callAudioEl){callAudioEl.muted=false;callAudioEl.volume=1;callAudioEl.play().catch(()=>{})}
+  try{if(callAudioEl&&callAudioEl.setSinkId&&navigator.mediaDevices.enumerateDevices){const d=(await navigator.mediaDevices.enumerateDevices()).find(d=>d.kind==='audiooutput'&&/speaker/i.test(d.label));if(d)await callAudioEl.setSinkId(d.deviceId)}}catch(x){}}
+ else{try{const S=navigator.audioSession;if(S)S.type='play-and-record'}catch(x){}
+  if(o&&callRemote&&!o.src){try{o.src=o.ctx.createMediaStreamSource(callRemote);o.src.connect(o.g)}catch(x){o.src=null}}
+  if(o&&o.src){if(callAudioEl)callAudioEl.muted=true}else{if(callAudioEl)callAudioEl.muted=false;if(!quiet)toast('ما قدرت حوّل لسماعة الأذن على هالتلفون')}}
+ if(!quiet)toast(spk?'🔊 سبيكر':'📱 سماعة الأذن')}
+/* back from background: iOS stops web mic capture while the app is hidden, so re-acquire it and resume audio */
+async function callResume(){if(!call||!call.pc||call.state!=='connected')return;try{callOut&&callOut.ctx.state!=='running'&&callOut.ctx.resume()}catch(x){}try{callAudioEl&&callAudioEl.play().catch(()=>{})}catch(x){}
+ const old=call.stream&&call.stream.getAudioTracks()[0];if(old&&old.readyState==='live'&&!old.muted)return;
+ try{const ns=await callGetMic();if(!call||!call.pc){ns.getTracks().forEach(t=>t.stop());return}const nt=ns.getAudioTracks()[0];nt.enabled=$('#callmute').getAttribute('aria-pressed')!=='true';
+  const snd=call.pc.getSenders().find(x=>!x.track||x.track.kind==='audio');if(snd)await snd.replaceTrack(nt.enabled?nt:null);try{old&&old.stop()}catch(x){}call.stream=ns;if(!callSpk)callRoute(false,true)}catch(x){}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(callResume,300)});addEventListener('pageshow',()=>setTimeout(callResume,300));
 $('#callspk').addEventListener('click',()=>{callRoute(!callSpk);try{navigator.vibrate&&navigator.vibrate(10)}catch(x){}});
-$('#callmute').addEventListener('click',e=>{if(!call||!call.stream)return;const tr=call.stream.getAudioTracks()[0];if(!tr)return;tr.enabled=!tr.enabled;e.currentTarget.setAttribute('aria-pressed',String(!tr.enabled))});
+$('#callmute').addEventListener('click',e=>{const btn=e.currentTarget,m=btn.getAttribute('aria-pressed')!=='true';btn.setAttribute('aria-pressed',String(m));try{navigator.vibrate&&navigator.vibrate(10)}catch(x){}
+ if(!call||!call.stream)return;const tr=call.stream.getAudioTracks()[0];if(tr)tr.enabled=!m;
+ try{const snd=call.pc&&call.pc.getSenders().find(x=>x.track?x.track.kind==='audio':true);if(snd)snd.replaceTrack(m?null:tr).catch(()=>{})}catch(x){}
+ toast(m?'🔇 المايك مسكّر':'🎙️ المايك مفتوح')});
 function chMarkRead(){if(!chOpen||document.hidden||!me||!db)return;const last=chat.filter(m=>m.by!==me).reduce((a,m)=>Math.max(a,m.t||0),0);const cur=(chMeta[me]||{}).read||0;
  if(last>cur&&Date.now()-chReadT>800){chReadT=Date.now();chMeta[me]={...(chMeta[me]||{}),read:last};db.doc('chatmeta/'+me).set({...(chMeta[me]||{}),read:last,seen:Date.now()}).catch(()=>{});chBadge()}}
 function onChat(docs){const before=chSeenIds;chat=docs.sort((a,b)=>(a.t||0)-(b.t||0));
