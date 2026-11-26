@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-26.50">
+<meta name="app-ver" content="2026-11-26.51">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1266,10 +1266,10 @@ function pushBanner(){const b=$('#chpush');if(!b)return;if(pushOffLocal()){b.hid
  b.hidden=!need||Date.now()-dis<3*864e5||(pushOK()&&Notification.permission==='denied'&&Date.now()-dis<30*864e5);
  if(!pushOK())$('#chpusht').textContent='لتوصلك الإشعارات، افتح التطبيق من أيقونته عالشاشة الرئيسية';}
 $('#chpushb').onclick=enablePush;$('#chpushx').onclick=()=>{try{localStorage.setItem('hl-push-later',Date.now())}catch(x){}$('#chpush').hidden=true};
-function fgPing(on){if(!db||!me)return;const v={fg:on?Date.now():0},d=db.doc('chatmeta/'+me);try{Promise.resolve(d.update(v)).catch(()=>d.set({...(chMeta[me]||{}),...v}))}catch(x){try{d.set({...(chMeta[me]||{}),...v})}catch(y){}}}
+function fgPing(on){if(!db||!me)return;const v={fg:on?Date.now():0,ver:document.querySelector('meta[name=app-ver]').content},d=db.doc('chatmeta/'+me);try{Promise.resolve(d.update(v)).catch(()=>d.set({...(chMeta[me]||{}),...v}))}catch(x){try{d.set({...(chMeta[me]||{}),...v})}catch(y){}}}
 setInterval(()=>{if(!document.hidden)fgPing(true)},15000);setTimeout(()=>fgPing(!document.hidden),2500);
 document.addEventListener('visibilitychange',()=>fgPing(!document.hidden));addEventListener('pagehide',()=>fgPing(false));
-function notifyOther(title,body,tag){try{const o=other(me),ps=pushSubs[o];if(!ps||!ps.sub||!PUSH_URL.startsWith('https'))return;{const f=(chMeta[o]||{}).fg;if(f&&Date.now()-f<25000)return}
+function notifyOther(title,body,tag){try{const o=other(me),ps=pushSubs[o];if(!ps||!ps.sub||!PUSH_URL.startsWith('https'))return;{const om=chMeta[o]||{},n=Date.now();if((om.fg&&n-om.fg<25000)||(om.seen&&n-om.seen<20000&&om.fg!==0))return}
  fetch(PUSH_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sub:ps.sub,title,body,tag:tag||'chat',url:'./?open=chat'}),keepalive:true})
  .then(r=>r.json()).then(j=>{if(j&&j.gone)db.doc('push/'+o).delete().catch(()=>{})}).catch(()=>{})}catch(x){}}
 function onPushDocs(docs){pushSubs={};docs.forEach(d=>pushSubs[d.id]=d);pushRefresh()}
@@ -1987,7 +1987,7 @@ function openSettings(){
  open('<h2>إعداداتنا</h2><form id="sf"><label class="l" for="s-d">تاريخ خطبتنا</label><input class="in" id="s-d" type="date" value="'+esc(settings.start||'')+'">'+
  (me?'<label class="l" for="s-b">عيد ميلادك</label><input class="in" id="s-b" type="date" value="'+esc(bdayOf(me))+'">':'')+
  '<div class="srow"><div><b>🔔 الإشعارات</b><span>رسائل المحادثة والبوس، حتى لو التطبيق مسكّر</span></div><button type="button" class="swt" id="s-push" aria-label="الإشعارات" aria-pressed="'+(typeof pushIsOn==='function'&&pushIsOn())+'"></button></div>'+
- '<p class="small" style="opacity:.6">نسخة التطبيق: '+APP_VER+'</p><p class="small">'+(me?'إنت مسجّل باسم '+WHO[me]+'. كل واحد بيعدّل عيد ميلادو ووزنو وطولو هوّي بس.':'لسّا ما اخترت مين إنت.')+'</p><div class="acts"><button class="btn pri" type="submit">احفظ</button></div><div class="acts" style="margin-top:10px"><button type="button" class="btn" id="bk">نسخة احتياطية</button><button type="button" class="btn del" id="lo">طلوع من الحساب</button></div></form>');
+ '<p class="small" style="opacity:.6">نسخة التطبيق: '+APP_VER+(me&&(chMeta[other(me)]||{}).ver?' · نسخة '+WHO[other(me)]+': '+chMeta[other(me)].ver:'')+'</p><p class="small">'+(me?'إنت مسجّل باسم '+WHO[me]+'. كل واحد بيعدّل عيد ميلادو ووزنو وطولو هوّي بس.':'لسّا ما اخترت مين إنت.')+'</p><div class="acts"><button class="btn pri" type="submit">احفظ</button></div><div class="acts" style="margin-top:10px"><button type="button" class="btn" id="bk">نسخة احتياطية</button><button type="button" class="btn del" id="lo">طلوع من الحساب</button></div></form>');
  $('#bk').onclick=()=>{close();backup()};
  $('#s-push').onclick=()=>togglePush();
  $('#lo').onclick=()=>window.__logout&&window.__logout();
