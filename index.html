@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-26.69">
+<meta name="app-ver" content="2026-11-26.70">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -723,7 +723,7 @@ body.chat-open.kbopen main,body.chat-open.kbopen header,body.chat-open.kbopen .f
  <div class="sky" id="sky" aria-hidden="true"></div>
  <div class="wrap">
   <div class="top">
-   <div style="display:flex;gap:8px;align-items:center"><button class="me" id="meBtn">مين أنا؟</button><button class="mbtn" id="musBtn" aria-label="الموسيقى"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="w1" d="M15.5 9a4 4 0 0 1 0 6"/><path class="w2" d="M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="mx" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button></div>
+   <div style="display:flex;gap:8px;align-items:center"><button class="me" id="meBtn">مين أنا؟</button><button class="mbtn" id="musBtn" hidden style="display:none" aria-label="الموسيقى"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="w1" d="M15.5 9a4 4 0 0 1 0 6"/><path class="w2" d="M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="mx" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button></div>
    <button class="gear" id="setBtn" aria-label="الإعدادات"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
   </div>
   <div class="pic">
@@ -1607,7 +1607,7 @@ const Music=(()=>{
   master=ctx.createGain();master.gain.value=1;master.connect(ctx.destination);
   mus=ctx.createGain();mus.gain.value=0;mus.connect(master);sfx=ctx.createGain();sfx.gain.value=.9;sfx.connect(master);
   rev=ctx.createConvolver();rev.buffer=impulse();revIn=ctx.createGain();revIn.gain.value=.55;revIn.connect(rev);rev.connect(mus);
-  setBtn();if(pref())start()}
+  setBtn()}
  let hushed=false;
  function level(){return hushed?0:ducked?.06:.6}
  function hush(h){if(hushed===h)return;hushed=h;if(on)fade(level(),.5);napCheck()}
@@ -1630,7 +1630,7 @@ const Music=(()=>{
    if(first||Math.random()<c.prob){first=false;const idx=(s8+Math.floor(beat/8))%ch.length,m=ch[idx]+c.oct[(s8>>1)%c.oct.length];
     voice(mf(m),nextT,c.bell?2:1.3,c.pl*(s8%2?.75:1),c.wave,c.bell?3800:2600);if(c.bell&&s8%4===0)voice(mf(m)*2,nextT,1,c.pl*.22,'sine',5000)}
    nextT+=st;beat++}}
- function start(){if(!booted)return;if(on)return;on=true;beat=0;nextT=ctx.currentTime+.02;clearInterval(timer);timer=setInterval(tick,150);first=true;tick();fade(level(),.25);setBtn()}
+ function start(){return;if(!booted)return;if(on)return;on=true;beat=0;nextT=ctx.currentTime+.02;clearInterval(timer);timer=setInterval(tick,150);first=true;tick();fade(level(),.25);setBtn()}
  function stop(){if(!on){setBtn();return}on=false;fade(0,.8);setTimeout(()=>{if(!on){clearInterval(timer);timer=0;napCheck()}},900);setBtn()}
  function setBtn(){const b=document.getElementById('musBtn');if(b)b.classList.toggle('off',!pref())}
  function toggle(){const n=!pref();try{localStorage.setItem('hl-music',n?'on':'off')}catch(x){}unlockAudio();if(n)start();else stop();setBtn();toast(n?'الموسيقى اشتغلت':'الموسيقى انطفت')}
