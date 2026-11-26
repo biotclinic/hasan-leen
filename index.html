@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-26.58">
+<meta name="app-ver" content="2026-11-26.59">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -639,7 +639,7 @@ body.kbopen .bnav{transform:translateY(120%)}
 .mgrid button .ti{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:23px;color:#fff}
 .mgrid button[aria-current=page]{box-shadow:inset 0 0 0 2px var(--rose)}
 .tm .ed{font-style:normal;opacity:.8;font-size:.92em}
-.chmenu,.chmenu *,.ch :not(input):not(textarea),.bnav,.bnav *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.chmenu,.ch,.bnav{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.ch input,.ch textarea{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
 .aum{display:inline-grid;place-items:center;width:18px;height:18px;margin-inline-start:4px;opacity:.55;flex:none}
 .aum svg{width:15px;height:15px}
 .aum.on{color:#3fa9f5;opacity:1}
@@ -793,6 +793,10 @@ const otherInput=(id,v,shown,ph)=>'<input class="in" id="'+id+'" maxlength="40" 
 function wireOther(box,attr,id){sheet.querySelector(box).addEventListener('click',e=>{const b=e.target.closest('['+attr+']');if(!b)return;const i=document.getElementById(id);const on=b.getAttribute(attr)==='other';i.hidden=!on;if(on)setTimeout(()=>i.focus(),60)})}
 const WHO={both:'سوا',hassan:'حسن',leen:'لين'};
 const L='ar-u-nu-latn';
+/* perf: cache Intl formatters (toLocale* builds a new formatter every call) */
+{const C=new Map(),fm=(loc,o)=>{const k=String(loc)+'|'+JSON.stringify(o);let f=C.get(k);if(!f){f=new Intl.DateTimeFormat(loc,o);C.set(k,f)}return f},D=Date.prototype,od=D.toLocaleDateString,ot=D.toLocaleTimeString;
+ D.toLocaleDateString=function(loc,o){if(isNaN(this))return od.call(this,loc,o);try{return fm(loc,o||{year:'numeric',month:'numeric',day:'numeric'}).format(this)}catch(e){return od.call(this,loc,o)}};
+ D.toLocaleTimeString=function(loc,o){if(isNaN(this))return ot.call(this,loc,o);try{return fm(loc,o||{hour:'numeric',minute:'numeric',second:'numeric'}).format(this)}catch(e){return ot.call(this,loc,o)}}}
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 const pd=s=>{const [y,m,d]=String(s||today()).split('-').map(Number);return new Date(y,(m||1)-1,d||1)};
 const heart='<svg><use href="#h"/></svg>';
@@ -956,6 +960,7 @@ const CREACT=['❤️','😂','😍','🥺','😮','👍'];
 let chLimit=300,chUnsub=null,chStick=true,chNew=0,chKeep=0;
 function subChat(){if(!db)return;try{chUnsub&&chUnsub()}catch(x){}let q=db.collection('chat');if(q.orderBy){q=q.orderBy('t');if(q.limitToLast)q=q.limitToLast(chLimit)}
  chUnsub=q.onSnapshot(sn=>onChat(sn.docs.map(d=>({...d.data(),id:d.id,_p:d.pending?1:0}))),()=>{})}
+const CH_WIN=60;let chShow=CH_WIN,chStart=0,chMoreBusy=false;
 let chat=[],chMeta={},chOpen=false,chReply=null,chLoadT=Date.now(),chSeenIds=null,chTypT=0,chReadT=0,chFirst=true;
 const chl=$('#chlist'),chin=$('#chin');
 $('#chq').innerHTML=CQUICK.map(e=>'<button data-qe="'+e+'">'+e+'</button>').join('');
@@ -979,7 +984,7 @@ function chMsgHtml(m,prevBy,oread){const mine=m.by===me;let inner='';
  if(m.del)inner='<div class="cb del">🚫 انحذفت هالرسالة</div>';
  else{const big=!m.img&&!m.aud&&!m.reply&&isBigEmo(m.text);
   const rp=m.reply?'<span class="crp" data-goto="'+esc(m.reply.id||'')+'"><b>'+esc(WHO[m.reply.by]||'')+'</b><span class="crt">'+esc((m.reply.text||'📷 صورة').slice(0,80))+'</span></span>':'';
-  const im=m.img?'<img alt="صورة" data-cimg="'+esc(m.id)+'" src="'+m.img+'"'+imgDim(m)+'>':'';
+  const im=m.img?'<img alt="صورة" decoding="async" data-cimg="'+esc(m.id)+'" src="'+m.img+'"'+imgDim(m)+'>':'';
   const au=m.aud?audHtml(m):'';
   const tk=mine?(m._p?'<span class="tk pd">🕓</span>':'<span class="tk'+((oread||0)>=(m.t||0)?' rd':'')+'">✓✓</span>'):'';
   inner=m.stk?'<div class="cb stk" data-chm="'+esc(m.id)+'">'+(m.reply?rp:'')+'<span class="sk">'+stkHtml(m.stk)+'</span>'+'<span class="tm">'+(m.edited?'<i class="ed">معدّلة</i> ':'')+hm(m.t)+' '+tk+'</span></div>':'<div class="cb'+(big?' big':'')+'" data-chm="'+esc(m.id)+'">'+rp+im+au+(m.text?linkify(esc(m.text)):'')+'<span class="tm">'+(m.edited?'<i class="ed">معدّلة</i> ':'')+hm(m.t)+' '+tk+'</span></div>'}
@@ -1006,8 +1011,9 @@ function renderChat(){chBadge();if(!chOpen)return;if(swBusy){swPend=true;return}
  if(!chat.length){chl.innerHTML='<div class="chempty"><b>💌</b>أوّل رسالة بيناتكن هون، يلا '+(me==='leen'?'ابعتيلو':'ابعتلها')+' شي حلو</div>';return}
  const oread=(chMeta[o]||{}).read||0,items=[];let lastDay='',prevBy='';
  const lastRead=[...chat].reverse().find(m=>m.by===me&&!m.del&&!m._p&&(m.t||0)<=oread);
- if(chat.length>=chLimit)items.push({k:'older',h:'<button class="cholder" id="cholder">⬆️ رسائل أقدم</button>'});
- chat.forEach(m=>{const d=dayLbl(m.t||0);if(d!==lastDay){items.push({k:'day:'+d,h:'<div class="chday"><span>'+d+'</span></div>'});lastDay=d;prevBy=''}
+ let start=Math.max(0,chat.length-chShow);if(chUnreadKey){const ui=chat.findIndex(m=>kOf(m)===chUnreadKey);if(ui>=0&&ui<start+3)start=Math.max(0,ui-6,chat.length-200)}chStart=start;
+ if(start>0||chat.length>=chLimit)items.push({k:'older',h:'<button class="cholder" id="cholder">⬆️ رسائل أقدم</button>'});
+ (start?chat.slice(start):chat).forEach(m=>{const d=dayLbl(m.t||0);if(d!==lastDay){items.push({k:'day:'+d,h:'<div class="chday"><span>'+d+'</span></div>'});lastDay=d;prevBy=''}
   const k=kOf(m);if(chUnreadKey&&k===chUnreadKey)items.push({k:'unread',h:'<div class="chunread"><span>رسائل جديدة</span></div>'});
   items.push({k:'m:'+k,h:chMsgHtml(m,prevBy,oread),a:1});
   if(lastRead&&m===lastRead)items.push({k:'read',h:'<div class="chread">'+(m.aud?(m.played?'تمت القراءة والاستماع ✓✓':'تمت القراءة ✓✓ · لسّا ما انسمعت'):'تمت القراءة ✓✓')+'</div>',a:1});prevBy=m.by});
@@ -1022,8 +1028,11 @@ function jumpUI(){const j=$('#chjump');const far=chl.scrollHeight-chl.scrollTop-
 chl.addEventListener('scroll',()=>{chStick=chl.scrollHeight-chl.scrollTop-chl.clientHeight<140;if(chStick)chNew=0;jumpUI()},{passive:true});
 chl.addEventListener('load',e=>{if(e.target.tagName==='IMG'&&chStick)chl.scrollTop=chl.scrollHeight},true);
 $('#chjump').onclick=()=>{chl.scrollTo({top:chl.scrollHeight,behavior:'smooth'});chNew=0};
-chl.addEventListener('click',e=>{if(e.target.closest('#cholder')){chKeep=chl.scrollHeight-chl.scrollTop;chLimit+=300;subChat();return}
- const g=e.target.closest('[data-goto]');if(!g||!g.dataset.goto)return;e.stopPropagation();const t=chl.querySelector('[data-chm="'+CSS.escape(g.dataset.goto)+'"]');
+function chMore(){if(chMoreBusy)return;chMoreBusy=true;chKeep=chl.scrollHeight-chl.scrollTop;if(chStart>0){chShow+=50;renderChat()}else{chLimit+=300;subChat()}setTimeout(()=>chMoreBusy=false,250)}
+function chReveal(id){const i=chat.findIndex(m=>m.id===id);if(i<0)return null;if(i<chStart){chShow=chat.length-i+12;renderChat()}return chl.querySelector('[data-chm="'+CSS.escape(id)+'"]')}
+chl.addEventListener('scroll',()=>{if(chl.scrollTop<250&&chStart>0&&!chMoreBusy&&!chFirst)requestAnimationFrame(chMore)},{passive:true});
+chl.addEventListener('click',e=>{if(e.target.closest('#cholder')){chMore();return}
+ const g=e.target.closest('[data-goto]');if(!g||!g.dataset.goto)return;e.stopPropagation();const t=chl.querySelector('[data-chm="'+CSS.escape(g.dataset.goto)+'"]')||chReveal(g.dataset.goto);
  if(!t){toast('هالرسالة قديمة كتير، طلّع لفوق وكبس «رسائل أقدم»');return}const row=t.closest('.cm');row.scrollIntoView({block:'center',behavior:'smooth'});row.classList.remove('flash');void row.offsetWidth;row.classList.add('flash')});
 /* ---- chat search + double-tap heart (v54) ---- */
 const srN=t=>String(t||'').replace(/[ً-ٰٟـ]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/ؤ/g,'و').replace(/ئ/g,'ي').toLowerCase();
@@ -1033,7 +1042,7 @@ function srOpen(){const b=$('#chsr');if(!b.hidden){$('#chsq').focus();return}try
 function srClose(){const b=$('#chsr');if(b.hidden)return;b.hidden=true;srHits=[];srQ='';$('#chsq').blur();srMark()}
 function srRun(){srQ=srN($('#chsq').value.trim());srHits=srQ.length<2?[]:chat.filter(m=>!m.del&&m.text&&srN(m.text).includes(srQ)).map(m=>m.id).reverse();srI=0;srShow()}
 function srShow(){const n=$('#chsn');if(!srQ||srQ.length<2){n.textContent='';srMark();return}if(!srHits.length){n.textContent='ما في';srMark();return}
- n.textContent=(srI+1)+' من '+srHits.length;srMark();const t=chl.querySelector('[data-chm="'+CSS.escape(srHits[srI])+'"]');if(t){const row=t.closest('.cm');row.scrollIntoView({block:'center',behavior:'smooth'});row.classList.remove('flash');void row.offsetWidth;row.classList.add('flash')}}
+ n.textContent=(srI+1)+' من '+srHits.length;srMark();let t=chl.querySelector('[data-chm="'+CSS.escape(srHits[srI])+'"]');if(!t){t=chReveal(srHits[srI]);srMark()}if(t){const row=t.closest('.cm');row.scrollIntoView({block:'center',behavior:'smooth'});row.classList.remove('flash');void row.offsetWidth;row.classList.add('flash')}}
 function srMark(){chl.querySelectorAll('mark.srm').forEach(mk=>{const p=mk.parentNode;mk.replaceWith(document.createTextNode(mk.textContent));p&&p.normalize()});chl.querySelectorAll('.cb.srcur').forEach(e=>e.classList.remove('srcur'));
  if(!srQ||srQ.length<2||!srHits.length)return;const set=new Set(srHits);
  chl.querySelectorAll('[data-chm]').forEach(cb=>{if(!set.has(cb.dataset.chm))return;if(cb.dataset.chm===srHits[srI])cb.classList.add('srcur');
@@ -1060,7 +1069,8 @@ function onChat(docs){const before=chSeenIds;chat=docs.sort((a,b)=>(a.t||0)-(b.t
   if(fresh.length){try{Music.sfx.pop()}catch(x){}if(chOpen&&!chStick)chNew+=fresh.length;const m=fresh[fresh.length-1];
    if(!chOpen)toast('💬 '+(WHO[m.by]||'')+': '+(m.stk?'🌟 ستيكر':m.aud?'🎤 رسالة صوتية':m.img?'📷 صورة':(m.text||'').slice(0,40)),'افتح',openChat)}}
  chSeenIds=new Set(chat.map(m=>m.id));renderChat()}
-function onChatMeta(docs){chMeta={};docs.forEach(d=>chMeta[d.id]=d);if(chOpen){chStatus();renderChat()}else chBadge();navAct()}
+let chMetaSig='';
+function onChatMeta(docs){chMeta={};docs.forEach(d=>chMeta[d.id]=d);if(chOpen){chStatus();const sg=((chMeta[other(me)]||{}).read||0)+'|'+chAct();if(sg!==chMetaSig){chMetaSig=sg;renderChat()}}else{chMetaSig='';chBadge()}navAct()}
 let fitRaf=0,fitH=0,fitT=-1,maxVH=window.innerHeight;
 addEventListener('resize',()=>{maxVH=Math.max(maxVH,window.innerHeight)});
 function kbOpen(){const vv=window.visualViewport;return !!vv&&document.activeElement===chin&&maxVH-vv.height>120}
@@ -1109,7 +1119,7 @@ function chLock(on){const b=document.body;if(on){chLockY=window.scrollY;b.style.
  C.addEventListener('touchend',()=>{if(!edg||!drag){edg=false;return}edg=false;drag=false;const cur=new DOMMatrix(getComputedStyle(C).transform).m41;
   if(cur<-innerWidth*.33||vx<-.5)closeChat();else{const an=C.animate([{transform:'translateX('+cur+'px)'},{transform:'translateX(0)'}],{duration:220,easing:'cubic-bezier(.2,.8,.2,1)'});C.style.transform='';}},{passive:true})}
 function openChat(){if(needMe())return;if(chOpen)return;bnSize();document.body.classList.add('chat-open');document.querySelectorAll('#bnav .bn').forEach(b=>b===$('#chBtn')?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current'));{const r=(chMeta[me]||{}).read||0,o=other(me),f=chat.find(m=>m.by===o&&!m.del&&(m.t||0)>r);chUnreadKey=f?kOf(f):''}
- {const c0=$('#ch');c0.getAnimations().forEach(a=>a.cancel());c0.style.transform=''}chOpen=true;pushBanner();pushUI();try{navigator.clearAppBadge&&navigator.clearAppBadge()}catch(x){}fitH=-1;fitT=-1;setTimeout(healViewport,50);chFirst=true;chStick=true;chNew=0;try{const d=localStorage.getItem('hl-chat-draft');if(d&&!chin.value){chin.value=d;setTimeout(chGrow,0)}}catch(x){}const c=$('#ch');c.classList.add('on');c.setAttribute('aria-hidden','false');chLock(true);fitCh();renderChat();chBadge();
+ {const c0=$('#ch');c0.getAnimations().forEach(a=>a.cancel());c0.style.transform=''}chOpen=true;pushBanner();pushUI();try{navigator.clearAppBadge&&navigator.clearAppBadge()}catch(x){}fitH=-1;fitT=-1;setTimeout(healViewport,50);chFirst=true;chShow=CH_WIN;chStick=true;chNew=0;try{const d=localStorage.getItem('hl-chat-draft');if(d&&!chin.value){chin.value=d;setTimeout(chGrow,0)}}catch(x){}const c=$('#ch');c.classList.add('on');c.setAttribute('aria-hidden','false');chLock(true);fitCh();renderChat();chBadge();
  if(db)db.doc('chatmeta/'+me).set({...(chMeta[me]||{}),seen:Date.now()}).catch(()=>{});try{Music.hush(true)}catch(x){}}
 function closeChat(){if(!chOpen)return;document.body.classList.remove('chat-open');try{syncNav()}catch(x){}if(recMR)stopRec(true);if(auEl){auEl.pause();auEl=null;auId=''}chOpen=false;chUnreadKey='';const c=$('#ch');c.setAttribute('aria-hidden','true');chLock(false);
  {const from=c.style.transform||'translateX(0)';c.getAnimations().forEach(a=>a.cancel());const an=c.animate([{transform:from},{transform:'translateX(-100%)'}],{duration:270,easing:'cubic-bezier(.4,0,.6,1)',fill:'forwards'});an.onfinish=()=>{if(!chOpen){c.classList.remove('on');c.style.transform='';an.cancel()}}}
