@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-27.85">
+<meta name="app-ver" content="2026-11-27.86">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -777,6 +777,9 @@ body.chat-open.kbopen main,body.chat-open.kbopen header,body.chat-open.kbopen .f
 .attov.on{opacity:1;pointer-events:auto}
 .attp{position:absolute;left:12px;right:12px;bottom:calc(var(--bnh,64px) + 74px);background:var(--card);border:1px solid var(--line);border-radius:22px;padding:14px 8px 10px;box-shadow:0 18px 40px -12px rgba(0,0,0,.6);transform:translateY(24px) scale(.96);transform-origin:50% 100%;transition:transform .28s cubic-bezier(.3,1.4,.5,1)}
 .attov.on .attp{transform:none}
+.cm.cot .cau{direction:ltr}
+.cm.cot .cau .wv{direction:ltr}
+.cm.cot .cau .pl svg{margin-inline-start:2px}
 .wod{flex:none;width:56px;height:56px;border-radius:16px;background:var(--soft);color:var(--rose);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rose) 14%,transparent)}
 .wod b{font-size:20px;font-weight:800;line-height:1}
 .wod span{font-size:11.5px;font-weight:700;line-height:1.2;white-space:nowrap;opacity:.85}
@@ -1612,7 +1615,7 @@ async function playAud(id,frac,toggle){const w=chl.querySelector('[data-aud="'+C
  auEl.play().catch(()=>toast('ما قدرنا نشغّل الصوت'))}
 /* seek on waveform */
 let skW=null,skF=0;
-function skFrac(w,x){const r=w.querySelector('.wv').getBoundingClientRect();return Math.max(0,Math.min(1,(r.right-x)/r.width))}
+function skFrac(w,x){const r=w.querySelector('.wv').getBoundingClientRect(),lt=!!w.closest('.cot');return Math.max(0,Math.min(1,(lt?x-r.left:r.right-x)/r.width))}
 function skPreview(w,f){const bars=w.querySelectorAll('.wv i'),n=Math.round(f*bars.length);bars.forEach((b,i)=>b.classList.toggle('on',i<n));const m=chat.find(x=>x.id===w.dataset.aud);if(m)w.querySelector('.du').textContent=fmtDur(f*(m.dur||0))}
 chl.addEventListener('pointerdown',e=>{const wv=e.target.closest('.cau .wv');if(!wv)return;skW=wv.closest('[data-aud]');skF=skFrac(skW,e.clientX);skW.classList.add('seeking');skPreview(skW,skF);try{wv.setPointerCapture(e.pointerId)}catch(x){}e.stopPropagation()});
 chl.addEventListener('pointermove',e=>{if(!skW)return;skF=skFrac(skW,e.clientX);skPreview(skW,skF)});
