@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-27.78">
+<meta name="app-ver" content="2026-11-27.79">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -804,6 +804,7 @@ body.chat-open.kbopen main,body.chat-open.kbopen header,body.chat-open.kbopen .f
 .cvid .vpl{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:grid;place-items:center;color:#fff;box-shadow:0 4px 18px rgba(0,0,0,.35)}
 .cvid .vpl svg{width:24px;height:24px;margin-left:3px}
 .cvid .vdu{position:absolute;left:8px;bottom:7px;font-size:12px;font-weight:700;color:#fff;background:rgba(0,0,0,.5);padding:2px 7px;border-radius:8px;display:flex;gap:4px;align-items:center;direction:ltr}
+.cvid .vst{position:absolute;left:0;right:0;top:calc(50% - 54px);text-align:center;font-size:12.5px;font-weight:800;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.7)}
 .cvid .vring{position:absolute;left:50%;top:50%;width:58px;height:58px;margin:-29px 0 0 -29px}
 .cvid .vring circle{fill:none;stroke-width:4}
 .cvid .vring .bg{stroke:rgba(255,255,255,.25)}.cvid .vring .fg{stroke:#fff;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset .25s}
@@ -1419,19 +1420,34 @@ $('#chvidf').onchange=e=>{const fs=[...(e.target.files||[])];e.target.value='';c
 const VPLAY='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.8v14.4a1 1 0 0 0 1.5.86l11.6-7.2a1 1 0 0 0 0-1.72L8.5 3.94A1 1 0 0 0 7 4.8z"/></svg>';
 function vidHtml(m){const up=m._up!=null,C=2*Math.PI*25;
  const img=m.img?'<img alt="فيديو" decoding="async" src="'+m.img+'"'+imgDim(m)+'>':'<img alt="" width="220" height="160" style="width:220px;height:160px;background:#111">';
- return '<span class="cvid" data-cvid="'+esc(m.id)+'">'+img+(up?'<svg class="vring" viewBox="0 0 58 58"><circle class="bg" cx="29" cy="29" r="25"/><circle class="fg" cx="29" cy="29" r="25" stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+(C*(1-(m._up||0))).toFixed(1)+'"/></svg>':'<span class="vpl">'+VPLAY+'</span>')+'<span class="vdu"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M3 7a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zm14 3.5 4-2.5v8l-4-2.5z"/></svg>'+fmtDur(Math.round(m.vdur||0))+'</span></span>'}
+ return '<span class="cvid" data-cvid="'+esc(m.id)+'">'+img+(up?'<svg class="vring" viewBox="0 0 58 58"><circle class="bg" cx="29" cy="29" r="25"/><circle class="fg" cx="29" cy="29" r="25" stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+(C*(1-(m._up||0))).toFixed(1)+'"/></svg><span class="vst">'+(m._st||'')+'</span>':'<span class="vpl">'+VPLAY+'</span>')+'<span class="vdu"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M3 7a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zm14 3.5 4-2.5v8l-4-2.5z"/></svg>'+fmtDur(Math.round(m.vdur||0))+'</span></span>'}
 function vidMeta(file){return new Promise(res=>{const u=URL.createObjectURL(file),v=document.createElement('video');let done=false;v.muted=true;v.playsInline=true;v.setAttribute('playsinline','');v.preload='auto';
  const fin=(poster)=>{if(done)return;done=true;const r={dur:isFinite(v.duration)?v.duration:0,w:v.videoWidth||0,h:v.videoHeight||0,poster:poster||'',url:u};try{v.removeAttribute('src');v.load()}catch(x){}res(r)};
  const grab=()=>{try{const W=v.videoWidth,Hh=v.videoHeight;if(!W||!Hh)return fin('');const sc=Math.min(1,480/Math.max(W,Hh)),c=document.createElement('canvas');c.width=Math.round(W*sc);c.height=Math.round(Hh*sc);c.getContext('2d').drawImage(v,0,0,c.width,c.height);fin(c.toDataURL('image/jpeg',.72))}catch(x){fin('')}};
  v.onloadeddata=()=>{try{v.currentTime=Math.min(.15,(v.duration||1)/2)}catch(x){grab()}};v.onseeked=grab;v.onerror=()=>fin('');setTimeout(()=>fin(''),6000);v.src=u;try{v.load()}catch(x){}})}
 function vidUpload(file,onp){return new Promise((res,rej)=>{const x=new XMLHttpRequest();x.open('POST',PUSH_URL+'/vid');x.setRequestHeader('content-type',file.type||'video/mp4');x.upload.onprogress=e=>{if(e.lengthComputable)onp(e.loaded/e.total)};x.onload=()=>{try{if(x.status===200)res(JSON.parse(x.responseText).id);else rej(new Error(x.status===413?'size':'http'))}catch(e){rej(e)}};x.onerror=()=>rej(new Error('net'));x.send(file)})}
-async function sendVideo(file,cap){if(needMe()||!db)return;if(file.size>25e6){toast('الفيديو كبير كتير (أكتر من 25 ميغا). جرّب فيديو أقصر');return}
- const meta=await vidMeta(file);const tmp={by:me,text:cap||'',t:Date.now(),id:'tmpv'+Date.now(),_p:1,_up:0,vid:'local',vdur:meta.dur,img:meta.poster,iw:meta.w,ih:meta.h};
+function loadMB(){return window.MBC?Promise.resolve():new Promise((res,rej)=>{const sc=document.createElement('script');sc.src='mb.js?v=1';sc.onload=()=>window.MBC?res():rej(new Error('mb'));sc.onerror=()=>rej(new Error('mb'));document.head.appendChild(sc)})}
+async function vidCompress(file,meta,onp){await loadMB();const dur=meta.dur||0;let w=meta.w,h=meta.h;const L=Math.max(w,h);
+ if(L>1280){const sc=1280/L;w=Math.round(w*sc/2)*2;h=Math.round(h*sc/2)*2}else{w=Math.round(w/2)*2;h=Math.round(h/2)*2}
+ const vb=dur>0?Math.max(450e3,Math.min(2.2e6,22e6*8/dur-110e3)):1.6e6;
+ const r=await window.MBC(file,{w:w||0,h:h||0,vb:Math.round(vb),fps:30},onp);return r.blob}
+async function sendVideo(file,cap){if(needMe()||!db)return;
+ const meta=await vidMeta(file);
+ if(meta.dur&&meta.dur>22e6*8/450e3){toast('الفيديو طويل كتير، اختار فيديو أقصر من 6 دقايق');return}
+ const big=file.size>8e6;
+ const tmp={by:me,text:cap||'',t:Date.now(),id:'tmpv'+Date.now(),_p:1,_up:0,_st:big?'عم نضغط…':'عم نبعت…',vid:'local',vdur:meta.dur,img:meta.poster,iw:meta.w,ih:meta.h};
  chat.push(tmp);chStick=true;renderChat();
- const setP=p=>{tmp._up=p;const ring=chl.querySelector('[data-cvid="'+tmp.id+'"] .fg');if(ring){const C=2*Math.PI*25;ring.setAttribute('stroke-dashoffset',(C*(1-p)).toFixed(1))}};
- try{const id=await vidUpload(file,setP);chat=chat.filter(x=>x!==tmp);try{URL.revokeObjectURL(meta.url)}catch(x){}
-  await chSend(cap||'',meta.poster||'',{vid:id,vt:file.type||'video/mp4',vdur:Math.round(meta.dur||0),iw:meta.w,ih:meta.h})}
- catch(e){chat=chat.filter(x=>x!==tmp);renderChat();toast(e&&e.message==='size'?'الفيديو كبير كتير (أكتر من 25 ميغا)':'ما انبعت الفيديو، جرّب كمان مرة')}}
+ const el=()=>chl.querySelector('[data-cvid="'+tmp.id+'"]');
+ const setP=p=>{tmp._up=p;const e=el(),ring=e&&e.querySelector('.fg');if(ring){const C=2*Math.PI*25;ring.setAttribute('stroke-dashoffset',(C*(1-p)).toFixed(1))}};
+ const setSt=t=>{tmp._st=t;const e=el(),x=e&&e.querySelector('.vst');if(x)x.textContent=t};
+ try{let blob=file,base=0;
+  if(big){try{blob=await vidCompress(file,meta,p=>setP(p*.6));base=.6}catch(err){console.warn('compress',err);blob=file;base=0}
+   if(blob.size>25e6)throw new Error('size')}
+  else if(file.size>25e6)throw new Error('size');
+  setSt('عم نبعت…');
+  const id=await vidUpload(blob,p=>setP(base+p*(1-base)));chat=chat.filter(x=>x!==tmp);try{URL.revokeObjectURL(meta.url)}catch(x){}
+  await chSend(cap||'',meta.poster||'',{vid:id,vt:blob.type||file.type||'video/mp4',vdur:Math.round(meta.dur||0),iw:meta.w,ih:meta.h})}
+ catch(e){chat=chat.filter(x=>x!==tmp);renderChat();toast(e&&e.message==='size'?'الفيديو كبير كتير وما قدرنا نضغطه، جرّب فيديو أقصر':'ما انبعت الفيديو، جرّب كمان مرة')}}
 function vidOpen(m){if(!m||!m.vid||m.vid==='local')return;try{if(auEl&&!auEl.paused)auEl.pause()}catch(x){}const v=$('#vvv');v.src=PUSH_URL+'/vid/'+encodeURIComponent(m.vid);if(m.img)v.poster=m.img;$('#vview').hidden=false;v.play().catch(()=>{})}
 function vidClose(){const v=$('#vvv');try{v.pause()}catch(x){}v.removeAttribute('src');v.removeAttribute('poster');try{v.load()}catch(x){}$('#vview').hidden=true}
 $('#vvx').onclick=vidClose;
