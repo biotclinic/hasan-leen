@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-27.93">
+<meta name="app-ver" content="2026-11-27.94">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -784,9 +784,17 @@ body.chat-open.kbopen main,body.chat-open.kbopen header,body.chat-open.kbopen .f
 .cm.cot .cau .pl svg{margin-inline-start:2px}
 .cb .tm .fv{font-style:normal;color:#f5b301;font-size:11px;margin-inline-end:1px}
 .cm.cme .cb .tm .fv{color:#7a4e00}
+.cfv{position:absolute;top:-8px;width:22px;height:22px;border-radius:50%;background:linear-gradient(145deg,#ffd54a,#f5a300);display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.3);animation:cfvin .4s cubic-bezier(.3,1.6,.5,1);z-index:1}
+.cfv svg{width:12px;height:12px;fill:#fff}
+.cm.cme .cfv{left:-6px}.cm.cot .cfv{right:-6px}
+@keyframes cfvin{from{transform:scale(0) rotate(-90deg)}}
+.fav{position:relative;cursor:pointer}
+.favrm{position:absolute;top:9px;left:10px;display:flex;align-items:center;gap:4px;font:inherit;font-size:12px;font-weight:800;color:var(--rose);background:color-mix(in srgb,var(--rose) 13%,transparent);border:0;border-radius:99px;padding:5px 10px 5px 9px}
+.favrm:active{transform:scale(.92)}
+.fav .fh{padding-left:78px}
 .favov{position:fixed;inset:0;z-index:92;background:rgba(5,6,20,.45);opacity:0;transition:opacity .25s}
 .favov.on{opacity:1}
-.favp{position:absolute;left:0;right:0;bottom:0;max-height:82%;display:flex;flex-direction:column;background:var(--bg);border-radius:24px 24px 0 0;box-shadow:0 -20px 50px -20px rgba(0,0,0,.6);transform:translateY(100%);transition:transform .32s cubic-bezier(.22,1,.36,1);padding-bottom:env(safe-area-inset-bottom)}
+.favp{position:absolute;left:0;right:0;bottom:0;max-height:82%;display:flex;flex-direction:column;background:var(--bg);border-radius:24px 24px 0 0;box-shadow:0 -20px 50px -20px rgba(0,0,0,.6);transform:translateY(100%);transition:transform .32s cubic-bezier(.22,1,.36,1);padding-bottom:calc(env(safe-area-inset-bottom) + 18px);min-height:38%}
 .favov.on .favp{transform:none}
 .favh{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 10px}
 .favh b{font-size:18px}
@@ -1165,10 +1173,11 @@ function chMsgHtml(m,prevBy,oread){const mine=m.by===me;let inner='';
   const im=m.vid?vidHtml(m):m.img?'<img alt="صورة" decoding="async" data-cimg="'+esc(m.id)+'" src="'+m.img+'"'+imgDim(m)+'>':'';
   const au=m.aud?audHtml(m):'';
   const tk=mine?(m._p?'<span class="tk pd">🕓</span>':'<span class="tk'+((oread||0)>=(m.t||0)?' rd':'')+'">✓✓</span>'):'';
-  const tmh=((m.fav||{})[me]?'<i class="fv">★</i>':'')+(m.edited?'<i class="ed">معدّلة</i> ':'')+hm(m.t)+' '+tk,tx=!!m.text&&!big&&!m.aud;
+  const tmh=(m.edited?'<i class="ed">معدّلة</i> ':'')+hm(m.t)+' '+tk,tx=!!m.text&&!big&&!m.aud;
   inner=m.stk?'<div class="cb stk" data-chm="'+esc(m.id)+'">'+(m.reply?rp:'')+'<span class="sk">'+stkHtml(m.stk)+'</span>'+'<span class="tm">'+tmh+'</span></div>':'<div class="cb'+(big?' big':'')+(tx?' tx':'')+'" data-chm="'+esc(m.id)+'">'+rp+im+au+(m.text?linkify(esc(m.text)):'')+(tx?'<span class="tsp" aria-hidden="true">'+tmh+'</span>':'')+'<span class="tm">'+tmh+'</span></div>'}
  const rx=m.react&&!m.del?Object.values(m.react).filter(Boolean):[];
  if(rx.length)inner=inner.replace(/<\/div>$/,'<span class="crx">'+rx.join('')+'</span></div>');
+ if((m.fav||{})[me]&&!m.del)inner=inner.replace(/<\/div>$/,'<span class="cfv" aria-label="مفضّلة"><svg viewBox="0 0 24 24"><path d="M12 3.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg></span></div>');
  return '<div class="cm '+(mine?'cme':'cot')+(prevBy===m.by?'':' gf')+(rx.length?' hasr':'')+'">'+inner+'</div>'}
 let chUnreadKey='',chTypingShown='',chRecIv=0;
 function chRecPing(on){clearInterval(chRecIv);chRecIv=0;if(!db||!me)return;const w=()=>{try{db.doc('chatmeta/'+me).set({...(chMeta[me]||{}),rec:on?Date.now():0,typing:0})}catch(x){}};w();if(on)chRecIv=setInterval(w,3000)}
@@ -2465,14 +2474,19 @@ async function chFavOpen(){if(needMe()||!db)return;const ov=document.createEleme
  ov.innerHTML='<div class="favp"><div class="favh"><b>⭐ الرسائل المفضّلة</b><button class="x" data-fx aria-label="سكّر">✕</button></div><div class="favl"><div class="favem"><div class="bakr"></div></div></div></div>';
  document.body.appendChild(ov);requestAnimationFrame(()=>ov.classList.add('on'));
  const shut=()=>{ov.classList.remove('on');setTimeout(()=>ov.remove(),260)};
- ov.onclick=e=>{if(e.target===ov||e.target.closest('[data-fx]'))return shut();const it=e.target.closest('[data-fid]');if(it){shut();setTimeout(()=>chGoMsg(it.dataset.fid),180)}};
+ ov.onclick=async e=>{if(e.target===ov||e.target.closest('[data-fx]'))return shut();
+  const rm=e.target.closest('[data-frm]');if(rm){e.stopPropagation();const id=rm.dataset.frm,card=rm.closest('.fav');try{CSnd.tap()}catch(x){}
+   const cm=chat.find(x=>x.id===id);if(cm){cm.fav={...(cm.fav||{}),[me]:0};renderChat()}
+   card.animate([{opacity:1,transform:'none'},{opacity:0,transform:'translateX(40px) scale(.96)'}],{duration:220,easing:'ease-in'}).onfinish=()=>{const h=card.offsetHeight;card.style.overflow='hidden';card.animate([{height:h+'px'},{height:'0px',padding:'0',margin:'0',borderWidth:'0'}],{duration:200}).onfinish=()=>{card.remove();if(!ov.querySelector('.fav'))ov.querySelector('.favl').innerHTML='<div class="favem"><div style="font-size:44px">⭐</div><b>لسّا ما في رسائل مفضّلة</b><span>ضل ضاغط على أي رسالة بتحبها واختار «⭐ مفضّلة»</span></div>'}};
+   try{await db.collection('chat').doc(id).update({['fav.'+me]:0})}catch(x){}return}
+  const it=e.target.closest('[data-fid]');if(it){shut();setTimeout(()=>chGoMsg(it.dataset.fid),180)}};
  let list=chat.filter(m=>!m.del&&(m.fav||{})[me]);
  try{const sn=await db.collection('chat').where('fav.'+me,'>',0).get();const mp={};list.forEach(m=>mp[m.id]=m);sn.docs.forEach(d=>{const m={...d.data(),id:d.id};if(!m.del)mp[m.id]=mp[m.id]||m});list=Object.values(mp).filter(m=>(m.fav||{})[me])}catch(x){}
  list.sort((a,b)=>(b.fav[me]||0)-(a.fav[me]||0));
  const FL=ov.querySelector('.favl');
  if(!list.length){FL.innerHTML='<div class="favem"><div style="font-size:44px">⭐</div><b>لسّا ما في رسائل مفضّلة</b><span>ضل ضاغط على أي رسالة بتحبها واختار «⭐ مفضّلة»</span></div>';return}
  FL.innerHTML=list.map(m=>{const mine=m.by===me,ty=m.vid?'🎥 فيديو':m.aud?'🎤 رسالة صوتية · '+fmtDur(m.dur||0):m.stk?'🌟 ستيكر':m.img&&!m.text?'📷 صورة':'';
-  return '<button class="fav '+(mine?'me':'ot')+'" data-fid="'+esc(m.id)+'"><div class="fh"><b>'+esc(WHO[m.by]||'')+'</b><span>'+new Date(m.t).toLocaleDateString(L,{day:'numeric',month:'short',year:'numeric'})+' · '+hm(m.t)+'</span></div>'+(m.img&&!m.stk?'<img src="'+m.img+'" alt="">':'')+'<div class="fx">'+(m.text?esc(m.text):ty)+'</div></button>'}).join('')}
+  return '<div class="fav '+(mine?'me':'ot')+'" role="button" data-fid="'+esc(m.id)+'"><button class="favrm" data-frm="'+esc(m.id)+'" aria-label="إزالة من المفضّلة"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>إزالة</button><div class="fh"><b>'+esc(WHO[m.by]||'')+'</b><span>'+new Date(m.t).toLocaleDateString(L,{day:'numeric',month:'short',year:'numeric'})+' · '+hm(m.t)+'</span></div>'+(m.img&&!m.stk?'<img src="'+m.img+'" alt="">':'')+'<div class="fx">'+(m.text?esc(m.text):ty)+'</div></div>'}).join('')}
 $('#chfav').onclick=chFavOpen;
 
 /* ---- chat backup (export) ---- */
