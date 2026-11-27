@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-27.82">
+<meta name="app-ver" content="2026-11-27.83">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1011,7 +1011,7 @@ function renderMoments(){queueFeed();
   const d=pd(m.date),mk=String(m.date).slice(0,7);
   if(mk!==last){out+='<div class="month">'+d.toLocaleDateString(L,{month:'long',year:'numeric'})+'</div>';last=mk}
   const c=cat(m.cat);
-  out+='<article class="card"><div class="date"><b>'+d.getDate()+'</b><span>'+d.toLocaleDateString(L,{weekday:'short'})+'</span></div><div class="body"><h3>'+esc(m.title)+'</h3><div class="meta"><span class="tag"><i class="dot" style="background:'+c.c+'"></i>'+catLbl(m)+'</span><span>'+esc(WHO[m.who]||'سوا')+'</span>'+hearts(Math.min(5,Math.max(0,Number(m.rating)||0)))+'</div>'+(m.note?'<p class="note">'+esc(m.note)+'</p>':'')+(m.by?'<div class="small" style="margin-top:6px">زادها '+esc(WHO[m.by]||'')+'</div>':'')+'</div><button class="more" data-edit="'+esc(m.id)+'" aria-label="تعديل"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button></article>';
+  out+='<article class="card"><div class="date"><b>'+d.getDate()+'</b><span>'+d.toLocaleDateString(L,{weekday:'short'})+'</span></div><div class="body"><h3>'+esc(m.title)+'</h3><div class="meta"><span class="tag"><i class="dot" style="background:'+c.c+'"></i>'+catLbl(m)+'</span><span>'+esc(WHO[m.who]||'سوا')+'</span>'+hearts(Math.min(5,Math.max(0,Number(m.rating)||0)))+'</div>'+(m.note?'<p class="note">'+esc(m.note)+'</p>':'')+(m.by?'<div class="small" style="margin-top:6px">زادها '+esc(WHO[m.by]||'')+'</div>':'')+'</div>'+(m.cat==='sport'&&!woMine(m)?'':'<button class="more" data-edit="'+esc(m.id)+'" aria-label="تعديل"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button>')+'</article>';
  }
  $('#list').innerHTML=out;
 }
@@ -1963,7 +1963,7 @@ function openWorkout(m){
 function recentWorkouts(){
  const list=moments.filter(m=>m.cat==='sport').sort((a,b)=>String(b.date).localeCompare(String(a.date))||(b.createdAt||0)-(a.createdAt||0)).slice(0,6);
  if(!list.length)return '';
- return '<div class="sec"><h2>آخر التمارين</h2>'+list.map(m=>{const e=(EF.find(x=>x[0]===m.effort)||[])[1];return '<div class="pt"><span class="pv" style="min-width:52px;font-size:13px">'+pd(m.date).toLocaleDateString(L,{day:'numeric',month:'short'})+'</span><div class="body">'+esc(m.title)+'<div class="small">'+esc(m.who==='both'?'سوا':(WHO[m.who]||''))+(e?' · '+e:'')+(m.note?' · '+esc(m.note):'')+'</div></div><button class="more" data-wo="'+esc(m.id)+'" aria-label="'+(woMine(m)?'عدّل':'تفاصيل')+'"'+(woMine(m)?'':' style="opacity:.35"')+'><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button></div>'}).join('')+'</div>';
+ return '<div class="sec"><h2>آخر التمارين</h2>'+list.map(m=>{const e=(EF.find(x=>x[0]===m.effort)||[])[1];return '<div class="pt"><span class="pv" style="min-width:52px;font-size:13px">'+pd(m.date).toLocaleDateString(L,{day:'numeric',month:'short'})+'</span><div class="body">'+esc(m.title)+'<div class="small">'+esc(m.who==='both'?'سوا':(WHO[m.who]||''))+(e?' · '+e:'')+(m.note?' · '+esc(m.note):'')+'</div></div>'+(woMine(m)?'<button class="more" data-wo="'+esc(m.id)+'" aria-label="عدّل"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button>':'')+'</div>'}).join('')+'</div>';
 }
 function challengeHtml(sport){
  const wk=weekKey(new Date()),both=k=>wcount(k,wk)>=wgoal(k);
