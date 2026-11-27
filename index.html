@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-27.95">
+<meta name="app-ver" content="2026-11-27.96">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -792,6 +792,11 @@ body.chat-open.kbopen main,body.chat-open.kbopen header,body.chat-open.kbopen .f
 .favrm{position:absolute;top:9px;left:10px;display:flex;align-items:center;gap:4px;font:inherit;font-size:12px;font-weight:800;color:var(--rose);background:color-mix(in srgb,var(--rose) 13%,transparent);border:0;border-radius:99px;padding:5px 10px 5px 9px}
 .favrm:active{transform:scale(.92)}
 .fvi .fh{padding-left:78px}
+.fhrt{background:none;border:0;padding:2px;margin:0 auto 1px;display:grid;place-items:center;color:var(--mute);-webkit-tap-highlight-color:transparent}
+.fhrt svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linejoin:round;transition:fill .2s,stroke .2s}
+.fhrt.can{color:var(--rose);cursor:pointer}
+.fhrt.can svg{width:22px;height:22px}
+.fhrt.on{color:#e11d48}.fhrt.on svg{fill:#e11d48;stroke:#e11d48}
 .favov{position:fixed;inset:0;z-index:92;background:rgba(5,6,20,.45);opacity:0;transition:opacity .25s}
 .favov.on{opacity:1}
 .favp{position:absolute;left:0;right:0;bottom:0;max-height:82%;display:flex;flex-direction:column;background:var(--bg);border-radius:24px 24px 0 0;box-shadow:0 -20px 50px -20px rgba(0,0,0,.6);transform:translateY(100%);transition:transform .32s cubic-bezier(.22,1,.36,1);padding-bottom:calc(env(safe-area-inset-bottom) + 18px);min-height:38%}
@@ -1888,14 +1893,14 @@ const vb=(k,w)=>VB[k][w==='leen'?1:0];
 let feedT=0;function queueFeed(){clearTimeout(feedT);feedT=setTimeout(renderFeed,60)}
 function feedItems(){
  const since=Date.now()-7*864e5,out=[],q=t=>'«'+esc(t||'')+'»';
- const push=(t,who,ic,txt,go)=>{t=Number(t)||0;if(t>since&&t<=Date.now()+6e4&&(who==='hassan'||who==='leen'||who==='both'))out.push({t,who,ic,txt,go})};
+ const push=(t,who,ic,txt,go,ex)=>{t=Number(t)||0;if(t>since&&t<=Date.now()+6e4&&(who==='hassan'||who==='leen'||who==='both'))out.push({t,who,ic,txt,go,...(ex||{})})};
  moments.forEach(m=>{if(m.cat==='sport')push(m.createdAt,m.by,'fit',vb('log',m.by)+' تمرين '+q(m.title),'moment:'+m.id);else push(m.createdAt,m.by,'heart',vb('add',m.by)+' لحظة '+q(m.title),'moment:'+m.id)});
  const ph={};photos.forEach(p=>{const t=Number(p.createdAt)||0,k=(p.by||'')+':'+Math.floor(t/6e5);(ph[k]=ph[k]||{t,who:p.by,n:0}).n++;ph[k].t=Math.max(ph[k].t,t)});
  Object.values(ph).forEach(g=>push(g.t,g.who,'img',vb('add',g.who)+' '+(g.n===1?'صورة للألبوم':g.n+' صور للألبوم'),'album'));
  weights.forEach(w=>push(w.createdAt,w.by||w.who,'fit',vb('log',w.by||w.who)+' وزن جديد','fit'));
  plans.forEach(p=>{push(p.createdAt,p.by,'flag',vb('add',p.by)+' خطة '+q(p.title),'plan:'+p.id);if(p.done)push(p.doneAt,'both','flag','خلّصتوا '+q(p.title)+' سوا','plan:'+p.id)});
  events.forEach(e=>push(e.createdAt,e.by,'cal',vb('add',e.by)+' موعد '+q(e.title)+' · '+pd(e.date).toLocaleDateString(L,{day:'numeric',month:'short'}),'cal'));
- points.forEach(x=>push(x.createdAt,x.from,'star',vb('give',x.from)+' '+WHO[x.to]+' '+sgn(Number(x.pts)||0)+(x.reason?' · '+esc(x.reason):''),'points'));
+ points.forEach(x=>push(x.createdAt,x.from,'star',vb('give',x.from)+' '+WHO[x.to]+' '+sgn(Number(x.pts)||0)+(x.reason?' · '+esc(x.reason):''),'points',{pid:x.id,pto:x.to,lk:!!(x.liked&&x.liked.t)}));
  notes.forEach(n=>{push(n.createdAt,n.from,'msg',vb('send',n.from)+(n.kind==='thanks'?' كلمة شكر':' ملاحظة'),'notes');if(n.ok)push(n.okAt,n.to,'msg',vb('reply',n.to)+' على '+(n.kind==='thanks'?'كلمة الشكر':'الملاحظة'),'notes')});
  letters.forEach(l=>{push(l.createdAt,l.from,'env',vb('write',l.from)+' رسالة للمستقبل','letters');if(l.openedAt)push(l.openedAt,l.to,'env',vb('open',l.to)+' رسالة '+q(l.title),'letters')});
  const kg={};kisses.forEach(k=>{const t=Number(k.createdAt)||0,key=k.from+':'+Math.floor(t/6e5);(kg[key]=kg[key]||{t,who:k.from,to:k.to,n:0}).n++;kg[key].t=Math.max(kg[key].t,t)});
@@ -1906,7 +1911,7 @@ const FIC={kiss:'<use href="#lips" x="1" y="6" width="22" height="14"/>',heart:'
 const feedSeen=()=>{try{return Number(localStorage.getItem('hl-feed-seen'))||0}catch(x){return 0}};
 const tAgo=t=>{const d=new Date(t),td=pd(today());if(d>=td)return d.toLocaleTimeString(L,{hour:'numeric',minute:'2-digit'});if(d>=new Date(td-864e5))return 'مبارح';return d.toLocaleDateString(L,{weekday:'short',day:'numeric'})};
 function feedRow(it,seen){const fresh=it.who!==me&&it.who!=='both'&&it.t>seen;
- return '<div class="fi'+(fresh?' new':'')+(it.go?' go':'')+'"'+(it.go?' data-fgo="'+esc(it.go)+'" role="button"':'')+'><span class="fav '+it.who+'">'+(it.who==='both'?'<svg viewBox="0 0 24 24"><use href="#h"/></svg>':it.who==='hassan'?'ح':'ل')+'</span><div class="ft"><b>'+(it.who==='both'?'':WHO[it.who]+' ')+'</b>'+it.txt+'</div><span class="fw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+FIC[it.ic]+'</svg>'+tAgo(it.t)+'</span></div>'}
+ return '<div class="fi'+(fresh?' new':'')+(it.go?' go':'')+'"'+(it.go?' data-fgo="'+esc(it.go)+'" role="button"':'')+'><span class="fav '+it.who+'">'+(it.who==='both'?'<svg viewBox="0 0 24 24"><use href="#h"/></svg>':it.who==='hassan'?'ح':'ل')+'</span><div class="ft"><b>'+(it.who==='both'?'':WHO[it.who]+' ')+'</b>'+it.txt+'</div><span class="fw">'+(it.pid?'<button class="fhrt'+(it.lk?' on':'')+(it.pto===me?' can':'')+'" data-plk="'+esc(it.pid)+'" aria-label="'+(it.pto===me?'حبّيت':'تفاعل')+'"><svg viewBox="0 0 24 24"><path d="M12 20.6s-8-4.9-8-10.7A4.6 4.6 0 0 1 12 7.2a4.6 4.6 0 0 1 8 2.7c0 5.8-8 10.7-8 10.7z"/></svg></button>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+FIC[it.ic]+'</svg>')+tAgo(it.t)+'</span></div>'}
 function renderFeed(){try{renderHome()}catch(x){}
  const el=$('#feed');if(!el)return;
  const all=feedItems(),td=pd(today()).getTime(),todays=all.filter(i=>i.t>=td),seen=feedSeen();
@@ -1924,6 +1929,14 @@ function openFeed(){
  open('<h2>آخر المستجدات</h2><p class="hint" style="margin-top:0">كل شي صار خلال آخر ٧ أيام.</p><div class="feed flat">'+(html||'<p class="hint">لسّا ما في شي.</p>')+'</div>');
  try{localStorage.setItem('hl-feed-seen',String(Date.now()))}catch(x){}setTimeout(renderFeed,400);
 }
+
+async function pointLike(btn){const id=btn.dataset.plk,x=points.find(p=>p.id===id);if(!x||!me||x.to!==me||!db)return;
+ const on=!(x.liked&&x.liked.t);x.liked=on?{by:me,t:Date.now()}:null;
+ document.querySelectorAll('[data-plk="'+CSS.escape(id)+'"]').forEach(b=>{b.classList.toggle('on',on);if(on)b.animate([{transform:'scale(.6)'},{transform:'scale(1.35)'},{transform:'none'}],{duration:420,easing:'cubic-bezier(.3,1.5,.5,1)'})});
+ try{on?CSnd.react():CSnd.tap()}catch(z){}try{navigator.vibrate&&navigator.vibrate(10)}catch(z){}
+ try{await db.collection('points').doc(id).update({liked:x.liked})}catch(z){}
+ if(on)notifyOther('❤️ '+(WHO[me]||''),(me==='leen'?'حبّت':'حبّ')+' النقاط اللي عطيت'+(x.from==='leen'?'يها':'ها')+(x.reason?' · '+x.reason:''),'points','points')}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-plk]');if(!b)return;e.stopPropagation();e.preventDefault();if(b.classList.contains('can'))pointLike(b)},true);
 $('#feed').addEventListener('click',e=>{const g=e.target.closest('[data-fgo]');if(g){goTarget(g.dataset.fgo);return}if(e.target.closest('#feedAll')||e.target.closest('.fh'))openFeed()});
 document.addEventListener('click',e=>{const g=e.target.closest('.feed.flat [data-fgo]');if(g){close();setTimeout(()=>goTarget(g.dataset.fgo),280)}});
 
