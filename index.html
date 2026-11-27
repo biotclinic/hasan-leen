@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-27.76">
+<meta name="app-ver" content="2026-11-27.77">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -756,6 +756,24 @@ body.chat-open.kbopen main,body.chat-open.kbopen header,body.chat-open.kbopen .f
 .chrow textarea:focus{border-color:color-mix(in srgb,var(--rose) 45%,var(--line))}
 .chmic{background:var(--rose);color:var(--on);box-shadow:0 4px 12px -6px var(--rose)}
 .chsend{box-shadow:0 4px 12px -6px var(--rose)}
+.moodc{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:4px 0 10px}
+.mdh{position:relative;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:12px 10px 11px;text-align:center;box-shadow:0 8px 22px -16px rgba(0,0,0,.5);transition:transform .15s;-webkit-tap-highlight-color:transparent;color:inherit;font:inherit;display:block;width:100%}
+.mdh.mine{cursor:pointer}.mdh.mine:active{transform:scale(.96)}
+.mdh .mn{font-size:12.5px;font-weight:800;color:var(--mute);display:block}
+.mdh .me2{font-size:40px;line-height:1.15;display:block;margin:4px 0 2px;animation:mdpop .5s cubic-bezier(.3,1.5,.5,1)}
+.mdh .me2.q{opacity:.35;font-size:32px;filter:grayscale(1)}
+.mdh .ml{font-size:14.5px;font-weight:800;display:block}
+.mdh .mt{font-size:12px;color:var(--mute);font-weight:600;display:block;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mdh .med{position:absolute;top:8px;left:8px;width:24px;height:24px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-size:12px;color:var(--rose)}
+@keyframes mdpop{from{transform:scale(.4);opacity:0}}
+.mdgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:6px 0 12px}
+.mdgrid button{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:10px 2px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;font:inherit;color:inherit;transition:transform .12s,border-color .2s,background .2s}
+.mdgrid button b{font-size:30px;line-height:1.1}
+.mdgrid button span{font-size:12px;font-weight:800}
+.mdgrid button:active{transform:scale(.92)}
+.mdgrid button.on{border-color:var(--rose);background:color-mix(in srgb,var(--rose) 16%,var(--card))}
+#chav[data-mood]{position:relative}
+#chav[data-mood]::after{content:attr(data-mood);position:absolute;right:-5px;bottom:-5px;font-size:15px;line-height:1;background:var(--card);border-radius:50%;padding:2px;box-shadow:0 1px 3px rgba(0,0,0,.3)}
 @keyframes waPop{from{transform:scale(.4) rotate(-30deg);opacity:0}to{transform:none;opacity:1}}
 .chrow .chsend:not(.hid),.chrow .chmic:not(.hid){animation:waPop .26s cubic-bezier(.3,1.5,.5,1) both}
 .chmic:active,.chsend:active{transform:scale(.86)!important}
@@ -823,6 +841,7 @@ body.chat-open.kbopen main,body.chat-open.kbopen header,body.chat-open.kbopen .f
 <main class="wrap">
  <div class="banner" id="banner"></div>
  <section id="v-home">
+  <div class="moodc" id="moodc"></div>
   <div class="hcnt" id="hcnt"></div>
   <div class="hsec">أقسامنا</div>
   <div class="htiles" id="htiles"></div>
@@ -1307,7 +1326,7 @@ function onChat(docs){const before=chSeenIds;chat=docs.sort((a,b)=>(a.t||0)-(b.t
    if(!chOpen)toast('💬 '+(WHO[m.by]||'')+': '+(m.stk?'🌟 ستيكر':m.aud?'🎤 رسالة صوتية':m.img?'📷 صورة':(m.text||'').slice(0,40)),'افتح',openChat)}}
  chSeenIds=new Set(chat.map(m=>m.id));renderChat()}
 let chMetaSig='';
-function onChatMeta(docs){chMeta={};docs.forEach(d=>chMeta[d.id]=d);try{if(chMeta.call)callOnDoc(chMeta.call)}catch(x){}if(chOpen){chStatus();const sg=((chMeta[other(me)]||{}).read||0)+'|'+chAct();if(sg!==chMetaSig){chMetaSig=sg;renderChat()}}else{chMetaSig='';chBadge()}navAct()}
+function onChatMeta(docs){chMeta={};docs.forEach(d=>chMeta[d.id]=d);try{moodRender()}catch(x){}try{if(chMeta.call)callOnDoc(chMeta.call)}catch(x){}if(chOpen){chStatus();const sg=((chMeta[other(me)]||{}).read||0)+'|'+chAct();if(sg!==chMetaSig){chMetaSig=sg;renderChat()}}else{chMetaSig='';chBadge()}navAct()}
 let fitRaf=0,fitH=0,fitT=-1,maxVH=window.innerHeight;
 addEventListener('resize',()=>{maxVH=Math.max(maxVH,window.innerHeight)});
 function kbOpen(){const vv=window.visualViewport;return !!vv&&document.activeElement===chin&&maxVH-vv.height>120}
@@ -2418,7 +2437,28 @@ function pgSub(t){try{
  if(t==='plans'){const n=plans.filter(x=>!x.done).length;return n?n+' شغلة ناطرتنا':'شو ناويين نعمل'}
  if(t==='stats')return 'حكايتنا بالأرقام';
 }catch(x){}return ''}
-function renderHome(){const hc=$('#hcnt');if(!hc)return;
+/* ---- daily moods ---- */
+const MOODS=[['😍','مغروم','مغرومة'],['😊','مبسوط','مبسوطة'],['🥰','رومانسي','رومانسية'],['😌','رايق','رايقة'],['🥳','فرحان','فرحانة'],['🥺','مشتاق','مشتاقة'],['💪','متحمّس','متحمّسة'],['😴','تعبان','تعبانة'],['😔','زعلان','زعلانة'],['😤','معصّب','معصّبة'],['🤯','مضغوط','مضغوطة'],['🤒','مريض','مريضة']];
+const mdLbl=(who,i)=>MOODS[i]?MOODS[i][who==='leen'?2:1]:'';
+function mdGet(who){const d=chMeta&&chMeta['mood_'+who];return d&&d.day===today()&&MOODS[d.i]?d:null}
+let mdSig='';
+function moodRender(){const box=$('#moodc');if(!box)return;const ws=me==='leen'?['leen','hassan']:['hassan','leen'];
+ const sg=ws.map(w=>{const d=mdGet(w);return d?d.i+':'+d.t+':'+(d.note||''):'-'}).join('|')+me+today();
+ try{const o=mdGet(other(me));const av=$('#chav');if(av){if(o)av.dataset.mood=MOODS[o.i][0];else delete av.dataset.mood}}catch(x){}
+ if(sg===mdSig)return;mdSig=sg;
+ box.innerHTML=ws.map(w=>{const d=mdGet(w),mine=w===me,f=w==='leen';
+  const nm=(WHO[w]||'')+(mine?' (إنت'+(f?'ي':'')+')':'');
+  if(!d)return '<button class="mdh'+(mine?' mine':'')+'" '+(mine?'data-mood="1"':'disabled')+'><span class="mn">'+esc(nm)+'</span><span class="me2 q">🙂</span><span class="ml">'+(mine?(f?'شو مزاجك اليوم؟':'شو مزاجك اليوم؟'):'لسّا ما '+(f?'حطّت':'حطّ')+' مزاج'+(f?'ها':'ه'))+'</span><span class="mt">'+(mine?'كبّس واختار':'&nbsp;')+'</span></button>';
+  return '<button class="mdh'+(mine?' mine':'')+'" '+(mine?'data-mood="1"':'disabled')+'>'+(mine?'<span class="med">✎</span>':'')+'<span class="mn">'+esc(nm)+'</span><span class="me2">'+MOODS[d.i][0]+'</span><span class="ml">'+esc(mdLbl(w,d.i))+'</span><span class="mt">'+esc(d.note||hm(d.t))+'</span></button>'}).join('')}
+function moodPick(){if(needMe()||!db)return;const cur=mdGet(me),f=me==='leen';
+ open('<h2 style="text-align:center;margin-bottom:4px">شو مزاجك اليوم؟</h2><p style="text-align:center;color:var(--mute);font-weight:700;margin:0 0 6px">'+(f?'حسن':'لين')+' رح '+(f?'يعرف':'تعرف')+' فوراً 💌</p><div class="mdgrid">'+MOODS.map((m,i)=>'<button data-mi="'+i+'"'+(cur&&cur.i===i?' class="on"':'')+'><b>'+m[0]+'</b><span>'+mdLbl(me,i)+'</span></button>').join('')+'</div><input class="in" id="mdnote" maxlength="60" placeholder="كلمة صغيرة (اختياري)… مثلاً: اشتقتلك" value="'+esc(cur&&cur.note||'')+'"><button class="btn" id="mdsave" style="width:100%;margin-top:12px" disabled>حفظ</button>');
+ let sel=cur?cur.i:-1;const sv=$('#mdsave');sv.disabled=sel<0;
+ sheet.querySelectorAll('[data-mi]').forEach(b=>b.onclick=()=>{sel=+b.dataset.mi;sheet.querySelectorAll('[data-mi]').forEach(x=>x.classList.toggle('on',x===b));sv.disabled=false;try{navigator.vibrate&&navigator.vibrate(8)}catch(x){}});
+ sv.onclick=async()=>{if(sel<0)return;const note=($('#mdnote').value||'').trim().slice(0,60),d={i:sel,note,t:Date.now(),day:today(),by:me};
+  try{chMeta['mood_'+me]=d;moodRender();close();await db.doc('chatmeta/mood_'+me).set(d);try{CSnd.react()}catch(x){}
+   notifyOther(MOODS[sel][0]+' '+(WHO[me]||''),(f?'مزاجها':'مزاجه')+' اليوم: '+mdLbl(me,sel)+(note?' · '+note:''),'home','home')}catch(x){toast('ما انحفظ المزاج، جرّب كمان مرة')}}}
+document.addEventListener('click',e=>{if(e.target.closest('#moodc [data-mood]'))moodPick()});
+function renderHome(){try{moodRender()}catch(x){}const hc=$('#hcnt');if(!hc)return;
  const n=settings.start?Math.max(0,Math.floor((pd(today())-pd(settings.start))/864e5)):0;
  const an=settings.start?nextOf(settings.start).days:null;
  hc.innerHTML=[[n.toLocaleString(L),'يوم سوا'],[an==null?'—':an,'لذكرى الخطوبة'],[moments.length,'لحظة']].map(([v,l])=>'<div><b>'+v+'</b><span>'+l+'</span></div>').join('');
