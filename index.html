@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-27.87">
+<meta name="app-ver" content="2026-11-27.88">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -758,7 +758,7 @@ body.chat-open.kbopen main,body.chat-open.kbopen header,body.chat-open.kbopen .f
 .crp{border-inline-start-width:4px;border-radius:7px;background:rgba(0,0,0,.14);padding:4px 9px}
 .cm.cot .crp{color:var(--rose)}
 .cm.cot .crp .crt{color:var(--ink);opacity:.8}
-.chbar{background:color-mix(in srgb,var(--card) 92%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5)}
+.chbar{background:var(--card)}
 .chrow textarea{border-radius:24px;background:var(--card);border-color:color-mix(in srgb,var(--line) 80%,transparent);box-shadow:inset 0 1px 2px rgba(0,0,0,.12);transition:border-color .2s}
 .chrow textarea:focus{border-color:color-mix(in srgb,var(--rose) 45%,var(--line))}
 .chmic{background:var(--rose);color:var(--on);box-shadow:0 4px 12px -6px var(--rose)}
@@ -782,6 +782,15 @@ body.chat-open.kbopen main,body.chat-open.kbopen header,body.chat-open.kbopen .f
 .cm.cot .cb .tm,.cm.cot .cb.tx .tm{float:none;position:static;display:flex;width:max-content;margin:4px 0 -2px auto}
 .cm.cot .cau .wv{direction:ltr}
 .cm.cot .cau .pl svg{margin-inline-start:2px}
+.bakov{position:fixed;inset:0;z-index:96;background:rgba(5,6,20,.5);display:grid;place-items:center;padding:24px;opacity:0;transition:opacity .25s}
+.bakov.on{opacity:1}
+.bakp{width:100%;max-width:340px;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px 18px 16px;text-align:center;display:flex;flex-direction:column;gap:8px;box-shadow:0 24px 60px -20px rgba(0,0,0,.6);transform:scale(.94);transition:transform .3s cubic-bezier(.3,1.4,.5,1)}
+.bakov.on .bakp{transform:none}
+.bakp b{font-size:17px}
+.bakp span{color:var(--mute);font-weight:600;font-size:14px}
+.bakbtns{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.bakbtns[hidden]{display:none}
+.bakr{width:46px;height:46px;margin:0 auto 4px;border-radius:50%;border:4px solid var(--soft);border-top-color:var(--rose);animation:spin .9s linear infinite}
 .wod{flex:none;width:56px;height:56px;border-radius:16px;background:var(--soft);color:var(--rose);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rose) 14%,transparent)}
 .wod b{font-size:20px;font-weight:800;line-height:1}
 .wod span{font-size:11.5px;font-weight:700;line-height:1.2;white-space:nowrap;opacity:.85}
@@ -1199,7 +1208,7 @@ $('#chjump').onclick=()=>{chl.scrollTo({top:chl.scrollHeight,behavior:'smooth'})
 function chMore(){if(chMoreBusy)return;chMoreBusy=true;chKeep=chl.scrollHeight-chl.scrollTop;if(chStart>0){chShow+=50;renderChat()}else{chLimit+=300;subChat()}setTimeout(()=>chMoreBusy=false,250)}
 function chReveal(id){const i=chat.findIndex(m=>m.id===id);if(i<0)return null;if(i<chStart){chShow=chat.length-i+12;renderChat()}return chl.querySelector('[data-chm="'+CSS.escape(id)+'"]')}
 let chScT=0;function chDayStick(){const top=chl.getBoundingClientRect().top;chl.querySelectorAll('.chday').forEach(d=>{const r=d.getBoundingClientRect();d.classList.toggle('stuck',chl.scrollTop>4&&r.top-top<=24)})}
-chl.addEventListener('scroll',()=>{chl.classList.add('chsc');clearTimeout(chScT);chScT=setTimeout(()=>{chl.classList.remove('chsc')},1300);chDayStick()},{passive:true});
+let chDsR=0;chl.addEventListener('scroll',()=>{if(!chl.classList.contains('chsc'))chl.classList.add('chsc');clearTimeout(chScT);chScT=setTimeout(()=>{chl.classList.remove('chsc')},1300);if(!chDsR)chDsR=requestAnimationFrame(()=>{chDsR=0;chDayStick()})},{passive:true});
 chl.addEventListener('scroll',()=>{if(chl.scrollTop<250&&chStart>0&&!chMoreBusy&&!chFirst)requestAnimationFrame(chMore)},{passive:true});
 chl.addEventListener('click',e=>{if(e.target.closest('#cholder')){chMore();return}
  const g=e.target.closest('[data-goto]');if(!g||!g.dataset.goto)return;e.stopPropagation();const t=chl.querySelector('[data-chm="'+CSS.escape(g.dataset.goto)+'"]')||chReveal(g.dataset.goto);
@@ -2422,9 +2431,42 @@ function openPlan(p){
  const del=$('#pdel');if(del)del.onclick=async()=>{const copy={...p};delete copy.id;close();await write(()=>db.collection('plans').doc(p.id).delete());toast('انحذفت','تراجع',()=>write(()=>db.collection('plans').doc(p.id).set(copy),'رجعت'))};
 }
 
+
+/* ---- chat backup (export) ---- */
+async function chBackup(withAud){if(needMe()||!db)return;
+ const ov=document.createElement('div');ov.className='bakov';ov.innerHTML='<div class="bakp"><div class="bakr"><i></i></div><b id="bakt">عم نجهّز النسخة…</b><span id="baks">لا تسكّر التطبيق</span><div class="bakbtns" id="bakbtns" hidden></div></div>';document.body.appendChild(ov);requestAnimationFrame(()=>ov.classList.add('on'));
+ const st=(a,b)=>{$('#bakt').textContent=a;if(b!=null)$('#baks').textContent=b};const done=()=>{ov.classList.remove('on');setTimeout(()=>ov.remove(),250)};
+ try{const sn=await db.collection('chat').orderBy('t').get();const all=sn.docs.map(d=>({...d.data(),id:d.id})).filter(m=>!m.del);
+  st('عم نجمع '+all.length+' رسالة…','');
+  const auds={};if(withAud){const L=all.filter(m=>m.aud);let k=0;for(const m of L){k++;st('عم نجمع الرسائل الصوتية…',k+' من '+L.length);try{if(chAud[m.aud])auds[m.aud]=chAud[m.aud];else{let d='';const n=m.parts||1;for(let i=0;i<n;i++){const x=await db.doc('chataudio/'+(i?m.aud+'_'+i:m.aud)).get();d+=(x.data()||{}).data||''}if(d)auds[m.aud]=d}}catch(x){}}}
+  const nm=w=>WHO[w]||w,E=t=>esc(String(t||'')),tm=t=>new Date(t).toLocaleTimeString('ar',{hour:'numeric',minute:'2-digit'}),dy=t=>new Date(t).toLocaleDateString('ar',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  let last='',body='';
+  for(const m of all){const d=new Date(m.t).toDateString();if(d!==last){last=d;body+='<div class="d"><span>'+dy(m.t)+'</span></div>'}
+   const mine=m.by==='hassan';let c='';
+   if(m.reply&&(m.reply.text||m.reply.by))c+='<div class="q"><b>'+E(nm(m.reply.by))+'</b>'+E((m.reply.text||'').slice(0,120))+'</div>';
+   if(m.vid)c+='<a class="v" href="'+PUSH_URL+'/vid/'+encodeURIComponent(m.vid)+'" target="_blank">'+(m.img?'<img src="'+m.img+'">':'')+'<span>▶ فيديو · '+fmtDur(m.vdur||0)+'</span></a>';
+   else if(m.img)c+='<img src="'+m.img+'">';
+   if(m.stk)c+='<div class="s">'+stkHtml(m.stk)+'</div>';
+   if(m.aud)c+=auds[m.aud]?'<audio controls preload="none" src="'+auds[m.aud]+'"></audio>':'<div class="a">🎤 رسالة صوتية · '+fmtDur(m.dur||0)+'</div>';
+   if(m.text)c+='<div class="x">'+linkify(E(m.text)).replace(/\n/g,'<br>')+'</div>';
+   const rx=Object.values(m.react||{}).filter(Boolean).join('');
+   body+='<div class="m '+(mine?'me':'ot')+'"><div class="b"><div class="n">'+E(nm(m.by))+'</div>'+c+'<div class="t">'+tm(m.t)+(m.edited?' · معدّلة':'')+'</div>'+(rx?'<div class="r">'+E(rx)+'</div>':'')+'</div></div>'}
+  const now=new Date(),fn='محادثة-حسن-ولين-'+now.toISOString().slice(0,10)+'.html';
+  const html='<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>محادثتنا · حسن ولين</title><style>body{margin:0;background:#0f1230;color:#f3f1ff;font:16px/1.5 -apple-system,system-ui,"Segoe UI",Tahoma,sans-serif}header{position:sticky;top:0;background:#171a40;padding:14px 16px;text-align:center;box-shadow:0 4px 18px rgba(0,0,0,.4);z-index:2}header b{font-size:19px}header small{display:block;opacity:.65;font-size:12.5px}main{max-width:760px;margin:0 auto;padding:12px 12px 40px}.d{text-align:center;margin:16px 0 8px}.d span{background:#22265a;border-radius:9px;padding:4px 12px;font-size:12.5px;opacity:.9}.m{display:flex;margin:3px 0}.m.ot{justify-content:flex-end}.b{max-width:78%;border-radius:16px;padding:7px 11px;background:#22265a;position:relative;word-wrap:break-word}.me .b{background:linear-gradient(170deg,#f0c766,#d9a93a);color:#2a1f05}.n{font-size:11.5px;font-weight:800;opacity:.6}.t{font-size:11px;opacity:.65;text-align:left;margin-top:2px}.b img{max-width:100%;border-radius:12px;display:block;margin:4px 0}.s img,.s svg{width:120px;height:120px}.q{border-inline-start:3px solid currentColor;background:rgba(0,0,0,.14);border-radius:7px;padding:3px 8px;font-size:13px;margin:3px 0;opacity:.85}.q b{display:block;font-size:11.5px}.a{font-weight:700}audio{width:240px;max-width:100%;margin:4px 0}.v{display:block;color:inherit;text-decoration:none;position:relative}.v span{position:absolute;left:8px;bottom:8px;background:rgba(0,0,0,.6);color:#fff;border-radius:8px;padding:2px 8px;font-size:12px}.r{position:absolute;bottom:-12px;left:8px;background:#22265a;border-radius:10px;padding:0 5px;font-size:13px}.x a{color:inherit}</style></head><body><header><b>💛 محادثة حسن ولين</b><small>'+all.length+' رسالة · نسخة '+E(now.toLocaleDateString('ar',{day:'numeric',month:'long',year:'numeric'}))+'</small></header><main>'+body+'</main></body></html>';
+  const file=new File([html],fn,{type:'text/html'});const sz=file.size<1048576?Math.max(1,Math.round(file.size/1024))+' كيلو':(file.size/1048576).toFixed(1)+' ميغا';
+  const rr=ov.querySelector('.bakr');if(rr)rr.outerHTML='<div style="font-size:40px;line-height:1">✅</div>';st('النسخة جاهزة',all.length+' رسالة · '+sz);
+  const bb=$('#bakbtns');bb.hidden=false;bb.innerHTML='<button class="btn pri" id="baksv">احفظها على الموبايل</button><button class="btn" id="bakx">سكّر</button>';
+  $('#bakx').onclick=done;
+  $('#baksv').onclick=async()=>{try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'محادثتنا'});done();return}}catch(e){if(e&&e.name==='AbortError')return}
+   const u=URL.createObjectURL(file),a=document.createElement('a');a.href=u;a.download=fn;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000);done()};
+ }catch(e){console.warn(e);const rr=ov.querySelector('.bakr');if(rr)rr.remove();st('ما زبطت النسخة','جرّب كمان مرة');const bb=$('#bakbtns');bb.hidden=false;bb.innerHTML='<button class="btn" id="bakx">سكّر</button>';$('#bakx').onclick=done}}
+function chBackupAsk(){close();setTimeout(()=>{const ov=document.createElement('div');ov.className='bakov';ov.innerHTML='<div class="bakp"><b>💾 نسخة احتياطية</b><span>بدك الرسائل الصوتية جوّا النسخة كمان؟ بيصير الملف أكبر.</span><div class="bakbtns"><button class="btn pri" data-b="1">إي، مع الصوت</button><button class="btn" data-b="0">بس الكتابة والصور</button><button class="btn" data-b="x" style="background:none">إلغاء</button></div></div>';document.body.appendChild(ov);requestAnimationFrame(()=>ov.classList.add('on'));
+ ov.onclick=e=>{const b=e.target.closest('[data-b]');if(!b)return;ov.classList.remove('on');setTimeout(()=>ov.remove(),250);if(b.dataset.b!=='x')chBackup(b.dataset.b==='1')}},250)}
+document.addEventListener('click',e=>{if(e.target.closest('#s-bak'))chBackupAsk()});
 function openSettings(){
  open('<h2>إعداداتنا</h2><form id="sf"><label class="l" for="s-d">تاريخ خطبتنا</label><input class="in" id="s-d" type="date" value="'+esc(settings.start||'')+'">'+
  (me?'<label class="l" for="s-b">عيد ميلادك</label><input class="in" id="s-b" type="date" value="'+esc(bdayOf(me))+'">':'')+
+ '<div class="srow"><div><b>💾 نسخة احتياطية للمحادثة</b><span>كل رسائلنا وصورنا بملف واحد بينحفظ على موبايلك</span></div><button type="button" class="btn" id="s-bak" style="flex:none;padding:9px 14px">نزّل</button></div>'+
  '<div class="srow"><div><b>🔔 الإشعارات</b><span>رسائل المحادثة والبوس، حتى لو التطبيق مسكّر</span></div><button type="button" class="swt" id="s-push" aria-label="الإشعارات" aria-pressed="'+(typeof pushIsOn==='function'&&pushIsOn())+'"></button></div>'+
  '<p class="small" style="opacity:.6">نسخة التطبيق: '+APP_VER+(me&&(chMeta[other(me)]||{}).ver?' · نسخة '+WHO[other(me)]+': '+chMeta[other(me)].ver:'')+'</p><p class="small">'+(me?'إنت مسجّل باسم '+WHO[me]+'. كل واحد بيعدّل عيد ميلادو ووزنو وطولو هوّي بس.':'لسّا ما اخترت مين إنت.')+'</p><div class="acts"><button class="btn pri" type="submit">احفظ</button></div><div class="acts" style="margin-top:10px"><button type="button" class="btn" id="bk">نسخة احتياطية</button><button type="button" class="btn del" id="lo">طلوع من الحساب</button></div></form>');
  $('#bk').onclick=()=>{close();backup()};
