@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-27.92">
+<meta name="app-ver" content="2026-11-27.93">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1200,6 +1200,9 @@ const CSnd=(()=>{let c=null,out=null,last={};
   recv:()=>go('recv',t=>{tone(988,0,t,.2,.16,'sine',.35);tone(1480,0,t+.085,.28,.14,'sine',.3)},400),
   react:()=>go('react',t=>{[1568,2093,2637].forEach((f,i)=>tone(f,0,t+i*.055,.3,.075,'triangle'))}),
   tap:()=>go('tap',t=>tone(1500,1100,t,.05,.05,'sine'),40)}})();
+function chSlide(d){try{const kids=chl.children,n=kids.length,top=chl.getBoundingClientRect().top-40;
+ for(let i=n-1,c=0;i>=0&&c<24;i--){const el=kids[i];if(el.classList.contains('in'))continue;const r=el.getBoundingClientRect();if(r.bottom<top)break;c++;
+  el.animate([{transform:'translateY('+d+'px)'},{transform:'none'}],{duration:320,easing:'cubic-bezier(.22,1,.36,1)'})}}catch(x){}}
 function renderChat(){chBadge();if(!chOpen)return;if(swBusy){swPend=true;return}
  const o=other(me);$('#chnm').textContent=WHO[o]||'';$('#chav').textContent=o==='leen'?'ل':'ح';chStatus(true);
  const near=chStick,prevTop=chl.scrollTop;
@@ -1213,10 +1216,10 @@ function renderChat(){chBadge();if(!chOpen)return;if(swBusy){swPend=true;return}
   items.push({k:'m:'+k,h:chMsgHtml(m,prevBy,oread),a:1});
   if(lastRead&&m===lastRead)items.push({k:'read',h:'<div class="chread">'+(m.aud?(m.played?'تمت القراءة والاستماع ✓✓':'تمت القراءة ✓✓ · لسّا ما انسمعت'):'تمت القراءة ✓✓')+'</div>',a:1});prevBy=m.by});
  if(chTypingShown)items.push({k:'typing',h:chTypingShown==='rec'?'<div class="cm cot tyrow"><div class="cb tyb recb"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>عم '+(other(me)==='leen'?'تسجّل':'يسجّل')+' رسالة صوتية</span><i></i><i></i><i></i></div></div>':'<div class="cm cot tyrow"><div class="cb tyb"><i></i><i></i><i></i></div></div>',a:1});
- const first=chFirst;chPatch(items,!first);
+ const first=chFirst,oldH=chl.scrollHeight;chPatch(items,!first);
  if(chKeep){chl.scrollTop=chl.scrollHeight-chKeep;chKeep=0}
  else if(first){chFirst=false;chNew=0;const u=chUnreadKey&&chl.querySelector('[data-k="unread"]');if(u&&u.offsetTop>chl.clientHeight*.5){chl.scrollTop=u.offsetTop-70;chStick=false}else chl.scrollTop=chl.scrollHeight}
- else if(near)chl.scrollTop=chl.scrollHeight;else chl.scrollTop=prevTop;
+ else if(near){const dlt=chl.scrollHeight-oldH;chl.scrollTop=chl.scrollHeight;if(dlt>0&&dlt<chl.clientHeight*.9&&!document.hidden)chSlide(dlt)}else chl.scrollTop=prevTop;
  jumpUI();try{chDayStick()}catch(x){}if(auEl&&auId)auUI(auId,!auEl.paused,auEl.currentTime/(isFinite(auEl.duration)?auEl.duration:1));
  chMarkRead()}
 function jumpUI(){const j=$('#chjump');const far=chl.scrollHeight-chl.scrollTop-chl.clientHeight>300;j.hidden=!far;j.innerHTML='⬇️'+(chNew&&far?'<span>'+chNew+'</span>':'')}
