@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-27.97">
+<meta name="app-ver" content="2026-11-27.98">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1242,13 +1242,13 @@ chl.addEventListener('load',e=>{if(e.target.tagName==='IMG'&&chStick)chl.scrollT
 $('#chjump').onclick=()=>{chl.scrollTo({top:chl.scrollHeight,behavior:'smooth'});chNew=0};
 async function chLoadOlder(){if(chOldBusy||chNoMore||!db||!chat.length)return false;chOldBusy=true;try{let q=db.collection('chat').orderBy('t');
   if(typeof q.endBefore!=='function'){chLimit+=300;subChat();return true}
-  const sn=await q.endBefore(chat[0].t||0).limitToLast(200).get();const docs=sn.docs.map(d=>({...d.data(),id:d.id}));if(docs.length<200)chNoMore=true;
-  if(docs.length){chOlder=docs.concat(chOlder);docs.forEach(m=>chSeenIds&&chSeenIds.add(m.id));chKeep=chl.scrollHeight-chl.scrollTop;chat=chMerge();chShow+=Math.min(80,docs.length);renderChat()}else renderChat();return docs.length>0}catch(x){return false}finally{chOldBusy=false}}
-function chMore(){if(chMoreBusy)return;chMoreBusy=true;if(chStart>0){chKeep=chl.scrollHeight-chl.scrollTop;chShow+=80;renderChat()}else chLoadOlder();setTimeout(()=>chMoreBusy=false,300)}
+  const sn=await q.endBefore(chat[0].t||0).limitToLast(300).get();const docs=sn.docs.map(d=>({...d.data(),id:d.id}));if(docs.length<300)chNoMore=true;
+  if(docs.length){chOlder=docs.concat(chOlder);docs.forEach(m=>chSeenIds&&chSeenIds.add(m.id));chKeep=chl.scrollHeight-chl.scrollTop;chat=chMerge();chShow+=Math.min(150,docs.length);renderChat()}else renderChat();return docs.length>0}catch(x){return false}finally{chOldBusy=false}}
+function chMore(){if(chMoreBusy)return;chMoreBusy=true;if(chStart>0){chKeep=chl.scrollHeight-chl.scrollTop;chShow+=150;renderChat()}else chLoadOlder();setTimeout(()=>chMoreBusy=false,300)}
 function chReveal(id){const i=chat.findIndex(m=>m.id===id);if(i<0)return null;if(i<chStart){chShow=chat.length-i+12;renderChat()}return chl.querySelector('[data-chm="'+CSS.escape(id)+'"]')}
 let chScT=0;function chDayStick(){const top=chl.getBoundingClientRect().top;chl.querySelectorAll('.chday').forEach(d=>{const r=d.getBoundingClientRect();d.classList.toggle('stuck',chl.scrollTop>4&&r.top-top<=24)})}
 let chDsR=0;chl.addEventListener('scroll',()=>{if(!chl.classList.contains('chsc'))chl.classList.add('chsc');clearTimeout(chScT);chScT=setTimeout(()=>{chl.classList.remove('chsc')},1300);if(!chDsR)chDsR=requestAnimationFrame(()=>{chDsR=0;chDayStick()})},{passive:true});
-let chMoreT=0;chl.addEventListener('scroll',()=>{if(chFirst||chMoreBusy||!(chStart>0||!chNoMore))return;const st=chl.scrollTop;clearTimeout(chMoreT);if(st<80)requestAnimationFrame(chMore);else if(st<1400)chMoreT=setTimeout(()=>{if(chl.scrollTop<1400)chMore()},140)},{passive:true});
+chl.addEventListener('scroll',()=>{if(chFirst||chMoreBusy||chOldBusy||!(chStart>0||!chNoMore))return;if(chl.scrollTop<Math.max(1600,chl.clientHeight*3))chMore()},{passive:true});
 chl.addEventListener('click',e=>{if(e.target.closest('#cholder')){chMore();return}
  const g=e.target.closest('[data-goto]');if(!g||!g.dataset.goto)return;e.stopPropagation();const t=chl.querySelector('[data-chm="'+CSS.escape(g.dataset.goto)+'"]')||chReveal(g.dataset.goto);
  if(!t){toast('هالرسالة قديمة كتير، طلّع لفوق وكبس «رسائل أقدم»');return}const row=t.closest('.cm');row.scrollIntoView({block:'center',behavior:'smooth'});row.classList.remove('flash');void row.offsetWidth;row.classList.add('flash')});
