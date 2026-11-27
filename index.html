@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-27.88">
+<meta name="app-ver" content="2026-11-27.89">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -2468,7 +2468,7 @@ function openSettings(){
  (me?'<label class="l" for="s-b">عيد ميلادك</label><input class="in" id="s-b" type="date" value="'+esc(bdayOf(me))+'">':'')+
  '<div class="srow"><div><b>💾 نسخة احتياطية للمحادثة</b><span>كل رسائلنا وصورنا بملف واحد بينحفظ على موبايلك</span></div><button type="button" class="btn" id="s-bak" style="flex:none;padding:9px 14px">نزّل</button></div>'+
  '<div class="srow"><div><b>🔔 الإشعارات</b><span>رسائل المحادثة والبوس، حتى لو التطبيق مسكّر</span></div><button type="button" class="swt" id="s-push" aria-label="الإشعارات" aria-pressed="'+(typeof pushIsOn==='function'&&pushIsOn())+'"></button></div>'+
- '<p class="small" style="opacity:.6">نسخة التطبيق: '+APP_VER+(me&&(chMeta[other(me)]||{}).ver?' · نسخة '+WHO[other(me)]+': '+chMeta[other(me)].ver:'')+'</p><p class="small">'+(me?'إنت مسجّل باسم '+WHO[me]+'. كل واحد بيعدّل عيد ميلادو ووزنو وطولو هوّي بس.':'لسّا ما اخترت مين إنت.')+'</p><div class="acts"><button class="btn pri" type="submit">احفظ</button></div><div class="acts" style="margin-top:10px"><button type="button" class="btn" id="bk">نسخة احتياطية</button><button type="button" class="btn del" id="lo">طلوع من الحساب</button></div></form>');
+ '<p class="small" style="opacity:.6">نسخة التطبيق: '+APP_VER+(me&&(chMeta[other(me)]||{}).ver?' · نسخة '+WHO[other(me)]+': '+chMeta[other(me)].ver:'')+'</p>'+(me?'':'<p class="small">لسّا ما اخترت مين إنت.</p>')+'<div class="acts"><button class="btn pri" type="submit">احفظ</button></div><div class="acts" style="margin-top:10px"><button type="button" class="btn" id="bk">نسخة احتياطية</button><button type="button" class="btn del" id="lo">طلوع من الحساب</button></div></form>');
  $('#bk').onclick=()=>{close();backup()};
  $('#s-push').onclick=()=>togglePush();
  $('#lo').onclick=()=>window.__logout&&window.__logout();
