@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-27.98">
+<meta name="app-ver" content="2026-11-27.99">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -867,6 +867,19 @@ body.chat-open.kbopen main,body.chat-open.kbopen header,body.chat-open.kbopen .f
 .vview[hidden]{display:none}
 .vview video{width:100%;max-height:100%;background:#000}
 .vvx{position:absolute;top:calc(env(safe-area-inset-top) + 12px);right:14px;z-index:2;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.16);color:#fff;font-size:20px;display:grid;place-items:center}
+.hasav{background-size:cover!important;background-position:center!important;color:transparent!important;font-size:0!important}
+.fav.hasav svg{display:none}
+#chav{cursor:pointer}
+.avov{position:fixed;inset:0;z-index:9999;background:rgba(6,5,16,0);display:grid;place-items:center;transition:background .25s}
+.avov.on{background:rgba(6,5,16,.92)}
+.avov img{width:min(82vw,420px);aspect-ratio:1;border-radius:50%;object-fit:cover;transform:scale(.6);opacity:0;transition:transform .32s cubic-bezier(.2,.9,.3,1.2),opacity .25s;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.avov.on img{transform:none;opacity:1}
+.avov b{position:absolute;top:calc(env(safe-area-inset-top) + 28px);left:0;right:0;text-align:center;color:#fff;font-size:20px}
+.savr{display:flex;align-items:center;gap:12px}
+.savr .sava{width:58px;height:58px;flex:none;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:24px;color:var(--on);background:linear-gradient(135deg,var(--rose),color-mix(in srgb,var(--rose) 50%,var(--gold)));position:relative;cursor:pointer}
+.savr .sava i{position:absolute;right:-2px;bottom:-2px;width:22px;height:22px;border-radius:50%;background:var(--gold);color:#14112c;font-style:normal;font-size:12px;display:grid;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.savr .sava.hasav i{font-size:12px!important;color:#14112c!important}
+.savr .sbt{display:flex;gap:6px;flex:none;margin-inline-start:auto}
 </style>
 </head>
 <body>
@@ -1218,7 +1231,7 @@ function chSlide(d){try{const kids=chl.children,n=kids.length,top=chl.getBoundin
  for(let i=n-1,c=0;i>=0&&c<24;i--){const el=kids[i];if(el.classList.contains('in'))continue;const r=el.getBoundingClientRect();if(r.bottom<top)break;c++;
   el.animate([{transform:'translateY('+d+'px)'},{transform:'none'}],{duration:320,easing:'cubic-bezier(.22,1,.36,1)'})}}catch(x){}}
 function renderChat(){chBadge();if(!chOpen)return;if(swBusy){swPend=true;return}
- const o=other(me);$('#chnm').textContent=WHO[o]||'';$('#chav').textContent=o==='leen'?'ل':'ح';chStatus(true);
+ const o=other(me);$('#chnm').textContent=WHO[o]||'';$('#chav').textContent=o==='leen'?'ل':'ح';avPaint($('#chav'),o);chStatus(true);
  const near=chStick,prevTop=chl.scrollTop;
  if(!chat.length){chl.innerHTML='<div class="chempty"><b>💌</b>أوّل رسالة بيناتكن هون، يلا '+(me==='leen'?'ابعتيلو':'ابعتلها')+' شي حلو</div>';return}
  const oread=(chMeta[o]||{}).read||0,items=[];let lastDay='',prevBy='';
@@ -1301,7 +1314,7 @@ const TONES={};let ringEl=null;
 function ringPlay(kind){ringStop();try{TONES[kind]=TONES[kind]||toneUrl(kind);ringEl=new Audio(TONES[kind]);ringEl.loop=true;ringEl.volume=kind==='back'?.5:1;ringEl.play().catch(()=>{})}catch(x){}try{if(kind==='in'&&navigator.vibrate)navigator.vibrate([400,300,400,300,400])}catch(x){}}
 function ringStop(){if(ringEl){try{ringEl.pause()}catch(x){}ringEl=null}}
 function callPrepAudio(){if(!callAudioEl){callAudioEl=document.createElement('audio');callAudioEl.autoplay=true;callAudioEl.setAttribute('playsinline','');document.body.appendChild(callAudioEl)}try{callAudioEl.play().catch(()=>{})}catch(x){}}
-function callShow(){const o=call.role==='out'?other(me):(call.from||other(me));const v=$('#callv');v.classList.remove('min');$('#callpill').hidden=true;$('#callnm').textContent=WHO[o]||'';$('#callav').textContent=o==='leen'?'ل':'ح';
+function callShow(){const o=call.role==='out'?other(me):(call.from||other(me));const v=$('#callv');v.classList.remove('min');$('#callpill').hidden=true;$('#callnm').textContent=WHO[o]||'';$('#callav').textContent=o==='leen'?'ل':'ح';avPaint($('#callav'),o);
  v.classList.toggle('inc',call.role==='in'&&call.state==='incoming');v.classList.remove('conn','end');$('#callmute').setAttribute('aria-pressed','false');$('#callspk').setAttribute('aria-pressed',String(callSpk));v.hidden=false;v.classList.add('on')}
 function callTxt(t){$('#callst').textContent=t;$('#callpt').textContent=t}
 function callMin(on){const v=$('#callv'),p=$('#callpill');if(on&&(!call||call.state==='incoming'))return;v.classList.toggle('min',!!on);p.hidden=!on;if(on){$('#callpnm').textContent=WHO[call.role==='out'?other(me):(call.from||other(me))]||''}try{navigator.vibrate&&navigator.vibrate(8)}catch(x){}}
@@ -1404,7 +1417,7 @@ function onChat(docs){const before=chSeenIds;chLive=docs;if(!chOlder.length)chNo
    if(!chOpen)toast('💬 '+(WHO[m.by]||'')+': '+(m.stk?'🌟 ستيكر':m.aud?'🎤 رسالة صوتية':m.img?'📷 صورة':(m.text||'').slice(0,40)),'افتح',openChat)}}
  chSeenIds=new Set(chat.map(m=>m.id));renderChat()}
 let chMetaSig='';
-function onChatMeta(docs){chMeta={};docs.forEach(d=>chMeta[d.id]=d);try{moodRender()}catch(x){}try{if(chMeta.call)callOnDoc(chMeta.call)}catch(x){}if(chOpen){chStatus();const sg=((chMeta[other(me)]||{}).read||0)+'|'+chAct();if(sg!==chMetaSig){chMetaSig=sg;renderChat()}}else{chMetaSig='';chBadge()}navAct()}
+function onChatMeta(docs){chMeta={};docs.forEach(d=>chMeta[d.id]=d);try{avRender()}catch(x){}try{moodRender()}catch(x){}try{if(chMeta.call)callOnDoc(chMeta.call)}catch(x){}if(chOpen){chStatus();const sg=((chMeta[other(me)]||{}).read||0)+'|'+chAct();if(sg!==chMetaSig){chMetaSig=sg;renderChat()}}else{chMetaSig='';chBadge()}navAct()}
 let fitRaf=0,fitH=0,fitT=-1,maxVH=window.innerHeight;
 addEventListener('resize',()=>{maxVH=Math.max(maxVH,window.innerHeight)});
 function kbOpen(){const vv=window.visualViewport;return !!vv&&document.activeElement===chin&&maxVH-vv.height>120}
@@ -1917,7 +1930,7 @@ const FIC={kiss:'<use href="#lips" x="1" y="6" width="22" height="14"/>',heart:'
 const feedSeen=()=>{try{return Number(localStorage.getItem('hl-feed-seen'))||0}catch(x){return 0}};
 const tAgo=t=>{const d=new Date(t),td=pd(today());if(d>=td)return d.toLocaleTimeString(L,{hour:'numeric',minute:'2-digit'});if(d>=new Date(td-864e5))return 'مبارح';return d.toLocaleDateString(L,{weekday:'short',day:'numeric'})};
 function feedRow(it,seen){const fresh=it.who!==me&&it.who!=='both'&&it.t>seen;
- return '<div class="fi'+(fresh?' new':'')+(it.go?' go':'')+'"'+(it.go?' data-fgo="'+esc(it.go)+'" role="button"':'')+'><span class="fav '+it.who+'">'+(it.who==='both'?'<svg viewBox="0 0 24 24"><use href="#h"/></svg>':it.who==='hassan'?'ح':'ل')+'</span><div class="ft"><b>'+(it.who==='both'?'':WHO[it.who]+' ')+'</b>'+it.txt+'</div><span class="fw">'+(it.pid?'<button class="fhrt'+(it.lk?' on':'')+(it.pto===me?' can':'')+'" data-plk="'+esc(it.pid)+'" aria-label="'+(it.pto===me?'حبّيت':'تفاعل')+'"><svg viewBox="0 0 24 24"><path d="M12 20.6s-8-4.9-8-10.7A4.6 4.6 0 0 1 12 7.2a4.6 4.6 0 0 1 8 2.7c0 5.8-8 10.7-8 10.7z"/></svg></button>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+FIC[it.ic]+'</svg>')+tAgo(it.t)+'</span></div>'}
+ return '<div class="fi'+(fresh?' new':'')+(it.go?' go':'')+'"'+(it.go?' data-fgo="'+esc(it.go)+'" role="button"':'')+'><span class="fav '+it.who+(it.who!=='both'&&avImg(it.who)?' hasav" style="background-image:url(&quot;'+avImg(it.who)+'&quot;)':'')+'">'+(it.who==='both'?'<svg viewBox="0 0 24 24"><use href="#h"/></svg>':it.who==='hassan'?'ح':'ل')+'</span><div class="ft"><b>'+(it.who==='both'?'':WHO[it.who]+' ')+'</b>'+it.txt+'</div><span class="fw">'+(it.pid?'<button class="fhrt'+(it.lk?' on':'')+(it.pto===me?' can':'')+'" data-plk="'+esc(it.pid)+'" aria-label="'+(it.pto===me?'حبّيت':'تفاعل')+'"><svg viewBox="0 0 24 24"><path d="M12 20.6s-8-4.9-8-10.7A4.6 4.6 0 0 1 12 7.2a4.6 4.6 0 0 1 8 2.7c0 5.8-8 10.7-8 10.7z"/></svg></button>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+FIC[it.ic]+'</svg>')+tAgo(it.t)+'</span></div>'}
 function renderFeed(){try{renderHome()}catch(x){}
  const el=$('#feed');if(!el)return;
  const all=feedItems(),td=pd(today()).getTime(),todays=all.filter(i=>i.t>=td),seen=feedSeen();
@@ -2542,10 +2555,10 @@ document.addEventListener('click',e=>{if(e.target.closest('#s-bak'))chBackupAsk(
 function openSettings(){
  open('<h2>إعداداتنا</h2><form id="sf"><label class="l" for="s-d">تاريخ خطبتنا</label><input class="in" id="s-d" type="date" value="'+esc(settings.start||'')+'">'+
  (me?'<label class="l" for="s-b">عيد ميلادك</label><input class="in" id="s-b" type="date" value="'+esc(bdayOf(me))+'">':'')+
- '<div class="srow"><div><b>💾 نسخة احتياطية للمحادثة</b><span>كل رسائلنا وصورنا بملف واحد بينحفظ على موبايلك</span></div><button type="button" class="btn" id="s-bak" style="flex:none;padding:9px 14px">نزّل</button></div>'+
+ (me?'<div class="srow savr"><span class="sava" id="s-ava" role="button" aria-label="غيّر صورتك">'+(me==='leen'?'ل':'ح')+'<i>📷</i></span><div><b>صورتي الشخصية</b><span>'+(me==='leen'?'حسن بيشوفها':'لين بتشوفها')+'</span></div><div class="sbt"><button type="button" class="btn" id="s-avrm" style="padding:9px 12px">شيل</button><button type="button" class="btn" id="s-avch" style="padding:9px 14px">غيّر</button></div></div>':'')+'<div class="srow"><div><b>💾 نسخة احتياطية للمحادثة</b><span>كل رسائلنا وصورنا بملف واحد بينحفظ على موبايلك</span></div><button type="button" class="btn" id="s-bak" style="flex:none;padding:9px 14px">نزّل</button></div>'+
  '<div class="srow"><div><b>🔔 الإشعارات</b></div><button type="button" class="swt" id="s-push" aria-label="الإشعارات" aria-pressed="'+(typeof pushIsOn==='function'&&pushIsOn())+'"></button></div>'+
  '<p class="small" style="opacity:.6">نسخة التطبيق: '+APP_VER+(me&&(chMeta[other(me)]||{}).ver?' · نسخة '+WHO[other(me)]+': '+chMeta[other(me)].ver:'')+'</p>'+(me?'':'<p class="small">لسّا ما اخترت مين إنت.</p>')+'<div class="acts"><button class="btn pri" type="submit">احفظ</button></div><div class="acts" style="margin-top:10px"><button type="button" class="btn" id="bk">نسخة احتياطية</button><button type="button" class="btn del" id="lo">طلوع من الحساب</button></div></form>');
- $('#bk').onclick=()=>{close();backup()};
+ $('#bk').onclick=()=>{close();backup()};try{avRender()}catch(x){}
  $('#s-push').onclick=()=>togglePush();
  $('#lo').onclick=()=>window.__logout&&window.__logout();
  $('#sf').addEventListener('submit',async e=>{e.preventDefault();
@@ -2618,6 +2631,19 @@ function moodRender(){const box=$('#moodc');if(!box)return;const ws=me==='leen'?
   const nm=(WHO[w]||'')+(mine?' (إنت'+(f?'ي':'')+')':'');
   if(!d)return '<button class="mdh'+(mine?' mine':'')+'" '+(mine?'data-mood="1"':'disabled')+'><span class="mn">'+esc(nm)+'</span><span class="me2 q">🙂</span><span class="ml">'+(mine?(f?'شو مزاجك اليوم؟':'شو مزاجك اليوم؟'):'لسّا ما '+(f?'حطّت':'حطّ')+' مزاج'+(f?'ها':'ه'))+'</span><span class="mt">'+(mine?'كبّس واختار':'&nbsp;')+'</span></button>';
   return '<button class="mdh'+(mine?' mine':'')+'" '+(mine?'data-mood="1"':'disabled')+'>'+(mine?'<span class="med">✎</span>':'')+'<span class="mn">'+esc(nm)+'</span><span class="me2">'+MOODS[d.i][0]+'</span><span class="ml">'+esc(mdLbl(w,d.i))+'</span><span class="mt">'+esc(d.note||hm(d.t))+'</span></button>'}).join('')}
+function avImg(w){const d=chMeta&&chMeta['av_'+w];return d&&typeof d.img==='string'&&d.img.startsWith('data:image/')?d.img:''}
+function avPaint(el,w){if(!el)return;const u=avImg(w);if(u){el.style.backgroundImage='url("'+u+'")';el.classList.add('hasav')}else{el.style.backgroundImage='';el.classList.remove('hasav')}}
+let avSig='';function avRender(){const sg=['hassan','leen'].map(w=>((chMeta||{})['av_'+w]||{}).t||0).join('|');
+ try{if(me){avPaint($('#chav'),other(me));const sv=$('#s-ava');if(sv)avPaint(sv,me);const rm=$('#s-avrm');if(rm)rm.hidden=!avImg(me)}}catch(x){}
+ try{const cv=$('#callv');if(cv&&!cv.hidden&&call)avPaint($('#callav'),call.role==='out'?other(me):(call.from||other(me)))}catch(x){}
+ if(sg!==avSig){const first=!avSig;avSig=sg;if(!first)try{queueFeed()}catch(x){}}}
+function avView(w){const u=avImg(w);if(!u)return;const ov=document.createElement('div');ov.className='avov';ov.innerHTML='<b>'+esc(WHO[w]||'')+'</b><img alt="" src="'+u+'">';document.body.appendChild(ov);requestAnimationFrame(()=>ov.classList.add('on'));ov.onclick=()=>{ov.classList.remove('on');setTimeout(()=>ov.remove(),280)}}
+function avPick(){if(needMe()||!db)return;const inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.style.display='none';document.body.appendChild(inp);
+ inp.onchange=async()=>{const f=inp.files&&inp.files[0];inp.remove();if(!f)return;
+  try{const img=await shrink(f,400,.85,90000,true);const d={img,t:Date.now(),by:me};chMeta['av_'+me]=d;avRender();await db.doc('chatmeta/av_'+me).set(d);toast('📸 صورتك انحطّت');try{CSnd.react()}catch(x){}}
+  catch(e){toast('ما زبطت الصورة، جرّب صورة تانية')}};inp.click()}
+async function avRemove(){if(!me||!db)return;const d={img:'',t:Date.now(),by:me};chMeta['av_'+me]=d;avRender();try{await db.doc('chatmeta/av_'+me).set(d);toast('انشالت الصورة')}catch(x){}}
+document.addEventListener('click',e=>{if(e.target.closest('#chav')&&me)avView(other(me));else if(e.target.closest('#s-avch')||e.target.closest('#s-ava'))avPick();else if(e.target.closest('#s-avrm'))avRemove()});
 function moodPick(){if(needMe()||!db)return;const cur=mdGet(me),f=me==='leen';
  open('<h2 style="text-align:center;margin-bottom:4px">شو مزاجك اليوم؟</h2><p style="text-align:center;color:var(--mute);font-weight:700;margin:0 0 6px">'+(f?'حسن':'لين')+' رح '+(f?'يعرف':'تعرف')+' فوراً 💌</p><div class="mdgrid">'+MOODS.map((m,i)=>'<button data-mi="'+i+'"'+(cur&&cur.i===i?' class="on"':'')+'><b>'+m[0]+'</b><span>'+mdLbl(me,i)+'</span></button>').join('')+'</div><input class="in" id="mdnote" maxlength="60" placeholder="كلمة صغيرة (اختياري)… مثلاً: اشتقتلك" value="'+esc(cur&&cur.note||'')+'"><button class="btn" id="mdsave" style="width:100%;margin-top:12px" disabled>حفظ</button>');
  let sel=cur?cur.i:-1;const sv=$('#mdsave');sv.disabled=sel<0;
