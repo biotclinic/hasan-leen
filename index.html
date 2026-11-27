@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-28.103">
+<meta name="app-ver" content="2026-11-28.104">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -683,7 +683,8 @@ body.kbopen .bnav{transform:translateY(120%)}
 .callv.vid #callrv{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;z-index:0}
 .callv.vid .cvsh{display:block;position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(rgba(0,0,0,.55),transparent 26%,transparent 62%,rgba(0,0,0,.65))}
 .callv.vid #calllv{display:block;position:absolute;z-index:3;bottom:calc(env(safe-area-inset-bottom) + 150px);left:16px;width:104px;height:150px;border-radius:18px;object-fit:cover;background:#111;box-shadow:0 10px 30px rgba(0,0,0,.45);border:2px solid rgba(255,255,255,.25);transition:opacity .25s,transform .25s}
-.callv.vid #calllv.mir{transform:scaleX(-1)}
+.callv.vid #calllv.mir,.callv.vid #callrv.mir{transform:scaleX(-1)}
+#callrv.swp,#calllv.swp{animation:cswp .32s cubic-bezier(.2,.9,.3,1)}@keyframes cswp{0%{opacity:.25;filter:blur(6px)}100%{opacity:1;filter:none}}
 .callv.vid.rv #calllv{touch-action:none;cursor:grab}
 .callv.vid.rv>.top,.callv.vid.rv>.cbtns,.callv.vid.rv>.cmin,.callv.vid.rv .cvsh{transition:opacity .28s ease,transform .28s ease}
 .callv.vid.rv.hid>.cbtns{opacity:0;transform:translateY(24px);pointer-events:none}.callv.vid.rv.hid>.top,.callv.vid.rv.hid>.cmin{opacity:0;transform:translateY(-16px);pointer-events:none}.callv.vid.rv.hid .cvsh{opacity:0}.callv.vid.rv #calllv.drag{transition:none;box-shadow:0 18px 40px rgba(0,0,0,.55)}.callv.vid.rv #calllv.snap{transition:left .28s cubic-bezier(.2,.9,.3,1),top .28s cubic-bezier(.2,.9,.3,1),opacity .25s}
@@ -1359,15 +1360,22 @@ function ringPlay(kind){ringStop();try{TONES[kind]=TONES[kind]||toneUrl(kind);ri
 function ringStop(){if(ringEl){try{ringEl.pause()}catch(x){}ringEl=null}}
 function callPrepAudio(){if(!callAudioEl){callAudioEl=document.createElement('audio');callAudioEl.autoplay=true;callAudioEl.setAttribute('playsinline','');document.body.appendChild(callAudioEl)}try{callAudioEl.play().catch(()=>{})}catch(x){}}
 function callShow(){const o=call.role==='out'?other(me):(call.from||other(me));const v=$('#callv');v.classList.remove('min');$('#callpill').hidden=true;$('#callnm').textContent=WHO[o]||'';$('#callav').textContent=o==='leen'?'ل':'ح';avPaint($('#callav'),o);
- v.classList.toggle('inc',call.role==='in'&&call.state==='incoming');v.classList.remove('conn','end','rv','rvoff','camoff','hid');{const lv=$('#calllv');lv.style.left=lv.style.top=lv.style.bottom=''}v.classList.toggle('vid',!!call.video);$('#callcam').setAttribute('aria-pressed','false');$('#callaway').hidden=true;$('#callmute').setAttribute('aria-pressed','false');$('#callspk').setAttribute('aria-pressed',String(callSpk));v.hidden=false;v.classList.add('on')}
+ v.classList.toggle('inc',call.role==='in'&&call.state==='incoming');v.classList.remove('conn','end','rv','rvoff','camoff','hid','sw');{const lv=$('#calllv');lv.style.left=lv.style.top=lv.style.bottom=''}v.classList.toggle('vid',!!call.video);$('#callcam').setAttribute('aria-pressed','false');$('#callaway').hidden=true;$('#callmute').setAttribute('aria-pressed','false');$('#callspk').setAttribute('aria-pressed',String(callSpk));v.hidden=false;v.classList.add('on')}
 function callTxt(t){$('#callst').textContent=t;$('#callpt').textContent=t}
 function callMin(on){const v=$('#callv'),p=$('#callpill');if(on&&(!call||call.state==='incoming'))return;v.classList.toggle('min',!!on);p.hidden=!on;p.classList.toggle('vid',!!(call&&call.video));if(on){$('#callpnm').textContent=WHO[call.role==='out'?other(me):(call.from||other(me))]||''}try{navigator.vibrate&&navigator.vibrate(8)}catch(x){}}
 $('#callmin').addEventListener('click',()=>callMin(true));$('#callpill').addEventListener('click',()=>callMin(false));
 const CALL_VC=f=>({facingMode:f||'user',width:{ideal:960},height:{ideal:540},frameRate:{ideal:24,max:30}});
 async function callGetMic(video){return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:video?CALL_VC(call&&call.face):false})}
-function callLocalPrev(){const lv=$('#calllv');if(!call||!call.video||!call.stream)return;const vt=call.stream.getVideoTracks()[0];lv.srcObject=vt?new MediaStream([vt]):null;lv.classList.toggle('mir',(call.face||'user')==='user');lv.play&&lv.play().catch(()=>{})}
+function callLocalPrev(){callVids()}
+function callVids(){if(!call||!call.video)return;const rv=$('#callrv'),lv=$('#calllv');const vt=call.stream&&call.stream.getVideoTracks()[0];
+ if(!call.lStream||call.lStream.getVideoTracks()[0]!==vt)call.lStream=vt?new MediaStream([vt]):null;
+ const sw=!!(call.sw&&call.rStream);const big=sw?call.lStream:(call.rStream||null),small=sw?call.rStream:call.lStream,mir=(call.face||'user')==='user';
+ if(rv.srcObject!==big)rv.srcObject=big;if(lv.srcObject!==small)lv.srcObject=small;rv.classList.toggle('mir',sw&&mir);lv.classList.toggle('mir',!sw&&mir);$('#callv').classList.toggle('sw',sw);
+ try{rv.play().catch(()=>{})}catch(x){}try{lv.play().catch(()=>{})}catch(x){}}
+function callSwap(){if(!call||!call.video||!call.rStream)return;const v=$('#callv');if(!call.sw&&(v.classList.contains('camoff')||v.classList.contains('rvoff')))return;call.sw=!call.sw;
+ const rv=$('#callrv'),lv=$('#calllv');[rv,lv].forEach(el=>{el.classList.remove('swp');void el.offsetWidth;el.classList.add('swp')});callVids();try{navigator.vibrate&&navigator.vibrate(8)}catch(x){}}
 function callAddTracks(pc){const st=call.stream;const at=st.getAudioTracks()[0],vt=st.getVideoTracks()[0];call.aSnd=pc.addTrack(at,st);if(call.video){if(vt)call.vSnd=pc.addTrack(vt,st);else call.vSnd=pc.addTransceiver('video',{direction:'sendrecv'}).sender}}
-function callWire(pc){pc.ontrack=e=>{if(e.track.kind==='video'){const rv=$('#callrv');rv.srcObject=new MediaStream([e.track]);rv.play().catch(()=>{});$('#callv').classList.add('rv');try{callPipRestore()}catch(x){}return}if(!callAudioEl)callPrepAudio();callSetStream(e.track)};
+function callWire(pc){pc.ontrack=e=>{if(e.track.kind==='video'){call.rStream=new MediaStream([e.track]);$('#callv').classList.add('rv');callVids();try{callPipRestore()}catch(x){}return}if(!callAudioEl)callPrepAudio();callSetStream(e.track)};
  pc.onconnectionstatechange=()=>{if(!call||call.pc!==pc)return;const s=pc.connectionState;
   if(s==='connected'){clearTimeout(call.dc);call.dc=0;if(call.state==='connected')callAway(false);callConnected()}
   else if((s==='failed'||s==='disconnected')&&call.state==='connected'){callAway(true);if(!call.dc)call.dc=setTimeout(()=>{if(call&&call.pc===pc&&pc.connectionState!=='connected')callHang('انقطع الاتصال')},120000);if(s==='failed'&&!document.hidden)callRestart()}
@@ -1467,16 +1475,16 @@ async function callSetCam(face,force){if(!call||!call.video)return;try{const ns=
  const place=(x,y,save)=>{const b=box(),m=10,top=m+(parseFloat(getComputedStyle($('#callv')).paddingTop)||0)*0.15;x=Math.max(m,Math.min(b.W-b.w-m,x));y=Math.max(m+20,Math.min(b.H-b.h-m,y));lv.style.left=x+'px';lv.style.top=y+'px';lv.style.bottom='auto';if(save){pos={fx:x/(b.W-b.w),fy:y/(b.H-b.h)};try{localStorage.setItem('hl-pip',JSON.stringify(pos))}catch(e){}}};
  window.callPipRestore=()=>{if(!pos)return;requestAnimationFrame(()=>{const b=box();if(!b.w)return;place(pos.fx*(b.W-b.w),pos.fy*(b.H-b.h))})};
  addEventListener('resize',()=>{if(call&&call.video)callPipRestore()});
- lv.addEventListener('pointerdown',e=>{if(!$('#callv').classList.contains('rv'))return;e.preventDefault();e.stopPropagation();const r=lv.getBoundingClientRect(),v=$('#callv').getBoundingClientRect();d={id:e.pointerId,ox:e.clientX-(r.left-v.left),oy:e.clientY-(r.top-v.top),vx:0,vy:0,lx:e.clientX,ly:e.clientY,lt:performance.now()};lv.classList.remove('snap');lv.classList.add('drag');try{lv.setPointerCapture(e.pointerId)}catch(x){}});
+ lv.addEventListener('pointerdown',e=>{if(!$('#callv').classList.contains('rv'))return;e.preventDefault();e.stopPropagation();const r=lv.getBoundingClientRect(),v=$('#callv').getBoundingClientRect();d={id:e.pointerId,sx:e.clientX,sy:e.clientY,st:performance.now(),ox:e.clientX-(r.left-v.left),oy:e.clientY-(r.top-v.top),vx:0,vy:0,lx:e.clientX,ly:e.clientY,lt:performance.now()};lv.classList.remove('snap');lv.classList.add('drag');try{lv.setPointerCapture(e.pointerId)}catch(x){}});
  lv.addEventListener('pointermove',e=>{if(!d||e.pointerId!==d.id)return;const t=performance.now(),dt=Math.max(1,t-d.lt);d.vx=(e.clientX-d.lx)/dt;d.vy=(e.clientY-d.ly)/dt;d.lx=e.clientX;d.ly=e.clientY;d.lt=t;place(e.clientX-d.ox,e.clientY-d.oy)});
- const up=e=>{if(!d||e.pointerId!==d.id)return;const x=parseFloat(lv.style.left)||0,y=parseFloat(lv.style.top)||0;lv.classList.remove('drag');lv.classList.add('snap');place(x+d.vx*120,y+d.vy*120,true);d=null;setTimeout(()=>lv.classList.remove('snap'),300)};
+ const up=e=>{if(!d||e.pointerId!==d.id)return;if(e.type==='pointerup'&&Math.hypot(e.clientX-d.sx,e.clientY-d.sy)<8&&performance.now()-d.st<400){lv.classList.remove('drag');d=null;callSwap();return}const x=parseFloat(lv.style.left)||0,y=parseFloat(lv.style.top)||0;lv.classList.remove('drag');lv.classList.add('snap');place(x+d.vx*120,y+d.vy*120,true);d=null;setTimeout(()=>lv.classList.remove('snap'),300)};
  lv.addEventListener('pointerup',up);lv.addEventListener('pointercancel',up)})();
 $('#callv').addEventListener('click',e=>{const v=$('#callv');if(!v.classList.contains('vid')||!v.classList.contains('rv')||v.classList.contains('end')||v.classList.contains('min'))return;if(e.target.closest('button,#calllv,#callaway'))return;v.classList.toggle('hid')});
 function callCapVideo(){try{const snd=call&&call.vSnd;if(!snd||!snd.getParameters)return;const pr=snd.getParameters();if(!pr.encodings||!pr.encodings.length)pr.encodings=[{}];pr.encodings.forEach(e=>{e.maxBitrate=900000;e.maxFramerate=24});snd.setParameters(pr).catch(()=>{})}catch(x){}}
 function callAway(on,who){const el=$('#callaway');if(!el)return;if(!on){el.hidden=true;return}const o=who||other(me);el.textContent=o===me?'الاتصال ضعيف… عم نرجّعه':((WHO[o]||'')+' '+(o==='leen'?'طلعت من التطبيق، الصوت رح يرجع لما ترجع':'طلع من التطبيق، الصوت رح يرجع لما يرجع'));el.hidden=false}
 function callOnExtra(d){const o=other(me);call.remMute=!!(d.mute&&d.mute[o]);
  if(d.away&&call.state==='connected'){if(d.away[o])callAway(true,o);else if(call.pc&&call.pc.connectionState==='connected')callAway(false)}
- if(call.video){const v=$('#callv');v.classList.toggle('rvoff',d.cam&&d.cam[o]===false)}
+ if(call.video){const v=$('#callv'),ro=!!(d.cam&&d.cam[o]===false);if(ro&&call.sw){call.sw=false;callVids()}v.classList.toggle('rvoff',ro)}
  // ICE restart signalling: caller makes offers, callee answers; callee asks via rr
  if(call.role==='in'&&d.re&&d.re.n>call.reSeen&&d.re.offer&&call.pc){call.reSeen=d.re.n;(async()=>{try{const pc=call.pc;await pc.setRemoteDescription(d.re.offer);await pc.setLocalDescription(await pc.createAnswer());await iceDone(pc,1500);if(!call||call.pc!==pc)return;await callDoc().update({rea:{n:d.re.n,answer:{type:pc.localDescription.type,sdp:pc.localDescription.sdp}}})}catch(x){callDbg('reAnsErr',String(x))}})()}
  if(call.role==='out'&&d.rea&&d.rea.n===call.reN&&!call.reDone&&call.pc){call.reDone=1;call.pc.setRemoteDescription(d.rea.answer).catch(x=>callDbg('reSetErr',String(x)))}
@@ -1489,7 +1497,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&call&&call
 addEventListener('pagehide',()=>{if(call&&call.state==='connected'&&db)callDoc().update({['away.'+me]:true}).catch(()=>{})});
 $('#callcam').addEventListener('click',e=>{if(!call||!call.video||!call.stream)return;const off=!call.camOff;
  if(!off){const vt=call.stream.getVideoTracks()[0];if(!vt||vt.readyState!=='live'){callSetCam(call.face||'user');return}}
- call.camOff=off;const vt=call.stream.getVideoTracks()[0];if(vt)vt.enabled=!off;$('#callcam').setAttribute('aria-pressed',String(off));$('#callv').classList.toggle('camoff',off);callDoc().update({['cam.'+me]:!off}).catch(()=>{});try{navigator.vibrate&&navigator.vibrate(10)}catch(x){}});
+ if(off&&call.sw){call.sw=false;callVids()}call.camOff=off;const vt=call.stream.getVideoTracks()[0];if(vt)vt.enabled=!off;$('#callcam').setAttribute('aria-pressed',String(off));$('#callv').classList.toggle('camoff',off);callDoc().update({['cam.'+me]:!off}).catch(()=>{});try{navigator.vibrate&&navigator.vibrate(10)}catch(x){}});
 $('#callflip').addEventListener('click',()=>{if(!call||!call.video)return;callSetCam((call.face||'user')==='user'?'environment':'user');try{navigator.vibrate&&navigator.vibrate(10)}catch(x){}});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(callResume,300)});addEventListener('pageshow',()=>setTimeout(callResume,300));
 $('#callspk').addEventListener('click',()=>{callRoute(!callSpk);callRefreshOuts();try{navigator.vibrate&&navigator.vibrate(10)}catch(x){}});
