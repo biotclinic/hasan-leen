@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-27.83">
+<meta name="app-ver" content="2026-11-27.85">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -733,6 +733,9 @@ body.chat-open.kbopen main,body.chat-open.kbopen header,body.chat-open.kbopen .f
 .chlist{padding:10px 12px 8px}
 .cm{margin:2px 0}
 .cm.gf{margin-top:9px}
+.pt .body{min-width:0;flex:1;overflow-wrap:anywhere;word-break:break-word}
+.pt .body .small{overflow-wrap:anywhere}
+.card,.sec,.note,.small{overflow-wrap:anywhere}
 .cb{border-radius:16px;padding:6px 10px 6px 10px;box-shadow:0 1px 1.5px rgba(0,0,0,.22);transition:transform .18s cubic-bezier(.2,.9,.3,1)}
 .cm.cme .cb{border-end-start-radius:16px;background:linear-gradient(170deg,color-mix(in srgb,var(--rose) 96%,#fff),color-mix(in srgb,var(--rose) 84%,#000))}
 .cm.cot .cb{border-end-end-radius:16px;border:0;background:var(--card)}
@@ -774,6 +777,9 @@ body.chat-open.kbopen main,body.chat-open.kbopen header,body.chat-open.kbopen .f
 .attov.on{opacity:1;pointer-events:auto}
 .attp{position:absolute;left:12px;right:12px;bottom:calc(var(--bnh,64px) + 74px);background:var(--card);border:1px solid var(--line);border-radius:22px;padding:14px 8px 10px;box-shadow:0 18px 40px -12px rgba(0,0,0,.6);transform:translateY(24px) scale(.96);transform-origin:50% 100%;transition:transform .28s cubic-bezier(.3,1.4,.5,1)}
 .attov.on .attp{transform:none}
+.wod{flex:none;width:56px;height:56px;border-radius:16px;background:var(--soft);color:var(--rose);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rose) 14%,transparent)}
+.wod b{font-size:20px;font-weight:800;line-height:1}
+.wod span{font-size:11.5px;font-weight:700;line-height:1.2;white-space:nowrap;opacity:.85}
 .attg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0}
 .attg button{display:flex;flex-direction:column;align-items:center;gap:8px;padding:8px 0;font:inherit;color:inherit;background:none;border:0}
 .attg b{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;box-shadow:0 8px 20px -10px rgba(0,0,0,.5);transition:transform .15s}
@@ -1963,7 +1969,7 @@ function openWorkout(m){
 function recentWorkouts(){
  const list=moments.filter(m=>m.cat==='sport').sort((a,b)=>String(b.date).localeCompare(String(a.date))||(b.createdAt||0)-(a.createdAt||0)).slice(0,6);
  if(!list.length)return '';
- return '<div class="sec"><h2>آخر التمارين</h2>'+list.map(m=>{const e=(EF.find(x=>x[0]===m.effort)||[])[1];return '<div class="pt"><span class="pv" style="min-width:52px;font-size:13px">'+pd(m.date).toLocaleDateString(L,{day:'numeric',month:'short'})+'</span><div class="body">'+esc(m.title)+'<div class="small">'+esc(m.who==='both'?'سوا':(WHO[m.who]||''))+(e?' · '+e:'')+(m.note?' · '+esc(m.note):'')+'</div></div>'+(woMine(m)?'<button class="more" data-wo="'+esc(m.id)+'" aria-label="عدّل"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button>':'')+'</div>'}).join('')+'</div>';
+ return '<div class="sec"><h2>آخر التمارين</h2>'+list.map(m=>{const e=(EF.find(x=>x[0]===m.effort)||[])[1];const dd=pd(m.date);return '<div class="pt"><span class="wod"><b>'+dd.getDate()+'</b><span>'+dd.toLocaleDateString(L,{month:'short'})+'</span></span><div class="body">'+esc(m.title)+'<div class="small">'+esc(m.who==='both'?'سوا':(WHO[m.who]||''))+(e?' · '+e:'')+(m.note?' · '+esc(m.note):'')+'</div></div>'+(woMine(m)?'<button class="more" data-wo="'+esc(m.id)+'" aria-label="عدّل"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button>':'')+'</div>'}).join('')+'</div>';
 }
 function challengeHtml(sport){
  const wk=weekKey(new Date()),both=k=>wcount(k,wk)>=wgoal(k);
