@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-27.79">
+<meta name="app-ver" content="2026-11-27.80">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -695,8 +695,12 @@ body.chat-open #sky,body.chat-open #sky *,#sky.off,#sky.off *{animation-play-sta
 mark.srm{background:#ffd54a;color:#1a1300;border-radius:4px;padding:0 1px}
 .cb.srcur{box-shadow:0 0 0 3px #ffd54a}
 #chlist .cb{touch-action:manipulation}
-.dbh{position:fixed;z-index:90;font-size:76px;line-height:1;pointer-events:none;transform:translate(-50%,-50%) scale(0);animation:dbh .95s cubic-bezier(.2,1.3,.4,1) forwards;filter:drop-shadow(0 6px 14px rgba(0,0,0,.35))}
-@keyframes dbh{0%{transform:translate(-50%,-50%) scale(0);opacity:0}25%{transform:translate(-50%,-50%) scale(1.15);opacity:1}45%{transform:translate(-50%,-50%) scale(.95)}70%{transform:translate(-50%,-60%) scale(1);opacity:1}100%{transform:translate(-50%,-110%) scale(.8);opacity:0}}
+.dbh{position:fixed;z-index:90;width:110px;height:110px;margin:-55px 0 0 -55px;pointer-events:none;transform:scale(0);animation:dbh .9s cubic-bezier(.2,1.3,.4,1) forwards}
+.dbh svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 8px 16px rgba(225,29,72,.45))}
+.dbp{position:fixed;z-index:90;width:18px;height:18px;margin:-9px 0 0 -9px;pointer-events:none;animation:dbp .7s cubic-bezier(.2,.8,.3,1) forwards}
+.dbp svg{width:100%;height:100%}
+@keyframes dbp{0%{transform:translate(0,0) scale(.3);opacity:0}20%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1);opacity:0}}
+@keyframes dbh{0%{transform:scale(0) rotate(-12deg);opacity:0}22%{transform:scale(1.18) rotate(4deg);opacity:1}40%{transform:scale(.94) rotate(0)}55%{transform:scale(1.02)}75%{transform:scale(1);opacity:1}100%{transform:translateY(-38px) scale(.7);opacity:0}}
 
 .chinw{flex:1;min-width:0;position:relative;display:flex}
 .chdict{display:none!important}
@@ -1214,7 +1218,9 @@ $('#chsdn').addEventListener('click',()=>{if(!srHits.length)return;srI=Math.max(
 let dtLast={id:'',t:0,x:0,y:0};
 chl.addEventListener('click',e=>{const cb=e.target.closest('[data-chm]');if(!cb||e.target.closest('.cau,a,[data-goto],[data-cimg],[data-cvid],.crx'))return;const id=cb.dataset.chm,now=Date.now();
  if(dtLast.id===id&&now-dtLast.t<350&&Math.hypot(e.clientX-dtLast.x,e.clientY-dtLast.y)<30){dtLast={id:'',t:0,x:0,y:0};dtHeart(id,e.clientX,e.clientY)}else dtLast={id,t:now,x:e.clientX,y:e.clientY}});
-function dtHeart(id,x,y){const m=chat.find(z=>z.id===id);if(!m||m.del||m._p||!db)return;const h=document.createElement('div');h.className='dbh';h.textContent='❤️';h.style.left=x+'px';h.style.top=y+'px';document.body.appendChild(h);setTimeout(()=>h.remove(),950);
+function dtHeart(id,x,y){const m=chat.find(z=>z.id===id);if(!m||m.del||m._p||!db)return;const HP='<path d="M12 21.2s-8.6-5.3-8.6-11.4A4.9 4.9 0 0 1 12 6.9a4.9 4.9 0 0 1 8.6 2.9c0 6.1-8.6 11.4-8.6 11.4z"/>';
+ const h=document.createElement('div');h.className='dbh';h.innerHTML='<svg viewBox="0 0 24 24"><defs><linearGradient id="dbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff5c8a"/><stop offset="1" stop-color="#e11d48"/></linearGradient></defs><path fill="url(#dbg)" d="M12 21.2s-8.6-5.3-8.6-11.4A4.9 4.9 0 0 1 12 6.9a4.9 4.9 0 0 1 8.6 2.9c0 6.1-8.6 11.4-8.6 11.4z"/><ellipse cx="8.2" cy="9.4" rx="2.1" ry="1.3" fill="#fff" opacity=".45" transform="rotate(-30 8.2 9.4)"/></svg>';h.style.left=x+'px';h.style.top=y+'px';document.body.appendChild(h);setTimeout(()=>h.remove(),950);
+ for(let k=0;k<7;k++){const p=document.createElement('div'),a=k/7*Math.PI*2+Math.random()*.5,r=62+Math.random()*26;p.className='dbp';p.style.left=x+'px';p.style.top=y+'px';p.style.setProperty('--dx',Math.cos(a)*r+'px');p.style.setProperty('--dy',Math.sin(a)*r+'px');p.style.animationDelay=(.12+Math.random()*.06)+'s';p.innerHTML='<svg viewBox="0 0 24 24" fill="'+['#ff5c8a','#fb7185','#f43f5e','#fda4af'][k%4]+'">'+HP+'</svg>';document.body.appendChild(p);setTimeout(()=>p.remove(),1000)}
  try{navigator.vibrate&&navigator.vibrate(12)}catch(z){}if((m.react||{})[me]==='❤️')return;m.react={...(m.react||{}),[me]:'❤️'};renderChat();try{CSnd.react()}catch(z){}
  db.collection('chat').doc(m.id).update({['react.'+me]:'❤️'}).catch(()=>db.collection('chat').doc(m.id).update({react:m.react}).catch(()=>{}))}
 /* ---- voice calls (v62) ---- */
