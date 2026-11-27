@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-27.80">
+<meta name="app-ver" content="2026-11-27.81">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1938,7 +1938,11 @@ function wcount(k,wk){return moments.filter(m=>m.cat==='sport'&&(m.who===k||m.wh
 const wgoal=k=>Math.min(14,Math.max(1,Number(profiles[k]&&profiles[k].weekGoal)||3));
 const WT=[['run','جري'],['gym','نادي وحديد'],['walk','مشي'],['swim','سباحة'],['ball','كرة'],['yoga','يوغا وتمطيط'],['bike','دراجة'],['home','تمارين بالبيت'],['other','غير شي']];
 const EF=[['easy','خفيف'],['mid','متوسط'],['hard','قوي']];
+function woOwner(m){return m.who&&m.who!=='both'?m.who:(m.by||'')}
+function woMine(m){return !!me&&(!m||!m.id||m.who==='both'||woOwner(m)===me)}
 function openWorkout(m){
+ if(m&&m.id&&!woMine(m)){const o=woOwner(m),e=(EF.find(x=>x[0]===m.effort)||[])[1];
+  open('<h2>'+esc(m.title||'تمرين')+'</h2><div class="pt"><div class="body">'+esc(WHO[o]||'')+' · '+pd(m.date).toLocaleDateString(L,{weekday:'long',day:'numeric',month:'long'})+(e?' · '+e:'')+(m.note?'<div class="small">'+esc(m.note)+'</div>':'')+'</div></div><p class="hint" style="text-align:center;margin-top:12px">🔒 هالتمرين '+(o==='leen'?'للين، هي بس بتقدر تعدّله أو تحذفه':'لحسن، هو بس بيقدر يعدّله أو يحذفه')+'</p>');return}
  m=m||{};const wt=m.workoutType||'gym',ef=m.effort||'mid',who=m.who||(me||'both');
  const whoOpts=me?[[me,'أنا لحالي'],['both','سوا']]:[['both','سوا'],['hassan','حسن'],['leen','لين']];
  if(m.who&&!whoOpts.some(o=>o[0]===m.who))whoOpts.push([m.who,WHO[m.who]]);
@@ -1959,7 +1963,7 @@ function openWorkout(m){
 function recentWorkouts(){
  const list=moments.filter(m=>m.cat==='sport').sort((a,b)=>String(b.date).localeCompare(String(a.date))||(b.createdAt||0)-(a.createdAt||0)).slice(0,6);
  if(!list.length)return '';
- return '<div class="sec"><h2>آخر التمارين</h2>'+list.map(m=>{const e=(EF.find(x=>x[0]===m.effort)||[])[1];return '<div class="pt"><span class="pv" style="min-width:52px;font-size:13px">'+pd(m.date).toLocaleDateString(L,{day:'numeric',month:'short'})+'</span><div class="body">'+esc(m.title)+'<div class="small">'+esc(m.who==='both'?'سوا':(WHO[m.who]||''))+(e?' · '+e:'')+(m.note?' · '+esc(m.note):'')+'</div></div><button class="more" data-wo="'+esc(m.id)+'" aria-label="عدّل"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button></div>'}).join('')+'</div>';
+ return '<div class="sec"><h2>آخر التمارين</h2>'+list.map(m=>{const e=(EF.find(x=>x[0]===m.effort)||[])[1];return '<div class="pt"><span class="pv" style="min-width:52px;font-size:13px">'+pd(m.date).toLocaleDateString(L,{day:'numeric',month:'short'})+'</span><div class="body">'+esc(m.title)+'<div class="small">'+esc(m.who==='both'?'سوا':(WHO[m.who]||''))+(e?' · '+e:'')+(m.note?' · '+esc(m.note):'')+'</div></div><button class="more" data-wo="'+esc(m.id)+'" aria-label="'+(woMine(m)?'عدّل':'تفاصيل')+'"'+(woMine(m)?'':' style="opacity:.35"')+'><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button></div>'}).join('')+'</div>';
 }
 function challengeHtml(sport){
  const wk=weekKey(new Date()),both=k=>wcount(k,wk)>=wgoal(k);
