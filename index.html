@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-27.101">
+<meta name="app-ver" content="2026-11-28.102">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -679,6 +679,35 @@ body.kbopen .bnav{transform:translateY(120%)}
 .callv.min{opacity:0;transform:translateY(-30px) scale(.96);pointer-events:none}
 .cpill{position:fixed;top:calc(env(safe-area-inset-top) + 6px);left:50%;transform:translateX(-50%);z-index:86;display:flex;align-items:center;gap:7px;padding:8px 16px;border-radius:999px;background:#34c759;color:#fff;font-weight:800;font-size:15px;font-variant-numeric:tabular-nums;box-shadow:0 10px 26px -10px rgba(0,0,0,.45);animation:cpin .3s cubic-bezier(.2,.85,.25,1)}
 .cpill[hidden]{display:none}
+#callrv,#calllv,.cvsh{display:none}
+.callv.vid #callrv{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;z-index:0}
+.callv.vid .cvsh{display:block;position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(rgba(0,0,0,.55),transparent 26%,transparent 62%,rgba(0,0,0,.65))}
+.callv.vid #calllv{display:block;position:absolute;z-index:3;bottom:calc(env(safe-area-inset-bottom) + 150px);left:16px;width:104px;height:150px;border-radius:18px;object-fit:cover;background:#111;box-shadow:0 10px 30px rgba(0,0,0,.45);border:2px solid rgba(255,255,255,.25);transition:opacity .25s,transform .25s}
+.callv.vid #calllv.mir{transform:scaleX(-1)}
+.callv.vid.camoff #calllv{opacity:0;transform:scale(.8)}
+.callv.vid>.top,.callv.vid>.cbtns{position:relative;z-index:2}.callv.vid>.cmin{z-index:4}
+.callv.vid:not(.rv) #callrv,.callv.vid:not(.rv) .cvsh{display:none}.callv.vid:not(.rv){color:var(--ink)}.callv.vid:not(.rv) #callst{color:var(--mute)}
+.callv.vid.inc #calllv{display:none}
+.callv.vid:not(.rv) #calllv{inset:0;width:100%;height:100%;border-radius:0;border:0;box-shadow:none;z-index:0;opacity:.55}
+.callv.vid:not(.rv) .cring:before,.callv.vid:not(.rv) .cring:after{border-color:#fff}
+.callv.vid:not(.rv) .cb2:not(.red):not(.green){background:color-mix(in srgb,var(--ink) 13%,transparent);color:var(--ink)}.callv.vid:not(.rv) .cmin{color:var(--ink);background:color-mix(in srgb,var(--ink) 10%,transparent)}
+.callv.vid.rv>.top{flex-direction:row;gap:10px;align-self:stretch;justify-content:center}
+.callv.vid.rv .cring{display:none}
+.callv.vid.rv #callnm{font-size:22px}.callv.vid.rv #callst{font-size:15px}
+.callv.vid{color:#fff}.callv.vid #callst{color:rgba(255,255,255,.85)}
+.callv.vid .cb2:not(.red):not(.green){background:rgba(255,255,255,.18);color:#fff;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.callv.vid .cb2[aria-pressed=true]{background:#fff;color:#111}
+.callv.vid .cmin{color:#fff;background:rgba(255,255,255,.16)}
+.callv:not(.vid) .cvo{display:none}
+.callv.vid .cbtns{gap:10px}.callv.vid .cb2{width:58px;height:58px}.callv.vid .cb2 svg{width:26px;height:26px}.callv.vid.inc .cbtns{gap:60px}.callv.vid.inc .cb2{width:74px;height:74px}
+.callv.inc .cvo{display:none!important}
+#callcam .sl{opacity:0}#callcam[aria-pressed=true] .sl{opacity:1}
+#callaway{font-size:14px;font-weight:700;padding:6px 12px;border-radius:99px;background:color-mix(in srgb,var(--ink) 12%,transparent);max-width:300px;text-align:center}
+.callv.vid #callaway{background:rgba(0,0,0,.45);color:#fff}.callv.vid.rv>.top{flex-wrap:wrap}.callv.vid.rv #callaway{flex-basis:100%;max-width:300px;margin:2px auto 0}
+#callaway[hidden]{display:none}
+.callv.vid.rvoff #callrv{opacity:0}
+.callv.vid.rvoff .cring{display:grid}.callv.vid.rvoff>.top{flex-direction:column}
+.cpill.vid{background:#5856d6}
 .cpill .cdot{width:8px;height:8px;border-radius:50%;background:#fff;animation:cblink 1.2s ease-in-out infinite}
 @keyframes cblink{50%{opacity:.25}}
 @keyframes cpin{from{opacity:0;transform:translate(-50%,-14px)}}
@@ -963,7 +992,7 @@ body.chat-open.kbopen main,body.chat-open.kbopen header,body.chat-open.kbopen .f
 
 <button class="fab hide" id="fab" aria-label="إضافة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
 
-<div class="callv" id="callv" hidden><button class="cmin" id="callmin" aria-label="رجوع للتطبيق"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="top"><div class="cring"><span class="cav" id="callav"></span></div><b id="callnm"></b><span id="callst"></span></div><div class="cbtns"><button class="cb2" id="callspk" aria-label="سبيكر" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12.5 5v14l-5-4.5H4z" fill="currentColor"/><path d="M16 9a4 4 0 0 1 0 6M18.6 6.4a7.6 7.6 0 0 1 0 11.2"/></svg></button><button class="cb2" id="callmute" aria-label="كتم المايك" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M4 4l16 16"/></svg></button><button class="cb2 red" id="callend" aria-label="إنهاء المكالمة"><svg viewBox="0 0 24 24" fill="currentColor" style="transform:rotate(135deg)"><path d="M6.6 3.5h3l1.6 4.4-2.1 1.4a11.5 11.5 0 0 0 5.6 5.6l1.4-2.1 4.4 1.6v3a2 2 0 0 1-2.1 2A16.8 16.8 0 0 1 4.6 5.6a2 2 0 0 1 2-2.1z"/></svg></button><button class="cb2 green" id="callok" aria-label="رد"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 3.5h3l1.6 4.4-2.1 1.4a11.5 11.5 0 0 0 5.6 5.6l1.4-2.1 4.4 1.6v3a2 2 0 0 1-2.1 2A16.8 16.8 0 0 1 4.6 5.6a2 2 0 0 1 2-2.1z"/></svg></button></div></div>
+<div class="callv" id="callv" hidden><video id="callrv" playsinline autoplay muted></video><div class="cvsh"></div><video id="calllv" playsinline autoplay muted></video><button class="cmin" id="callmin" aria-label="رجوع للتطبيق"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="top"><div class="cring"><span class="cav" id="callav"></span></div><b id="callnm"></b><span id="callst"></span><span id="callaway" hidden></span></div><div class="cbtns"><button class="cb2 cvo" id="callcam" aria-label="الكاميرا" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><rect x="2.5" y="6" width="13" height="12" rx="3"/><path d="M15.5 10.5l6-3.5v10l-6-3.5z"/><path class="sl" d="M3 3l18 18"/></svg></button><button class="cb2 cvo" id="callflip" aria-label="قلب الكاميرا"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><path d="M9.5 12.5a2.8 2.8 0 0 1 5 -1.2M14.5 14a2.8 2.8 0 0 1-5 1.2"/><path d="M14.6 9.6v1.8h-1.8M9.4 16.4v-1.8h1.8"/></svg></button><button class="cb2" id="callspk" aria-label="سبيكر" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12.5 5v14l-5-4.5H4z" fill="currentColor"/><path d="M16 9a4 4 0 0 1 0 6M18.6 6.4a7.6 7.6 0 0 1 0 11.2"/></svg></button><button class="cb2" id="callmute" aria-label="كتم المايك" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M4 4l16 16"/></svg></button><button class="cb2 red" id="callend" aria-label="إنهاء المكالمة"><svg viewBox="0 0 24 24" fill="currentColor" style="transform:rotate(135deg)"><path d="M6.6 3.5h3l1.6 4.4-2.1 1.4a11.5 11.5 0 0 0 5.6 5.6l1.4-2.1 4.4 1.6v3a2 2 0 0 1-2.1 2A16.8 16.8 0 0 1 4.6 5.6a2 2 0 0 1 2-2.1z"/></svg></button><button class="cb2 green" id="callok" aria-label="رد"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 3.5h3l1.6 4.4-2.1 1.4a11.5 11.5 0 0 0 5.6 5.6l1.4-2.1 4.4 1.6v3a2 2 0 0 1-2.1 2A16.8 16.8 0 0 1 4.6 5.6a2 2 0 0 1 2-2.1z"/></svg></button></div></div>
 <button class="cpill" id="callpill" hidden aria-label="رجوع للمكالمة"><span class="cdot"></span><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M6.6 3.5h3l1.6 4.4-2.1 1.4a11.5 11.5 0 0 0 5.6 5.6l1.4-2.1 4.4 1.6v3a2 2 0 0 1-2.1 2A16.8 16.8 0 0 1 4.6 5.6a2 2 0 0 1 2-2.1z"/></svg><b id="callpnm"></b><span id="callpt"></span></button>
 <div class="vview" id="vview" hidden><button class="vvx" id="vvx" aria-label="سكّر">✕</button><video id="vvv" playsinline controls preload="auto"></video></div>
 <nav class="bnav" id="bnav"><button class="bn" data-go="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg><span>الرئيسية</span></button><button class="bn" id="chBtn" aria-label="محادثتنا"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 20.5l1.6-5.2A8.4 8.4 0 1 1 21 11.5z"/></svg><span>محادثتنا</span><i class="chbadge" id="chBadge" hidden></i></button><button class="bn" data-go="moments"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.4-9.3-9C1 8.6 3.3 5 6.8 5c2 0 3.6 1.1 5.2 3 1.6-1.9 3.2-3 5.2-3C20.7 5 23 8.6 21.3 12 19 16.6 12 21 12 21z"/></svg><span>لحظاتنا</span></button><button class="bn" data-go="album"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></svg><span>ألبومنا</span></button><button class="bn" data-go="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg><span>المزيد</span></button></nav>
@@ -989,7 +1018,7 @@ body.chat-open.kbopen main,body.chat-open.kbopen header,body.chat-open.kbopen .f
 <div class="dvidea" id="dvi" hidden></div>
 <div class="dva" id="dva"><canvas id="dvc"></canvas><canvas id="dvl"></canvas><div class="dvhint" id="dvhint">ارسموا بإصبعكن هون، كل واحد من تلفونو، وبتشوفوا رسمة التاني وهوّي عم يرسمها ✨</div><span class="dvpen" id="dvpen"></span></div>
 <div class="dvbar"><div class="dvcols" id="dvcols"></div><div class="dvtools"><button class="sz" data-sz="0" aria-label="رفيع"><i style="width:6px;height:6px"></i></button><button class="sz" data-sz="1" aria-label="وسط"><i style="width:11px;height:11px"></i></button><button class="sz" data-sz="2" aria-label="عريض"><i style="width:18px;height:18px"></i></button><span class="sep"></span><button id="dvundo" aria-label="رجّع آخر خط">↩️</button><button id="dvclr" aria-label="امسح اللوحة">🗑️</button><button id="dvsave" aria-label="احفظ بألبومنا">📸</button></div></div></div>
-<div class="ch" id="ch" aria-hidden="true"><div class="chtop"><button class="x" id="chx" aria-label="رجوع"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button><div class="chav" id="chav"></div><div class="nm"><b id="chnm"></b><span id="chst"></span></div><button class="x" id="chfav" aria-label="المفضّلة"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round"><path d="M12 3.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg></button><button class="x" id="chcall" aria-label="اتصال صوتي"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round"><path d="M6.6 3.5h3l1.6 4.4-2.1 1.4a11.5 11.5 0 0 0 5.6 5.6l1.4-2.1 4.4 1.6v3a2 2 0 0 1-2.1 2A16.8 16.8 0 0 1 4.6 5.6a2 2 0 0 1 2-2.1z"/></svg></button><button class="x" id="chsrb" aria-label="بحث"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg></button><button class="x chbell" id="chbell" aria-label="الإشعارات"></button></div><div class="chsr" id="chsr" hidden><input id="chsq" type="search" enterkeyhint="search" placeholder="دوّر بالمحادثة…" autocomplete="off"><span id="chsn"></span><button class="x" id="chsup" aria-label="أقدم"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></button><button class="x" id="chsdn" aria-label="أحدث"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><button class="x" id="chsx" aria-label="سكّر البحث">✕</button></div>
+<div class="ch" id="ch" aria-hidden="true"><div class="chtop"><button class="x" id="chx" aria-label="رجوع"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button><div class="chav" id="chav"></div><div class="nm"><b id="chnm"></b><span id="chst"></span></div><button class="x" id="chfav" aria-label="المفضّلة"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round"><path d="M12 3.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg></button><button class="x" id="chcall" aria-label="اتصال صوتي"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round"><path d="M6.6 3.5h3l1.6 4.4-2.1 1.4a11.5 11.5 0 0 0 5.6 5.6l1.4-2.1 4.4 1.6v3a2 2 0 0 1-2.1 2A16.8 16.8 0 0 1 4.6 5.6a2 2 0 0 1 2-2.1z"/></svg></button><button class="x" id="chvcall" aria-label="مكالمة فيديو"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round"><rect x="2.5" y="6" width="13" height="12" rx="3"/><path d="M15.5 10.5l6-3.5v10l-6-3.5z"/></svg></button><button class="x" id="chsrb" aria-label="بحث"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg></button><button class="x chbell" id="chbell" aria-label="الإشعارات"></button></div><div class="chsr" id="chsr" hidden><input id="chsq" type="search" enterkeyhint="search" placeholder="دوّر بالمحادثة…" autocomplete="off"><span id="chsn"></span><button class="x" id="chsup" aria-label="أقدم"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></button><button class="x" id="chsdn" aria-label="أحدث"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><button class="x" id="chsx" aria-label="سكّر البحث">✕</button></div>
 <div class="chpush" id="chpush" hidden><span>🔔</span><div id="chpusht">فعّل الإشعارات لتوصلك الرسائل حتى لو التطبيق مسكّر</div><button id="chpushb">فعّل</button><button class="x" id="chpushx" aria-label="لاحقاً">✕</button></div>
 <div class="chlist" id="chlist"></div>
 <div class="chbar"><button class="chjump" id="chjump" hidden aria-label="لآخر رسالة">⬇️</button><div class="chreply" id="chrp" hidden><div id="chrpt"></div><button id="chrpx" aria-label="إلغاء الرد">✕</button></div><div class="chquick" id="chq"></div><div class="chemo" id="chemo" hidden></div><div class="chstk" id="chstk" hidden></div><input type="file" id="stkfile" accept="image/*" hidden>
@@ -1327,30 +1356,36 @@ function ringPlay(kind){ringStop();try{TONES[kind]=TONES[kind]||toneUrl(kind);ri
 function ringStop(){if(ringEl){try{ringEl.pause()}catch(x){}ringEl=null}}
 function callPrepAudio(){if(!callAudioEl){callAudioEl=document.createElement('audio');callAudioEl.autoplay=true;callAudioEl.setAttribute('playsinline','');document.body.appendChild(callAudioEl)}try{callAudioEl.play().catch(()=>{})}catch(x){}}
 function callShow(){const o=call.role==='out'?other(me):(call.from||other(me));const v=$('#callv');v.classList.remove('min');$('#callpill').hidden=true;$('#callnm').textContent=WHO[o]||'';$('#callav').textContent=o==='leen'?'ل':'ح';avPaint($('#callav'),o);
- v.classList.toggle('inc',call.role==='in'&&call.state==='incoming');v.classList.remove('conn','end');$('#callmute').setAttribute('aria-pressed','false');$('#callspk').setAttribute('aria-pressed',String(callSpk));v.hidden=false;v.classList.add('on')}
+ v.classList.toggle('inc',call.role==='in'&&call.state==='incoming');v.classList.remove('conn','end','rv','rvoff','camoff');v.classList.toggle('vid',!!call.video);$('#callcam').setAttribute('aria-pressed','false');$('#callaway').hidden=true;$('#callmute').setAttribute('aria-pressed','false');$('#callspk').setAttribute('aria-pressed',String(callSpk));v.hidden=false;v.classList.add('on')}
 function callTxt(t){$('#callst').textContent=t;$('#callpt').textContent=t}
-function callMin(on){const v=$('#callv'),p=$('#callpill');if(on&&(!call||call.state==='incoming'))return;v.classList.toggle('min',!!on);p.hidden=!on;if(on){$('#callpnm').textContent=WHO[call.role==='out'?other(me):(call.from||other(me))]||''}try{navigator.vibrate&&navigator.vibrate(8)}catch(x){}}
+function callMin(on){const v=$('#callv'),p=$('#callpill');if(on&&(!call||call.state==='incoming'))return;v.classList.toggle('min',!!on);p.hidden=!on;p.classList.toggle('vid',!!(call&&call.video));if(on){$('#callpnm').textContent=WHO[call.role==='out'?other(me):(call.from||other(me))]||''}try{navigator.vibrate&&navigator.vibrate(8)}catch(x){}}
 $('#callmin').addEventListener('click',()=>callMin(true));$('#callpill').addEventListener('click',()=>callMin(false));
-async function callGetMic(){return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}})}
-function callWire(pc){pc.ontrack=e=>{if(!callAudioEl)callPrepAudio();callSetStream(e.track)};
- pc.onconnectionstatechange=()=>{if(!call||call.pc!==pc)return;const s=pc.connectionState;if(s==='connected')callConnected();else if(s==='failed')callHang('ما زبط الاتصال، جرّب كمان مرة');else if(s==='disconnected'){clearTimeout(call.dc);call.dc=setTimeout(()=>{if(call&&call.pc===pc&&pc.connectionState!=='connected')callHang('انقطع الاتصال')},6000)}}}
-async function callStart(){if(needMe()||call||!db)return;const o=other(me);
- call={id:me+Date.now().toString(36),role:'out',state:'calling',from:me};callShow();callTxt('عم نجهّز…');
- try{call.stream=await callGetMic()}catch(x){toast('لازم تسمح للتطبيق يستعمل المايك');callCleanup();return}
- if(!call)return;callPrepAudio();try{Music.hush(true)}catch(x){}
- try{const pc=call.pc=new RTCPeerConnection({iceServers:await callIce()});callWire(pc);call.stream.getTracks().forEach(t=>pc.addTrack(t,call.stream));
+const CALL_VC=f=>({facingMode:f||'user',width:{ideal:960},height:{ideal:540},frameRate:{ideal:24,max:30}});
+async function callGetMic(video){return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:video?CALL_VC(call&&call.face):false})}
+function callLocalPrev(){const lv=$('#calllv');if(!call||!call.video||!call.stream)return;const vt=call.stream.getVideoTracks()[0];lv.srcObject=vt?new MediaStream([vt]):null;lv.classList.toggle('mir',(call.face||'user')==='user');lv.play&&lv.play().catch(()=>{})}
+function callAddTracks(pc){const st=call.stream;const at=st.getAudioTracks()[0],vt=st.getVideoTracks()[0];call.aSnd=pc.addTrack(at,st);if(call.video){if(vt)call.vSnd=pc.addTrack(vt,st);else call.vSnd=pc.addTransceiver('video',{direction:'sendrecv'}).sender}}
+function callWire(pc){pc.ontrack=e=>{if(e.track.kind==='video'){const rv=$('#callrv');rv.srcObject=new MediaStream([e.track]);rv.play().catch(()=>{});$('#callv').classList.add('rv');return}if(!callAudioEl)callPrepAudio();callSetStream(e.track)};
+ pc.onconnectionstatechange=()=>{if(!call||call.pc!==pc)return;const s=pc.connectionState;
+  if(s==='connected'){clearTimeout(call.dc);call.dc=0;if(call.state==='connected')callAway(false);callConnected()}
+  else if((s==='failed'||s==='disconnected')&&call.state==='connected'){callAway(true);if(!call.dc)call.dc=setTimeout(()=>{if(call&&call.pc===pc&&pc.connectionState!=='connected')callHang('انقطع الاتصال')},120000);if(s==='failed'&&!document.hidden)callRestart()}
+  else if(s==='failed')callHang('ما زبط الاتصال، جرّب كمان مرة')}}
+async function callStart(video){if(needMe()||call||!db)return;const o=other(me);video=!!video;
+ call={id:me+Date.now().toString(36),role:'out',state:'calling',from:me,video,face:'user',reN:0,reSeen:0,rrSeen:0};if(video)callSpk=true;callShow();callTxt('عم نجهّز…');
+ try{call.stream=await callGetMic(video)}catch(x){if(video){try{call.stream=await callGetMic(false);toast('ما قدرنا نفتح الكاميرا، رح نكمّل صوت')}catch(y){}}if(!call||!call.stream){toast(video?'لازم تسمح للتطبيق يستعمل الكاميرا والمايك':'لازم تسمح للتطبيق يستعمل المايك');callCleanup();return}}
+ if(!call)return;callLocalPrev();callPrepAudio();try{Music.hush(true)}catch(x){}
+ try{const pc=call.pc=new RTCPeerConnection({iceServers:await callIce()});callWire(pc);callAddTracks(pc);
   await pc.setLocalDescription(await pc.createOffer());await iceDone(pc);if(!call||call.pc!==pc)return;
-  await callDoc().set({cid:call.id,from:me,to:o,state:'ringing',offer:{type:pc.localDescription.type,sdp:pc.localDescription.sdp},t:Date.now()});
+  await callDoc().set({cid:call.id,from:me,to:o,state:'ringing',video,cam:{[me]:!!call.stream.getVideoTracks().length},offer:{type:pc.localDescription.type,sdp:pc.localDescription.sdp},t:Date.now()});
   call.state='ringing';callTxt('عم يرن…');ringPlay('back');
-  notifyOther('📞 '+(WHO[me]||''),me==='leen'?'عم تتصل فيك، كبّس لترد':'عم يتصل فيكي، كبّسي لتردّي','call','call');
+  notifyOther((video?'📹 ':'📞 ')+(WHO[me]||''),(video?'مكالمة فيديو · ':'')+(me==='leen'?'عم تتصل فيك، كبّس لترد':'عم يتصل فيكي، كبّسي لتردّي'),'call','call');
   call.to=setTimeout(()=>{if(call&&call.state!=='connected'){callDoc().update({state:'missed'}).catch(()=>{});callLog('missed');callEnd(o==='leen'?'ما ردّت':'ما ردّ')}},45000)}
  catch(x){callHang('ما زبط الاتصال، جرّب كمان مرة')}}
 async function callAccept(){if(!call||call.role!=='in'||call.state!=='incoming')return;ringStop();call.state='accepting';$('#callv').classList.remove('inc');callTxt('عم نوصل…');
- try{call.stream=await callGetMic()}catch(x){toast('لازم تسمح للتطبيق يستعمل المايك');callDecline();return}
- if(!call)return;callPrepAudio();try{Music.hush(true)}catch(x){}
- try{const pc=call.pc=new RTCPeerConnection({iceServers:await callIce()});callWire(pc);call.stream.getTracks().forEach(t=>pc.addTrack(t,call.stream));
+ try{call.stream=await callGetMic(call.video)}catch(x){if(call&&call.video){try{call.stream=await callGetMic(false);toast('ما قدرنا نفتح الكاميرا، رح نكمّل صوت')}catch(y){}}if(!call||!call.stream){toast('لازم تسمح للتطبيق يستعمل المايك');callDecline();return}}
+ if(!call)return;callLocalPrev();callPrepAudio();try{Music.hush(true)}catch(x){}
+ try{const pc=call.pc=new RTCPeerConnection({iceServers:await callIce()});callWire(pc);callAddTracks(pc);
   await pc.setRemoteDescription(call.offer);await pc.setLocalDescription(await pc.createAnswer());await iceDone(pc);if(!call||call.pc!==pc)return;
-  await callDoc().update({state:'accepted',answer:{type:pc.localDescription.type,sdp:pc.localDescription.sdp},at:Date.now()})}
+  await callDoc().update({state:'accepted',['cam.'+me]:!!call.stream.getVideoTracks().length,answer:{type:pc.localDescription.type,sdp:pc.localDescription.sdp},at:Date.now()})}
  catch(x){callHang('ما زبط الاتصال، جرّب كمان مرة')}}
 function callDecline(){if(!call)return;callDoc().update({state:'declined'}).catch(()=>{});callEnd('رفضت المكالمة')}
 function callHang(msg){if(!call)return;const dur=call.t0?Math.round((Date.now()-call.t0)/1000):0;
@@ -1358,23 +1393,25 @@ function callHang(msg){if(!call)return;const dur=call.t0?Math.round((Date.now()-
  if(call.role==='out')callLog(call.t0?'done':'cancelled',dur);callEnd(msg||(call.t0?'انتهت المكالمة':'انلغت المكالمة'))}
 function callConnected(){if(!call||call.state==='connected')return;call.state='connected';call.t0=Date.now();clearTimeout(call.to);ringStop();$('#callv').classList.add('conn');
  const tick=()=>{if(call&&call.t0)callTxt(fmtDur(Math.round((Date.now()-call.t0)/1000)))};tick();call.tm=setInterval(tick,1000);
+ {let lastB=-1,still=0;call.sti=setInterval(async()=>{if(!call||!call.pc||document.hidden)return;try{let b=0;(await call.pc.getStats()).forEach(r=>{if(r.type==='inbound-rtp'&&(r.kind||r.mediaType)==='audio')b+=r.bytesReceived||0});
+  if(b===lastB&&!call.remMute){still++;if(still===3)callAway(true,call.pc.connectionState==='connected'?other(me):me)}else{if(still>=3)callAway(false);still=0}lastB=b}catch(x){}},1000)}
  try{navigator.wakeLock&&navigator.wakeLock.request('screen').then(l=>{if(call)call.wl=l;else l.release()}).catch(()=>{})}catch(x){}try{navigator.vibrate&&navigator.vibrate(30)}catch(x){}}
-function callLog(kind,dur){try{const txt=kind==='done'?'📞 مكالمة صوتية · '+fmtDur(dur||0):'📞 مكالمة فائتة';
+function callLog(kind,dur){try{const vd=call&&call.video;const txt=kind==='done'?(vd?'📹 مكالمة فيديو · ':'📞 مكالمة صوتية · ')+fmtDur(dur||0):(vd?'📹 مكالمة فيديو فائتة':'📞 مكالمة فائتة');
  db.collection('chat').add({by:me,text:txt,callLog:kind,t:Date.now(),cid:me[0]+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}).catch(()=>{});
  if(kind!=='done')notifyOther('📞 '+(WHO[me]||''),'مكالمة فائتة','chat','chat')}catch(x){}}
-function callCleanup(){const c=call;call=null;if(!c)return;callLastId=c.id;clearTimeout(c.to);clearTimeout(c.dc);clearInterval(c.tm);ringStop();
+function callCleanup(){const c=call;call=null;if(!c)return;try{$('#callrv').srcObject=null;$('#calllv').srcObject=null}catch(x){}clearInterval(c.sti);callLastId=c.id;clearTimeout(c.to);clearTimeout(c.dc);clearInterval(c.tm);ringStop();
  try{c.stream&&c.stream.getTracks().forEach(t=>t.stop())}catch(x){}try{c.pc&&c.pc.close()}catch(x){}try{c.wl&&c.wl.release()}catch(x){}
  if(callAudioEl){try{callAudioEl.srcObject=null}catch(x){}}try{callOut&&callOut.ctx.close()}catch(x){}callOut=null;if(callEarEl){try{callEarEl.pause();callEarEl.srcObject=null}catch(x){}}callRemote=null;if(callAudioEl)callAudioEl.muted=false;try{const S=navigator.audioSession;if(S){S.type='playback';S.type='auto'}}catch(x){}try{Music.hush(!!chOpen)}catch(x){}}
 function callEnd(msg){if(!call)return;const v=$('#callv');v.classList.remove('min');$('#callpill').hidden=true;callCleanup();v.classList.remove('inc','conn');v.classList.add('end');callTxt(msg||'انتهت المكالمة');setTimeout(()=>{if(!call){v.classList.remove('on','end');setTimeout(()=>{if(!call)v.hidden=true},300)}},1400)}
 function callOnDoc(d){if(!d||!d.cid||!me)return;
- if(call&&d.cid===call.id){
+ if(call&&d.cid===call.id){try{callOnExtra(d)}catch(x){}
   if(call.role==='out'){if(d.state==='accepted'&&d.answer&&!call.ans&&call.pc){call.ans=1;ringStop();callTxt('عم نوصل…');call.pc.setRemoteDescription(d.answer).catch(()=>callHang('ما زبط الاتصال'))}
    else if(d.state==='declined'){callLog('missed');callEnd(other(me)==='leen'?'رفضت المكالمة':'رفض المكالمة')}
    else if(d.state==='ended'&&call.state!=='ended'){callLog('done',d.dur||(call.t0?Math.round((Date.now()-call.t0)/1000):0));callEnd('انتهت المكالمة')}}
   else if(['ended','cancelled','missed'].includes(d.state))callEnd(d.state==='ended'?'انتهت المكالمة':'المكالمة انلغت');
   return}
- if(!call&&d.to===me&&d.state==='ringing'&&d.cid!==callLastId&&Date.now()-(d.t||0)<45000){call={id:d.cid,role:'in',state:'incoming',from:d.from,offer:d.offer};callShow();callTxt('عم يتصل فيك'+(me==='leen'?'ي':'')+'…');ringPlay('in')}}
-$('#chcall').addEventListener('click',()=>{callCtx();callStart()});
+ if(!call&&d.to===me&&d.state==='ringing'&&d.cid!==callLastId&&Date.now()-(d.t||0)<45000){call={id:d.cid,role:'in',state:'incoming',from:d.from,offer:d.offer,video:!!d.video,face:'user',reN:0,reSeen:0,rrSeen:0};if(call.video)callSpk=true;callShow();callTxt((call.video?'مكالمة فيديو · ':'')+'عم يتصل فيك'+(me==='leen'?'ي':'')+'…');ringPlay('in')}}
+$('#chcall').addEventListener('click',()=>{callCtx();callStart(false)});$('#chvcall').addEventListener('click',()=>{callCtx();callStart(true)});
 $('#callend').addEventListener('click',()=>{if(call&&call.role==='in'&&call.state==='incoming')callDecline();else callHang()});
 $('#callok').addEventListener('click',()=>{callCtx();callAccept()});
 /* speaker / earpiece. Speaker: main <audio>. Earpiece: remote -> WebAudio -> MediaStreamDestination -> 2nd <audio> with setSinkId(receiver); fallback WebAudio destination. Logs diagnostics to chatmeta/dbg<me>. */
@@ -1408,16 +1445,44 @@ try{navigator.mediaDevices.addEventListener('devicechange',()=>{if(call&&call.st
 document.addEventListener('pointerup',()=>{if(callSinkPend!==null&&call&&call.state==='connected'){const v=callSinkPend;callSinkPend=null;callRoute(v,true)}},true);
 /* back from background: iOS stops web mic capture while the app is hidden, so re-acquire it and resume audio */
 async function callResume(){if(!call||!call.pc||call.state!=='connected')return;try{callOut&&callOut.ctx.state!=='running'&&callOut.ctx.resume()}catch(x){}try{callAudioEl&&callAudioEl.play().catch(()=>{})}catch(x){}
- const old=call.stream&&call.stream.getAudioTracks()[0];if(old&&old.readyState==='live'&&!old.muted)return;
- try{const ns=await callGetMic();if(!call||!call.pc){ns.getTracks().forEach(t=>t.stop());return}const nt=ns.getAudioTracks()[0];nt.enabled=$('#callmute').getAttribute('aria-pressed')!=='true';
-  const snd=call.pc.getSenders().find(x=>!x.track||x.track.kind==='audio');if(snd)await snd.replaceTrack(nt.enabled?nt:null);try{old&&old.stop()}catch(x){}call.stream=ns;if(!callSpk)callRoute(false,true)}catch(x){}}
+ try{$('#callrv').play().catch(()=>{})}catch(x){}
+ const old=call.stream&&call.stream.getAudioTracks()[0];
+ if(!(old&&old.readyState==='live'&&!old.muted)){
+ try{const ns=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});if(!call||!call.pc){ns.getTracks().forEach(t=>t.stop());return}const nt=ns.getAudioTracks()[0];nt.enabled=$('#callmute').getAttribute('aria-pressed')!=='true';
+  const snd=call.aSnd||call.pc.getSenders().find(x=>!x.track||x.track.kind==='audio');if(snd)await snd.replaceTrack(nt.enabled?nt:null);try{old&&old.stop()}catch(x){}
+  const vts=call.stream?call.stream.getVideoTracks():[];call.stream=new MediaStream([nt,...vts]);if(!callSpk)callRoute(false,true)}catch(x){}}
+ if(call&&call.video&&!call.camOff){const ov=call.stream&&call.stream.getVideoTracks()[0];if(!(ov&&ov.readyState==='live'&&!ov.muted))await callSetCam(call.face,true)}
+ if(call&&call.pc&&['disconnected','failed'].includes(call.pc.iceConnectionState))callRestart();
+ if(call&&call.state==='connected')callDoc().update({['away.'+me]:false}).catch(()=>{})}
+async function callSetCam(face,force){if(!call||!call.video)return;try{const ns=await navigator.mediaDevices.getUserMedia({video:CALL_VC(face)});if(!call){ns.getTracks().forEach(t=>t.stop());return}const nt=ns.getVideoTracks()[0];
+  const old=call.stream.getVideoTracks()[0];if(call.vSnd)await call.vSnd.replaceTrack(nt);try{old&&old.stop()}catch(x){}call.face=face;
+  call.stream=new MediaStream([...call.stream.getAudioTracks(),nt]);call.camOff=false;$('#callv').classList.remove('camoff');$('#callcam').setAttribute('aria-pressed','false');callLocalPrev();callDoc().update({['cam.'+me]:true}).catch(()=>{})}
+ catch(x){if(!force)toast('ما قدرنا نفتح الكاميرا')}}
+function callAway(on,who){const el=$('#callaway');if(!el)return;if(!on){el.hidden=true;return}const o=who||other(me);el.textContent=o===me?'الاتصال ضعيف… عم نرجّعه':((WHO[o]||'')+' '+(o==='leen'?'طلعت من التطبيق، الصوت رح يرجع لما ترجع':'طلع من التطبيق، الصوت رح يرجع لما يرجع'));el.hidden=false}
+function callOnExtra(d){const o=other(me);call.remMute=!!(d.mute&&d.mute[o]);
+ if(d.away&&call.state==='connected'){if(d.away[o])callAway(true,o);else if(call.pc&&call.pc.connectionState==='connected')callAway(false)}
+ if(call.video){const v=$('#callv');v.classList.toggle('rvoff',d.cam&&d.cam[o]===false)}
+ // ICE restart signalling: caller makes offers, callee answers; callee asks via rr
+ if(call.role==='in'&&d.re&&d.re.n>call.reSeen&&d.re.offer&&call.pc){call.reSeen=d.re.n;(async()=>{try{const pc=call.pc;await pc.setRemoteDescription(d.re.offer);await pc.setLocalDescription(await pc.createAnswer());await iceDone(pc,1500);if(!call||call.pc!==pc)return;await callDoc().update({rea:{n:d.re.n,answer:{type:pc.localDescription.type,sdp:pc.localDescription.sdp}}})}catch(x){callDbg('reAnsErr',String(x))}})()}
+ if(call.role==='out'&&d.rea&&d.rea.n===call.reN&&!call.reDone&&call.pc){call.reDone=1;call.pc.setRemoteDescription(d.rea.answer).catch(x=>callDbg('reSetErr',String(x)))}
+ if(call.role==='out'&&d.rr&&d.rr>call.rrSeen){call.rrSeen=d.rr;callRestart()}}
+let callReT=0;async function callRestart(){if(!call||!call.pc||call.state!=='connected')return;if(Date.now()-callReT<4000)return;callReT=Date.now();
+ if(call.role==='in'){callDoc().update({rr:Date.now()}).catch(()=>{});return}
+ try{const pc=call.pc;if(pc.signalingState!=='stable')return;call.reN=(call.reN||0)+1;call.reDone=0;await pc.setLocalDescription(await pc.createOffer({iceRestart:true}));await iceDone(pc,1500);if(!call||call.pc!==pc)return;
+  await callDoc().update({re:{n:call.reN,offer:{type:pc.localDescription.type,sdp:pc.localDescription.sdp}}})}catch(x){callDbg('reErr',String(x))}}
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&call&&call.state==='connected'&&db)callDoc().update({['away.'+me]:true}).catch(()=>{})});
+addEventListener('pagehide',()=>{if(call&&call.state==='connected'&&db)callDoc().update({['away.'+me]:true}).catch(()=>{})});
+$('#callcam').addEventListener('click',e=>{if(!call||!call.video||!call.stream)return;const off=!call.camOff;
+ if(!off){const vt=call.stream.getVideoTracks()[0];if(!vt||vt.readyState!=='live'){callSetCam(call.face||'user');return}}
+ call.camOff=off;const vt=call.stream.getVideoTracks()[0];if(vt)vt.enabled=!off;$('#callcam').setAttribute('aria-pressed',String(off));$('#callv').classList.toggle('camoff',off);callDoc().update({['cam.'+me]:!off}).catch(()=>{});try{navigator.vibrate&&navigator.vibrate(10)}catch(x){}});
+$('#callflip').addEventListener('click',()=>{if(!call||!call.video)return;callSetCam((call.face||'user')==='user'?'environment':'user');try{navigator.vibrate&&navigator.vibrate(10)}catch(x){}});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(callResume,300)});addEventListener('pageshow',()=>setTimeout(callResume,300));
 $('#callspk').addEventListener('click',()=>{callRoute(!callSpk);callRefreshOuts();try{navigator.vibrate&&navigator.vibrate(10)}catch(x){}});
 $('#callmute').addEventListener('click',e=>{const btn=e.currentTarget,m=btn.getAttribute('aria-pressed')!=='true';btn.setAttribute('aria-pressed',String(m));try{navigator.vibrate&&navigator.vibrate(10)}catch(x){}
  if(!call||!call.stream)return;const tr=call.stream.getAudioTracks()[0];if(tr)tr.enabled=!m;
- const info={m,tr:!!tr,en:tr&&tr.enabled};try{const snd=call.pc&&call.pc.getSenders().find(x=>x.track?x.track.kind==='audio':true);info.snd=!!snd;
+ const info={m,tr:!!tr,en:tr&&tr.enabled};try{const snd=call.aSnd||(call.pc&&call.pc.getSenders().find(x=>x.track?x.track.kind==='audio':true));info.snd=!!snd;
   if(snd){snd.replaceTrack(m?null:tr).then(()=>{info.rep='ok'},e=>{info.rep=String(e)});try{const pr=snd.getParameters();if(pr.encodings&&pr.encodings.length){pr.encodings.forEach(e=>e.active=!m);snd.setParameters(pr).catch(e=>{info.par=String(e)})}}catch(e){info.par=String(e)}}}catch(x){info.err=String(x)}
- setTimeout(()=>callDbg('mute',info),400);
+ setTimeout(()=>callDbg('mute',info),400);try{callDoc().update({['mute.'+me]:m}).catch(()=>{})}catch(x){}
  toast(m?'🔇 المايك مسكّر':'🎙️ المايك مفتوح')});
 function chMarkRead(){if(!chOpen||document.hidden||!me||!db)return;const last=chat.filter(m=>m.by!==me).reduce((a,m)=>Math.max(a,m.t||0),0);const cur=(chMeta[me]||{}).read||0;
  if(last>cur&&Date.now()-chReadT>800){chReadT=Date.now();chMeta[me]={...(chMeta[me]||{}),read:last};db.doc('chatmeta/'+me).set({...(chMeta[me]||{}),read:last,seen:Date.now()}).catch(()=>{});chBadge()}}
