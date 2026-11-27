@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-28.104">
+<meta name="app-ver" content="2026-11-28.105">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -305,6 +305,28 @@ textarea.in{min-height:84px;resize:vertical}
 .gpres i{width:9px;height:9px;border-radius:50%;background:#8a8fb0}.gpres.on i{background:#5ee08a;box-shadow:0 0 0 4px rgba(94,224,138,.25)}
 .wq{font-size:14px;opacity:.8;margin-bottom:6px}
 .wopts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0}
+.cmcard{background:radial-gradient(80% 60% at 10% 0%,rgba(255,120,160,.38),transparent 70%),linear-gradient(160deg,#4a1d5e,#1a1238 78%)}
+.cmsc{position:absolute;top:18px;left:18px;display:flex;gap:6px}.cmsc span{display:flex;align-items:center;gap:4px;font-weight:800;font-size:13px;background:rgba(255,255,255,.12);border-radius:99px;padding:3px 9px 3px 4px}.cmsc b{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;color:#1a1238;background:#ffe7a2}.cmsc b.leen{background:#e9ebf5}
+.cmw{text-align:center;font-weight:700}
+.cmtd{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 10px}
+.cmtd button,.cmgrid button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border-radius:18px;color:#fff;font-weight:800;transition:transform .15s}
+.cmtd button{min-height:96px;font-size:20px}.cmtd i,.cmgrid i{font-style:normal;font-size:28px;line-height:1}
+.cmtd button:active,.cmgrid button:active{transform:scale(.95)}
+.cm-t{background:linear-gradient(150deg,#3f7bf0,#2448a8)}.cm-d{background:linear-gradient(150deg,#ff6a3d,#c2261a)}
+.cmgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.cmgrid button{min-height:78px;font-size:13px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16)}.cmgrid i{font-size:22px}
+.cmgrid button[disabled]{opacity:.45}
+.cmc{position:relative;margin:8px 0 12px;border-radius:22px;padding:18px 16px 14px;text-align:center;color:#fff;box-shadow:0 14px 30px -12px rgba(0,0,0,.6);animation:cmIn .5s cubic-bezier(.2,.9,.3,1.15)}
+@keyframes cmIn{0%{transform:perspective(700px) rotateY(80deg) scale(.9);opacity:0}100%{transform:none;opacity:1}}
+.cmc.cm-t{background:linear-gradient(150deg,#4d86f5,#2448a8)}.cmc.cm-d{background:linear-gradient(150deg,#ff7048,#b8231a)}.cmc.cm-r{background:linear-gradient(150deg,#f0547f,#9e1546)}.cmc.cm-l{background:linear-gradient(150deg,#2bb39a,#0f6b5d)}
+.cmtag{display:inline-block;font-size:13px;font-weight:800;background:rgba(0,0,0,.22);border-radius:99px;padding:4px 11px;margin-bottom:10px}
+.cmq{font-size:20px;font-weight:800;line-height:1.5;text-shadow:0 1px 3px rgba(0,0,0,.25)}.cmq.sm{font-size:16px}
+.cmc small{display:block;margin-top:10px;font-weight:700;opacity:.85}
+.cmbtns{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap}
+.cmghost{min-height:44px;padding:0 18px;border-radius:14px;font-weight:800;font-size:15px;color:#fff;background:rgba(255,255,255,.14)}.cmghost.sm{min-height:36px;margin-top:8px;font-size:14px}
+.cmsec{margin-top:12px;border-radius:18px;padding:14px;text-align:center;background:rgba(0,0,0,.25);border:1px dashed rgba(255,255,255,.28)}
+.cmsec.mine{background:linear-gradient(150deg,rgba(120,70,200,.55),rgba(60,30,120,.55));border-style:solid}
+.cmsec.rv{background:rgba(255,231,162,.12);border-color:rgba(255,231,162,.4)}
+.cmsec .cmq{font-size:17px;margin-bottom:10px}
 .wopt{position:relative;min-height:92px;border-radius:18px;padding:12px;font-weight:800;font-size:18px;line-height:1.3;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.18);color:#fff;transition:transform .2s,background .3s,border-color .3s}
 .wopt.mine{background:rgba(255,227,163,.2);border-color:#ffe3a3}
 .wopt .who{position:absolute;bottom:6px;inset-inline-start:8px;display:flex;gap:4px}
@@ -1173,11 +1195,54 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkKisse
 /* ---------- games ---------- */
 const WYR=[['بحر','جبل'],['قهوة الصبح','شاي المسا'],['سهرة بالبيت','طلعة برّا'],['فيلم رومانسي','فيلم أكشن'],['شتي','صيفية'],['أكل بيتي','مطعم'],['سفرة لأوروبا','سفرة لبلد عربي'],['شروق الشمس','غروب الشمس'],['مسج طويل','اتصال قصير'],['هدية مفاجأة','هدية بنختارها سوا'],['بيت بالمدينة','بيت بالضيعة'],['كلب','قطة'],['رقص','غنا'],['حلو','مالح'],['نادي سوا','مشي برّا'],['نصحى بكير','نسهر لمتأخر'],['بيتزا','شاورما'],['نتمشّى عالبحر','نتمشّى بالغابة'],['ورد أحمر','ورد أبيض'],['رحلة بالسيارة','رحلة بالطيارة'],['ألعاب','مسلسل'],['نطبخ سوا','نطلب أكل'],['صور كتير','نعيش اللحظة بلا صور'],['ثلج','بحر دافي'],['موسيقى هادية','موسيقى حماسية'],['عشا على ضو الشموع','بيكنك بالطبيعة'],['نتذكّر الماضي','نحلم بالمستقبل'],['مفاجأة كبيرة','تفاصيل صغيرة كل يوم'],['خيمة تحت النجوم','فندق فخم'],['كيك شوكولا','تشيز كيك'],['شمس','قمر'],['رسالة بخط الإيد','فيديو مسجّل'],['نسافر كل سنة لمكان جديد','نرجع كل سنة لنفس المكان المفضّل'],['بوسة عالجبين','ضمّة طويلة'],['نلعب لعبة','نحكي ساعات'],['أول موعد بمطعم','أول موعد بنزهة'],['تلج وكاكاو','بحر وآيس كريم'],['بيت فيه حديقة','شقة فيها إطلالة'],['نتصوّر سيلفي','حدا يصوّرنا'],['نحتفل بالعيد بالبيت','نحتفل برّا']];
 let wyr=null,wyrLog=[],touchDocs={},tvOpen=false,logged={},lastInvite=0,seenReveal={};
+
+/* ---- couple missions / truth or dare ---- */
+const CMD={"t": ["شو أول شي لفت نظرك بـ{P}؟", "إمتى حسّيت لأول مرة إنك {حبّيتها|حبّيتو} عن جد؟", "شو أكتر شي بتغار{|ي} عليه؟", "شو العادة عند {P} اللي بتضحّكك كل مرة؟", "شو أحلى ذكرى إلكن لحدّ هلّق؟ ليش هي بالذات؟", "شو أول انطباع أخدته عن {P}؟ وهل تغيّر؟", "شو الشي اللي بتحب{|ي}ه {فيها|فيه} وما قلتل{ها|و} ياه قبل؟", "إذا فيك تعيش{|ي} يوم من أول تعارفكن من جديد، أيّا يوم بتختار{|ي}؟", "شو أكتر شي بيخوّفك بالمستقبل؟", "شو الأغنية اللي بتذكّرك بـ{P}؟", "شو أكتر كلمة {بتقولها|بيقولها} {P} وبتذوّبك؟", "إمتى آخر مرة {زعلت|زعلتي} من {P} وما {حكيت|حكيتي}؟", "شو الحلم اللي بدك تحقّق{|ي}ه سوا مع {P}؟", "شو أكتر شي {اشتقتلها|اشتقتلو} فيه هالأسبوع؟", "شو الشي اللي بتحس{|ي} إنك بتعمل{|ي}ه أحسن من {P}؟ 😏", "وين بتتخيّل{|ي} حالكن بعد ٥ سنين؟", "شو أكتر صفة {ورثتها|ورثها} {P} عن أهل{ها|و} وبتحب{|ي}ها؟", "شو كذبة بيضا {قلتها|قلتيها} لـ{P} مرة؟", "شو أكتر شي بيعصّبك بس بتحب{|ي}ه بنفس الوقت عند {P}؟", "إذا {P} {بتكون|بيكون} أكلة، شو {بتكون|بيكون}؟ وليش؟", "شو أكتر لحظة {حسّيت|حسّيتي} فيها إنك فخور{|ة} بـ{P}؟", "شو الشي اللي بدّك {ياها تعرفو|ياه يعرفو} عنك وما بتعرف كيف تقولو؟", "شو أول شي بدك تعمل{|ي}ه بأول يوم بعد العرس؟", "كم مرة بتفتح{|ي} صور {P} بالنهار؟ بصراحة 😄", "شو أكتر هدية بتتمنّى {تجيبلك|يجيبلك} ياها {P}؟", "شو الشي اللي ما بتقدر{|ي} تسامح{|ي} فيه أبداً؟", "شو الإيموجي اللي بيوصف {P}؟", "شو الشي اللي {بتعملو|بيعملو} {P} وبيحسّسك بالأمان؟", "مين {حبّ|حبّت} التاني أوّل برأيك؟", "شو السؤال اللي بدك تسأل{|ي}ه لـ{P} من زمان وما {سألتو|سألتيه}؟"], "d": ["ابعت{|ي} voice وإنت{|ي} عم تغنّي{|} مقطع من أغنية بتذكّرك بـ{P} 🎤", "صوّر{|ي} سيلفي بأغرب وجه عندك وابعت{|ي}ه بالمحادثة هلّق 🤪", "اكتب{|ي} لـ{P} رسالة حب من ٥ أسطر بالمحادثة هلّق 💌", "احكي{|} ٣٠ ثانية بلهجة غير لهجتك بـvoice", "قلّد{|ي} طريقة حكي {P} بـvoice 😂", "غيّر{|ي} اسم {P} بتلفونك لاسم دلع جديد وابعت{|ي} screenshot", "اعمل{|ي} ١٥ سكوات هلّق وابعت{|ي} فيديو 💪", "ارسم{|ي} {P} بلعبة «نرسم سوا» بدقيقة وحدة", "ابعت{|ي} آخر صورة سيلفي عندك بالتلفون بدون ما تختار{|ي} 📸", "اتصل{|ي} فيديو وطلّع{|ي} بعيون {P} ٣٠ ثانية بدون ما تضحك{|ي}", "قول{|ي} لـ{P} ٣ مجاملات ورا بعض بـvoice بدون ما توقف{|ي}", "ابعت{|ي} لـ{P} صورة الشي اللي قدّامك هلّق بالزبط", "اكتب{|ي} قصيدة صغيرة من ٤ أسطر عن {P} ✍️", "احكي{|} نكتة بـvoice، إذا ما ضحك{ت|} {P} بتعيد{|ي} وحدة تانية", "ابعت{|ي} voice بتقلّد{|ي} فيه مذيع أخبار عم يعلن خبر حبكن 📺", "ارقص{|ي} ١٠ ثواني وصوّر{|ي} فيديو 💃", "خلّي {P} {تختار|يختار} صورتك الجاية على البروفايل بالتطبيق", "ابعت{|ي} لـ{P} أقدم صورة إلك بالتلفون", "ابعت{|ي} ١٠ إيموجيات بتوصف يومك اليوم بدون ولا كلمة", "اكتب{|ي} اسم {P} بأحلى خط عندك على ورقة وصوّر{|ي}ه", "قول{|ي} «بحبك» بـ٣ لغات مختلفة بـvoice", "اعمل{|ي} أحلى وجه زعلان وابعت{|ي}ه سيلفي 🥺", "اتصل{|ي} مكالمة صوتية ٣٠ ثانية وبس قول{|ي} أشياء حلوة بدون ما {تسمح لـ{P} تحكي|تسمحي لـ{P} يحكي}", "ابعت{|ي} voice بتعمل{|ي} فيه صوت حيوان و{P} {تحزر|يحزر} شو هو 🐱", "خلّي {P} {تكتبلك|يكتبلك} جملة وإنت{|ي} لازم {تحطّها|تحطّيها} حالة عندك ساعة"], "r": ["ابعت{|ي} لـ{P} voice صباحي/مسائي بتقول{|ي} فيه شو بتحب{|ي} {فيها|فيه}", "اكتب{|ي} ملاحظة حب بـ«بيناتنا» ما بتنفتح إلا بكرا 💌", "ابعت{|ي} صورة إلكن قديمة وقول{|ي} شو بتتذكّر{|ي} من هديك اللحظة", "عدّ{|ي} ٥ أشياء صغيرة {بتعملها|بيعملها} {P} وبتفرّحك", "اختار{|ي} أغنية بتوصف حبكن وابعت{|ي}ها مع سطر ليش", "كمّل{|ي} الجملة: «أكتر شي بحبه بأيامنا سوا هو…»", "اكتب{|ي} لـ{P} ٣ وعود صغيرة رح تلتزم{|ي} فيهن هالأسبوع", "صف{|ي} أحلى يوم بتتخيّل{|ي}ه مع {P} من الصبح للمسا", "ابعت{|ي} لـ{P} صورة لشي شفته اليوم وذكّرك {فيها|فيه}", "قول{|ي} لـ{P} شو الشي اللي غيّرو فيك من وقت ما تعرّفتوا", "اكتب{|ي} رسالة لـ{P} المستقبل، بتنقرا بذكرى خطوبتكن الجاية", "سمّي{|} أغنية «إلكن» وابعت{|ي}ها، تصير أغنيتكن الرسمية 🎶", "ابعت{|ي} voice فيه دعوة أو أمنية حلوة لـ{P} من قلبك", "احكي{|} لـ{P} عن لحظة {حسّيت|حسّيتي} فيها {إنها هي|إنو هو} الشخص الصح", "خطّط{|ي} موعد فيديو مفاجئ الليلة وحدّد{|ي} الساعة", "اكتب{|ي} ١٠ أسباب بتحب{|ي} فيهن {P} بالمحادثة", "صوّر{|ي} المكان اللي بتتخيّل{|ي} فيه بيتكن وابعت{|ي}ه 🏡", "قول{|ي} لـ{P} أكتر شي بتشتاق{|ي} لـ{ها|و} لما تكونوا بعاد"], "s": ["خلّي {P} {تضحك|يضحك} ٣ مرات اليوم بدون ما {تعرف|يعرف} إنها مهمّة 😄", "اسأل{|ي} {P} عن أكلة {بتحبها|بيحبها} وبعدين فاجئ{|ي}{ها|و} فيها أو بصورتها", "استعمل{|ي} كلمة «بطّيخ» ٣ مرات بالحكي مع {P} اليوم بدون ما {تنتبه|ينتبه} 🍉", "ابعت{|ي} لـ{P} مجاملة كل ساعتين اليوم بشكل طبيعي", "خلّي {P} {تقول|يقول} «بحبك» أوّل، بدون ما تطلب{|ي} 😏", "اعرف{|ي} من {P} شو {حلمها|حلمو} الصغير اللي ما {حكيتو|حكيتيه} عنه، بدون ما {تحس|يحس}", "حضّر{|ي} مفاجأة صغيرة لـ{P} خلال ٤٨ ساعة (رسالة، هدية، أي شي)", "خلّي {P} {تختار|يختار} لون بدون ما {تعرف|يعرف} ليش، وبعدين اعمل{|ي} فيه شي", "غيّر{|ي} صورتك بالتطبيق لصورة إلكن سوا وشوف{|ي} أدّيش ب{بتاخد|بياخد} {P} {لتنتبه|لينتبه}", "اعرف{|ي} مقاس أو لون مفضّل عند {P} بشكل ذكي 🕵️", "ابعت{|ي} نفس الإيموجي بأول كل رسالة اليوم، وشوف{|ي} إذا {بتلاحظ|بيلاحظ} {P}", "خلّي {P} {تحكيلك|يحكيلك} عن ذكرى طفولة ما {سمعتها|سمعتيها} قبل", "كتّر{|ي} من كلمة «حبيب{تي|ي}» اليوم وعدّ{|ي} كم مرة {بتردّ|بيردّ} بكلمة حلوة", "اكتب{|ي} اسم {P} مخبّى بأول حروف ٤ رسائل ورا بعض", "اطلب{|ي} من {P} {تبعتلك|يبعتلك} صورة، وبعدين اعمل{|ي}ها خلفية تلفونك وفاجئ{|ي}{ها|و}"], "l": ["لعبة ٢٠ سؤال: فكّر{|ي} بشي و{P} {تحزر|يحزر} بأسئلة جوابها نعم أو لا", "شغّلوا نفس الأغنية بنفس اللحظة واسمعوها سوا على مكالمة 🎧", "كل واحد يرسم التاني بـ«نرسم سوا» بدقيقتين، وقارنوا 😂", "تحدّي سرعة: مين بيبعت صورة لشي أحمر أوّل؟ 🔴", "احزر{|ي} الإيموجي: احكي{|} فيلم بالإيموجي و{P} {تحزره|يحزره}", "كمّلوا قصة سوا: كل واحد يكتب جملة بالمحادثة، ١٠ جمل", "اعملوا «هذا أو ذاك» سريع: ١٠ أسئلة بـ١٠ ثواني لكل سؤال", "تفرّجوا على نفس الفيلم بنفس الوقت وابعتوا تعليقاتكن لايف", "كل واحد يطبخ أو يحضّر نفس المشروب، واشربوه سوا على فيديو ☕", "لعبة الذاكرة: {P} {بتبعتلك|بيبعتلك} صورة ٥ ثواني وبتحكي{|} شو كان فيها", "اختاروا مدينة بتحبوا تسافروا عليها، وكل واحد يدوّر على ٣ أشياء بدكن تعملوها فيها ✈️", "حطّوا إصبعكن بـ«لمسة عن بعد» ومين بيلاقي التاني أسرع", "قولوا بنفس اللحظة اسم أكلة بتشتهوها، إذا اتفقتوا بتطلبوها بأول لقاء 🍕", "كل واحد يبعت ٣ صور من يومه، والتاني يحزر الترتيب", "العبوا ٥ أسئلة «بتفضّل؟» وشوفوا أدّيش بتتفقوا"]};
+const CMC={t:['💬','صراحة'],d:['🔥','جرأة'],r:['🌹','رومانسي'],s:['🤫','مهمّة سرية'],l:['📱','لعبة عن بعد']};
+function cmTx(cat,i,who){let t=(CMD[cat]||[])[i]||'';const o=who==='leen'?'hassan':'leen';t=t.replace(/\{P\}/g,WHO[o]||'');return t.replace(/\{([^{}|]*)\|([^{}]*)\}/g,(m,a,b)=>who==='leen'?b:a)}
+const cmF=w=>w==='leen';
+function cmDoc(){return (chMeta&&chMeta.cm)||{}}
+function cmPick(cat,h){const hist=new Set((h||[]).filter(x=>x.startsWith(cat+':')).map(x=>+x.split(':')[1]));const n=CMD[cat].length;let pool=[];for(let i=0;i<n;i++)if(!hist.has(i))pool.push(i);if(!pool.length)pool=[...Array(n).keys()];return pool[Math.floor(Math.random()*pool.length)]}
+function cmSet(d){chMeta.cm={...cmDoc(),...d};renderGames();return db.doc('chatmeta/cm').set(d,{merge:true}).catch(()=>{})}
+function cmAct(a,arg){const d=cmDoc(),o=other(me),h=(d.h||[]).slice(-60);try{Music.sfx.pop()}catch(x){}
+ if(a==='start')return cmSet({turn:Math.random()<.5?'hassan':'leen',st:'pick',t:Date.now()});
+ if(a==='draw'){if(d.turn!==me||d.st==='card')return;let cat=arg;if(cat==='x')cat=['t','d','r','l'][Math.floor(Math.random()*4)];
+  const i=cmPick(cat,h);h.push(cat+':'+i);try{notifyGame('cm','مهمّات الحب')}catch(x){}
+  if(cat==='s'){if(d['sec_'+me])return;try{notifyOther('🤫 '+(WHO[me]||''),(cmF(me)?'سحبت مهمّة سرية عنك… انتبه':'سحب مهمّة سرية عنك… انتبهي')+' 👀','game-cm','cm')}catch(x){}
+   return cmSet({['sec_'+me]:{i,t:Date.now()},turn:o,st:'pick',h,t:Date.now()})}
+  return cmSet({st:'card',cat,i,rid:Date.now().toString(36),h,t:Date.now()})}
+ if(a==='done'||a==='skip'){if(d.st!=='card')return;const w=d.turn,k=(a==='done'?'n_':'k_')+w;if(a==='done'){try{Music.sfx.win()}catch(x){}try{navigator.vibrate&&navigator.vibrate([15,30,15])}catch(x){}}
+  return cmSet({[k]:(d[k]||0)+1,turn:other(w),st:'pick',t:Date.now()})}
+ if(a==='reveal'){const sc=d['sec_'+me];if(!sc)return;try{Music.sfx.win()}catch(x){}try{notifyOther('🤫 '+(WHO[me]||''),(cmF(me)?'كشفت':'كشف')+' مهمّتو السرية، شوف'.replace('مهمّتو',cmF(me)?'مهمّتها':'مهمّتو').replace('شوف',cmF(o)?'شوفي':'شوف'),'game-cm','cm')}catch(x){}
+  return cmSet({['sec_'+me]:null,['secr_'+me]:{i:sc.i,t:Date.now(),seen:null},['n_'+me]:(d['n_'+me]||0)+1})}
+ if(a==='drop')return cmSet({['sec_'+me]:null});
+ if(a==='seen'){const r=d['secr_'+o];if(!r)return;return cmSet({['secr_'+o]:{...r,seen:arg==='1'}})}
+ if(a==='clr')return cmSet({['secr_'+arg]:null})}
+function cmHtml(){const d=cmDoc(),o=other(me),fm=cmF(me),fo=cmF(o);let h='<div class="gcard cmcard" id="cmcard"><h2>مهمّات الحب 💘</h2>';
+ const sc='<div class="cmsc"><span><b class="hassan">ح</b>'+(d.n_hassan||0)+' ✓</span><span><b class="leen">ل</b>'+(d.n_leen||0)+' ✓</span></div>';
+ if(!d.turn){h+='<p>صراحة ولا جرأة، تحديات رومانسية، مهمّات سرية وألعاب للبعد. بالدور، وكل شي بيبيّن عند التنين لايف.</p><button class="gbtn" data-cm="start">يلا نلعب</button></div>';return h}
+ h+=sc;
+ if(d.st==='card'&&CMD[d.cat]){const w=d.turn,c=CMC[d.cat],mine=w===me;
+  h+='<div class="cmc cm-'+d.cat+'" data-rid="'+(d.rid||'')+'"><span class="cmtag">'+c[0]+' '+c[1]+'</span><div class="cmq">'+esc(cmTx(d.cat,d.i,w))+'</div><small>'+(mine?'دورك':'دور '+WHO[w])+'</small></div>';
+  h+='<div class="cmbtns"><button class="gbtn" data-cm="done">'+(d.cat==='t'?(mine?'جاوبت ✓':(fo?'جاوبت ✓':'جاوب ✓')):(mine?'عملتها ✓':(fo?'عملتها ✓':'عملها ✓')))+'</button><button class="cmghost" data-cm="skip">تخطّي</button></div>';
+  if(!mine)h+='<p class="cmw">'+WHO[w]+' '+(fo?'عم تلعب هلّق… فيك تأكّد{|ي} لما تخلّص':'عم يلعب هلّق… فيكي تأكّدي لما يخلّص').replace('{|ي}',fm?'':'ي')+'</p>'}
+ else if(d.turn===me){const has=!!d['sec_'+me];
+  h+='<p class="cmw">'+(fm?'دورك! اختاري:':'دورك! اختار:')+'</p><div class="cmtd"><button data-cm="draw" data-c="t" class="cm-t"><i>💬</i>صراحة</button><button data-cm="draw" data-c="d" class="cm-d"><i>🔥</i>جرأة</button></div>';
+  h+='<div class="cmgrid"><button data-cm="draw" data-c="r"><i>🌹</i>رومانسي</button><button data-cm="draw" data-c="s"'+(has?' disabled':'')+'><i>🤫</i>'+(has?'عندك وحدة':'مهمّة سرية')+'</button><button data-cm="draw" data-c="l"><i>📱</i>عن بعد</button><button data-cm="draw" data-c="x"><i>🎲</i>مفاجأة</button></div>'}
+ else h+='<p class="cmw">دور '+WHO[o]+'، '+(fo?'ناطرين تختار…':'ناطرين يختار…')+'</p>';
+ const ms=d['sec_'+me];if(ms)h+='<div class="cmsec mine"><span class="cmtag">🤫 مهمّتك السرية · ما {P} بيشوفها</span><div class="cmq">'.replace('ما {P} بيشوفها',WHO[o]+(fo?' ما بتشوفها':' ما بيشوفها'))+esc(cmTx('s',ms.i,me))+'</div><div class="cmbtns"><button class="gbtn" data-cm="reveal">خلّصتها، اكشفها</button><button class="cmghost" data-cm="drop">شيلها</button></div></div>';
+ if(d['sec_'+o])h+='<div class="cmsec"><span class="cmtag">🤫</span><div class="cmq sm">'+WHO[o]+(fo?' عندها مهمّة سرية عنك… ':' عندو مهمّة سرية عنك… ')+(fm?'انتبهي 👀':'انتبه 👀')+'</div></div>';
+ const ro=d['secr_'+o];if(ro&&Date.now()-ro.t<3*86400e3){h+='<div class="cmsec rv"><span class="cmtag">🤫 '+WHO[o]+(fo?' كشفت مهمّتها السرية':' كشف مهمّتو السرية')+'</span><div class="cmq">'+esc(cmTx('s',ro.i,o))+'</div>'+(ro.seen==null?'<div class="cmbtns"><button class="gbtn" data-cm="seen" data-c="1">انتبهت 👀</button><button class="cmghost" data-cm="seen" data-c="0">ما انتبهت 😮</button></div>':'<p class="cmw">'+(ro.seen?'انتبهت! 😎':'ما انتبهت… '+WHO[o]+(fo?' ربحت':' ربح')+' 😄')+'</p><button class="cmghost sm" data-cm="clr" data-c="'+o+'">تمام</button>')+'</div>'}
+ const rm=d['secr_'+me];if(rm&&rm.seen!=null&&Date.now()-rm.t<3*86400e3)h+='<div class="cmsec rv"><span class="cmtag">🤫 مهمّتك السرية</span><div class="cmq sm">'+(rm.seen?WHO[o]+(fo?' انتبهت عليها 👀':' انتبه عليها 👀'):WHO[o]+(fo?' ما انتبهت، ربحت 😎':' ما انتبه، ربحت 😎').replace('ربحت',fm?'ربحتي':'ربحت'))+'</div><button class="cmghost sm" data-cm="clr" data-c="'+me+'">تمام</button></div>';
+ return h+'</div>'}
+let cmSig='';
+document.addEventListener('click',e=>{const b=e.target.closest('[data-cm]');if(!b||!me||!db)return;cmAct(b.dataset.cm,b.dataset.c)});
+
 function renderGames(){const el=$('#games');if(!el||!me)return;const o=other(me),od=touchDocs[o]||{},here=od.here&&Date.now()-od.here<15000;
  const dd=drawLive[o]||{},dhere=dd.here&&Date.now()-dd.here<15000;
  let h='<div class="gcard"><h2>نرسم سوا 🎨</h2><p>لوحة وحدة إلكن التنين. كل واحد بيرسم من تلفونو، وبتشوفوا الرسمة عم تنرسم لايف. فيكن تحفظوها بألبومنا.</p><div class="gpres'+(dhere?' on':'')+'"><i></i>'+(dhere?WHO[o]+' عم يرسم هلّق'.replace('يرسم',o==='leen'?'ترسم':'يرسم'):WHO[o]+' مش جوّا اللوحة')+'</div><br><button class="gbtn" id="gDraw">يلا نرسم</button></div>';
  h+='<div class="gcard"><h2>لمسة عن بعد</h2><p>حطّوا إصبعكن عالشاشة بنفس الوقت. لما يلتقوا، بتنضوّى الشاشة وبيطلع قلوب.</p><div class="gpres'+(here?' on':'')+'"><i></i>'+(here?WHO[o]+' جوّا اللعبة هلّق':WHO[o]+' مش جوّا اللعبة')+'</div><br><button class="gbtn" id="gTouch">ابلّش</button></div>';
- h+='<div class="gcard" id="wcard"><h2>بتفضّل؟</h2>';
+ h+=cmHtml();h+='<div class="gcard" id="wcard"><h2>بتفضّل؟</h2>';
  const qi=wyr&&wyr.qi!=null?wyr.qi:null;
  if(qi==null||!WYR[qi]){h+='<p>بيطلعلكن نفس السؤال. كل واحد بيختار، والأجوبة بتنكشف لما تجاوبوا التنين.</p><button class="gbtn" id="wNew">ابلّشوا</button>'}
  else{const q=WYR[qi],am=wyr['a_'+me]||'',ao=wyr['a_'+o]||'',both=am&&ao;
@@ -1517,7 +1582,7 @@ function onChat(docs){const before=chSeenIds;chLive=docs;if(!chOlder.length)chNo
    if(!chOpen)toast('💬 '+(WHO[m.by]||'')+': '+(m.stk?'🌟 ستيكر':m.aud?'🎤 رسالة صوتية':m.img?'📷 صورة':(m.text||'').slice(0,40)),'افتح',openChat)}}
  chSeenIds=new Set(chat.map(m=>m.id));renderChat()}
 let chMetaSig='';
-function onChatMeta(docs){chMeta={};docs.forEach(d=>chMeta[d.id]=d);try{avRender()}catch(x){}try{moodRender()}catch(x){}try{if(chMeta.call)callOnDoc(chMeta.call)}catch(x){}if(chOpen){chStatus();const sg=((chMeta[other(me)]||{}).read||0)+'|'+chAct();if(sg!==chMetaSig){chMetaSig=sg;renderChat()}}else{chMetaSig='';chBadge()}navAct()}
+function onChatMeta(docs){chMeta={};docs.forEach(d=>chMeta[d.id]=d);try{avRender()}catch(x){}try{moodRender()}catch(x){}try{if(chMeta.call)callOnDoc(chMeta.call)}catch(x){}try{const cs=JSON.stringify(chMeta.cm||null);if(cs!==cmSig){const first=!cmSig;cmSig=cs;if(!first||chMeta.cm)renderGames()}}catch(x){}if(chOpen){chStatus();const sg=((chMeta[other(me)]||{}).read||0)+'|'+chAct();if(sg!==chMetaSig){chMetaSig=sg;renderChat()}}else{chMetaSig='';chBadge()}navAct()}
 let fitRaf=0,fitH=0,fitT=-1,maxVH=window.innerHeight;
 addEventListener('resize',()=>{maxVH=Math.max(maxVH,window.innerHeight)});
 function kbOpen(){const vv=window.visualViewport;return !!vv&&document.activeElement===chin&&maxVH-vv.height>120}
@@ -2783,6 +2848,7 @@ function goTarget(t){t=String(t||'');const i=t.indexOf(':'),a=i<0?t:t.slice(0,i)
   case 'draw':goTab('games');setTimeout(()=>{try{openDraw()}catch(x){}},300);return;
   case 'touch':goTab('games');setTimeout(()=>{try{openTouch()}catch(x){}},300);return;
   case 'wyr':goTab('games');flashTo(()=>secByTitle('بتفضّل'));return;
+  case 'cm':goTab('games');return;
   case 'moment':goTab('moments');if(id)flashTo(()=>{const b=document.querySelector('#v-moments [data-edit="'+CSS.escape(id)+'"]');return b&&(b.closest('article,.card')||b)});return;
   case 'weight':goTab('fit');return;
   case 'plan':goTab('plans');if(id)flashTo(()=>{const b=document.querySelector('#v-plans [data-tog="'+CSS.escape(id)+'"],#v-plans [data-edit="'+CSS.escape(id)+'"]');return b&&(b.closest('article,.card')||b)});return;
