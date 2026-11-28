@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-28.110">
+<meta name="app-ver" content="2026-11-28.111">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -315,7 +315,7 @@ textarea.in{min-height:84px;resize:vertical}
 .cm-t{background:linear-gradient(150deg,#3f7bf0,#2448a8)}.cm-d{background:linear-gradient(150deg,#ff6a3d,#c2261a)}
 .cmgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.cmgrid button{min-height:78px;font-size:13px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16)}.cmgrid i{font-size:22px}
 .cmgrid button[disabled]{opacity:.45}
-.cmc{position:relative;margin:8px 0 12px;border-radius:22px;padding:18px 16px 14px;text-align:center;color:#fff;box-shadow:0 14px 30px -12px rgba(0,0,0,.6);animation:cmIn .5s cubic-bezier(.2,.9,.3,1.15)}
+.cmc{position:relative;margin:8px 0 12px;border-radius:22px;padding:18px 16px 14px;text-align:center;color:#fff;box-shadow:0 14px 30px -12px rgba(0,0,0,.6)}.cmc.cmnew{animation:cmIn .5s cubic-bezier(.2,.9,.3,1.15)}
 @keyframes cmIn{0%{transform:perspective(700px) rotateY(80deg) scale(.9);opacity:0}100%{transform:none;opacity:1}}
 .spchip{position:absolute;top:16px;left:16px;font:800 12.5px Tajawal,sans-serif;color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:99px;padding:5px 10px;opacity:.75;transition:all .2s}.spchip.on{background:linear-gradient(135deg,#ff4d4d,#c2185b);border-color:transparent;opacity:1;box-shadow:0 4px 12px rgba(194,24,91,.4)}
 .cmc.cmsp{background:linear-gradient(150deg,#e0245e,#7a0f3a)!important}.gcard.wsp{background:radial-gradient(70% 60% at 85% 0%,rgba(255,60,90,.45),transparent 70%),linear-gradient(160deg,#5a1235,#1e0c24 75%)}
@@ -1211,18 +1211,18 @@ function cmAct(a,cat){if(a==='spicy'){const d=cmDoc();const v=!spOn();chMeta.cm=
 function spChip(){return ''}
 function cmHtml(){const d=cmDoc(),f=me==='leen';let h='<div class="gcard cmcard" id="cmcard"><h2>صراحة ولا جرأة 🎲</h2>'+spChip();
  const ok=d.by&&CMD[d.cat]&&CMD[d.cat][d.i]!=null;
- if(ok){const sp=d.cat.length>1,c=CMC[d.cat[0]],mine=d.by===me;h+='<div class="cmc cm-'+d.cat[0]+'" data-rid="'+(d.rid||'')+'"><span class="cmtag">'+c[0]+' '+c[1]+' · '+(mine?(f?'إلك':'إلك'):'لـ'+WHO[d.by])+'</span><div class="cmq">'+esc(cmTx(d.cat,d.i,d.by))+'</div></div>'}
+ if(ok){const sp=d.cat.length>1,c=CMC[d.cat[0]],mine=d.by===me;h+='<div class="cmc cm-'+d.cat[0]+(d.rid!==cmFirstRid&&cmLastRid0?' cmnew':'')+'" data-rid="'+(d.rid||'')+'"><span class="cmtag">'+c[0]+' '+c[1]+' · '+(mine?(f?'إلك':'إلك'):'لـ'+WHO[d.by])+'</span><div class="cmq">'+esc(cmTx(d.cat,d.i,d.by))+'</div></div>'}
  else h+='<p>اختار'+(f?'ي':'')+' صراحة أو جرأة، وبتطلعلك بطاقة. البطاقة بتبيّن عندكن التنين.</p>';
  h+='<div class="cmtd"><button data-cm="draw" data-c="t" class="cm-t"><i>💬</i>صراحة</button><button data-cm="draw" data-c="d" class="cm-d"><i>🔥</i>جرأة</button></div>';
  return h+'</div>'}
-let cmSig='';
+let cmSig='',cmFirstRid=undefined,cmLastRid0=false,cmLastHtml='',cmEl=null;setTimeout(()=>{cmLastRid0=true;cmFirstRid=(cmDoc()||{}).rid},1500);
 document.addEventListener('click',e=>{const b=e.target.closest('[data-cm]');if(!b||!me||!db)return;cmAct(b.dataset.cm,b.dataset.c)});
 
 function renderGames(){const el=$('#games');if(!el||!me)return;const o=other(me),od=touchDocs[o]||{},here=od.here&&Date.now()-od.here<15000;
  const dd=drawLive[o]||{},dhere=dd.here&&Date.now()-dd.here<15000;
  let h='<div class="gcard"><h2>نرسم سوا 🎨</h2><p>لوحة وحدة إلكن التنين. كل واحد بيرسم من تلفونو، وبتشوفوا الرسمة عم تنرسم لايف. فيكن تحفظوها بألبومنا.</p><div class="gpres'+(dhere?' on':'')+'"><i></i>'+(dhere?WHO[o]+' عم يرسم هلّق'.replace('يرسم',o==='leen'?'ترسم':'يرسم'):WHO[o]+' مش جوّا اللوحة')+'</div><br><button class="gbtn" id="gDraw">يلا نرسم</button></div>';
  h+='<div class="gcard"><h2>لمسة عن بعد</h2><p>حطّوا إصبعكن عالشاشة بنفس الوقت. لما يلتقوا، بتنضوّى الشاشة وبيطلع قلوب.</p><div class="gpres'+(here?' on':'')+'"><i></i>'+(here?WHO[o]+' جوّا اللعبة هلّق':WHO[o]+' مش جوّا اللعبة')+'</div><br><button class="gbtn" id="gTouch">ابلّش</button></div>';
- h+=cmHtml();h+='<div class="gcard" id="wcard"><h2>بتفضّل؟</h2>';
+ const cmh=cmHtml();h+='<div id="cmslot"></div>';h+='<div class="gcard" id="wcard"><h2>بتفضّل؟</h2>';
  const qi=wyr&&wyr.qi!=null?wyr.qi:null;
  const WP=wyr&&wyr.sp?WYRS:WYR;
  if(qi==null||!WP[qi]){h+='<p>بيطلعلكن نفس السؤال. كل واحد بيختار، والأجوبة بتنكشف لما تجاوبوا التنين.</p><button class="gbtn" id="wNew">ابلّشوا</button>'}
@@ -1236,7 +1236,7 @@ function renderGames(){const el=$('#games');if(!el||!me)return;const o=other(me)
  const tot=wyrLog.length,mt=wyrLog.filter(x=>x.match).length;
  if(tot)h+='<div class="wstat">اتفقتوا بـ '+mt+' من '+tot+' سؤال ('+Math.round(mt/tot*100)+'٪)</div>';
  h+='<div class="wburst" id="wburst"></div></div>';
- el.innerHTML=h;
+ const oldCm=document.getElementById('cmcard');el.innerHTML=h;{const sl=document.getElementById('cmslot');if(oldCm&&cmh===cmLastHtml)sl.replaceWith(oldCm);else{sl.outerHTML=cmh;cmLastHtml=cmh}}
  if(qi!=null&&wyr['a_hassan']&&wyr['a_leen']&&!seenReveal[wyr.rid]){seenReveal[wyr.rid]=1;if(Date.now()-(wyr.t||0)<600000)(wyr.a_hassan===wyr.a_leen?Music.sfx.win:Music.sfx.diff)();if(wyr.a_hassan===wyr.a_leen){$('#wburst').innerHTML=burst(14,0,120).replace('class="kburst"','class="kburst" style="left:50%;top:40%"');try{navigator.vibrate&&navigator.vibrate([20,40,20])}catch(x){}}}
 }
 function wyrMaybeLog(){if(!wyr||!wyr.rid||logged[wyr.rid])return;if(!(wyr.a_hassan&&wyr.a_leen))return;logged[wyr.rid]=1;
