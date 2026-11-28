@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="app-ver" content="2026-11-28.112">
+<meta name="app-ver" content="2026-11-28.113">
 <script>try{if(localStorage.getItem("hl-me-cache")==="hassan")document.documentElement.classList.add("nosp")}catch(e){}try{var n=navigator;if((n.maxTouchPoints>1&&/Macintosh/.test(n.userAgent)||/iPad/.test(n.userAgent))&&(n.standalone||matchMedia("(display-mode: standalone)").matches))document.documentElement.classList.add("ipad")}catch(e){}</script>
 <style>.nosp #splash{display:none!important}</style>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1422,7 +1422,16 @@ function callTxt(t){$('#callst').textContent=t;$('#callpt').textContent=t}
 function callMin(on){const v=$('#callv'),p=$('#callpill');if(on&&(!call||call.state==='incoming'))return;v.classList.toggle('min',!!on);p.hidden=!on;p.classList.toggle('vid',!!(call&&call.video));if(on){$('#callpnm').textContent=WHO[call.role==='out'?other(me):(call.from||other(me))]||''}try{navigator.vibrate&&navigator.vibrate(8)}catch(x){}}
 $('#callmin').addEventListener('click',()=>callMin(true));$('#callpill').addEventListener('click',()=>callMin(false));
 const CALL_VC=f=>({facingMode:f||'user',width:{ideal:960},height:{ideal:540},frameRate:{ideal:24,max:30}});
-async function callGetMic(video){return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:video?CALL_VC(call&&call.face):false})}
+async function callGetMic(video){const a=await micGet();if(!video)return new MediaStream(a.getAudioTracks());
+ const v=await navigator.mediaDevices.getUserMedia({video:CALL_VC(call&&call.face)});return new MediaStream([...a.getAudioTracks(),...v.getVideoTracks()])}
+/* one shared mic stream: iOS web apps re-ask permission on every getUserMedia, so we ask once and keep it */
+let micKeep=null,micKeepT=0;
+async function micGet(){const live=micKeep&&micKeep.getAudioTracks().some(t=>t.readyState==='live');clearTimeout(micKeepT);
+ if(live){micKeep.getAudioTracks().forEach(t=>t.enabled=true);return micKeep}
+ micKeep=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});return micKeep}
+function micPark(){if(!micKeep)return;micKeep.getAudioTracks().forEach(t=>t.enabled=false);clearTimeout(micKeepT);micKeepT=setTimeout(micRelease,20*60e3)}
+function micRelease(){clearTimeout(micKeepT);try{micKeep&&micKeep.getTracks().forEach(t=>t.stop())}catch(x){}micKeep=null}
+const micOwn=t=>!!(micKeep&&micKeep.getTracks().includes(t));
 function callLocalPrev(){callVids()}
 function callVids(){if(!call||!call.video)return;const rv=$('#callrv'),lv=$('#calllv');const vt=call.stream&&call.stream.getVideoTracks()[0];
  if(!call.lStream||call.lStream.getVideoTracks()[0]!==vt)call.lStream=vt?new MediaStream([vt]):null;
@@ -1468,7 +1477,7 @@ function callLog(kind,dur){try{const vd=call&&call.video;const txt=kind==='done'
  db.collection('chat').add({by:me,text:txt,callLog:kind,t:Date.now(),cid:me[0]+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}).catch(()=>{});
  if(kind!=='done')notifyOther('📞 '+(WHO[me]||''),'مكالمة فائتة','chat','chat')}catch(x){}}
 function callCleanup(){const c=call;call=null;if(!c)return;try{$('#callrv').srcObject=null;$('#calllv').srcObject=null}catch(x){}clearInterval(c.sti);callLastId=c.id;clearTimeout(c.to);clearTimeout(c.dc);clearInterval(c.tm);ringStop();
- try{c.stream&&c.stream.getTracks().forEach(t=>t.stop())}catch(x){}try{c.pc&&c.pc.close()}catch(x){}try{c.wl&&c.wl.release()}catch(x){}
+ try{c.stream&&c.stream.getTracks().forEach(t=>{if(micOwn(t))micPark();else t.stop()})}catch(x){}try{c.pc&&c.pc.close()}catch(x){}try{c.wl&&c.wl.release()}catch(x){}
  if(callAudioEl){try{callAudioEl.srcObject=null}catch(x){}}try{callOut&&callOut.ctx.close()}catch(x){}callOut=null;if(callEarEl){try{callEarEl.pause();callEarEl.srcObject=null}catch(x){}}callRemote=null;if(callAudioEl)callAudioEl.muted=false;try{const S=navigator.audioSession;if(S){S.type='playback';S.type='auto'}}catch(x){}try{Music.hush(!!chOpen)}catch(x){}}
 function callEnd(msg){if(!call)return;const v=$('#callv');v.classList.remove('min');$('#callpill').hidden=true;callCleanup();v.classList.remove('inc','conn');v.classList.add('end');callTxt(msg||'انتهت المكالمة');setTimeout(()=>{if(!call){v.classList.remove('on','end');setTimeout(()=>{if(!call)v.hidden=true},300)}},1400)}
 function callOnDoc(d){if(!d||!d.cid||!me)return;
@@ -1516,8 +1525,8 @@ async function callResume(){if(!call||!call.pc||call.state!=='connected')return;
  try{$('#callrv').play().catch(()=>{})}catch(x){}
  const old=call.stream&&call.stream.getAudioTracks()[0];
  if(!(old&&old.readyState==='live'&&!old.muted)){
- try{const ns=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});if(!call||!call.pc){ns.getTracks().forEach(t=>t.stop());return}const nt=ns.getAudioTracks()[0];nt.enabled=$('#callmute').getAttribute('aria-pressed')!=='true';
-  const snd=call.aSnd||call.pc.getSenders().find(x=>!x.track||x.track.kind==='audio');if(snd)await snd.replaceTrack(nt.enabled?nt:null);try{old&&old.stop()}catch(x){}
+ try{if(micOwn(old))micRelease();const ns=await micGet();if(!call||!call.pc){micPark();return}const nt=ns.getAudioTracks()[0];nt.enabled=$('#callmute').getAttribute('aria-pressed')!=='true';
+  const snd=call.aSnd||call.pc.getSenders().find(x=>!x.track||x.track.kind==='audio');if(snd)await snd.replaceTrack(nt.enabled?nt:null);try{old&&!micOwn(old)&&old.stop()}catch(x){}
   const vts=call.stream?call.stream.getVideoTracks():[];call.stream=new MediaStream([nt,...vts]);if(!callSpk)callRoute(false,true)}catch(x){}}
  if(call&&call.video&&!call.camOff){const ov=call.stream&&call.stream.getVideoTracks()[0];if(!(ov&&ov.readyState==='live'&&!ov.muted))await callSetCam(call.face,true)}
  if(call&&call.pc&&['disconnected','failed'].includes(call.pc.iceConnectionState))callRestart();
@@ -1784,7 +1793,7 @@ let recDict=false,recActx=null;
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&recMR&&!recDict)stopRec(false)});
 async function startRec(dict){if(needMe()||recMR)return;try{if(auEl&&!auEl.paused)auEl.pause()}catch(x){}recDict=dict===true;$('#chrec').classList.toggle('dict',recDict);if(!navigator.mediaDevices||!window.MediaRecorder){toast('التلفون ما بيدعم التسجيل هون');return}
  chClosePanels();recBars=[];recLv=0;recSec=-1;$('#chrect').textContent='0:00';recT0=Date.now();recShow(true);
- try{recStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}catch(x){recShow(false);toast('لازم تسمح للتطبيق يستعمل المايك');return}
+ try{recStream=await micGet()}catch(x){recShow(false);toast('لازم تسمح للتطبيق يستعمل المايك');return}
  const mt=['audio/mp4','audio/aac','audio/webm;codecs=opus','audio/webm'].find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
  try{recMR=new MediaRecorder(recStream,mt?{mimeType:mt,audioBitsPerSecond:40000}:{})}catch(x){recMR=new MediaRecorder(recStream)}
  recChunks=[];recCancel=false;recMR.ondataavailable=e=>{if(e.data&&e.data.size)recChunks.push(e.data)};recMR.onstop=()=>setTimeout(finishRec,80);recMR.onerror=()=>{try{recMR&&recMR.state!=='inactive'&&recMR.stop()}catch(x){finishRec()}};
@@ -1810,7 +1819,7 @@ async function chDictate(blob){const btn=$('#chdict'),ph=chin.placeholder;dictBu
  finally{dictBusy=false;btn.classList.remove('busy');chin.placeholder=ph}}
 $('#chdict').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(dictBusy||recMR)return;chin.blur();startRec(true)});
 function stopRec(cancel){if(!recMR||recMR._st)return;recMR._st=1;recCancel=!!cancel;try{recMR.state!=='inactive'?recMR.stop():finishRec()}catch(x){finishRec()}}
-async function finishRec(){if(!recMR)return;const dict=recDict;recDict=false;if(!dict)chRecPing(false);clearInterval(recTick);cancelAnimationFrame(recRaf);const dur=(Date.now()-recT0)/1000;const mr=recMR;recMR=null;try{recStream&&recStream.getTracks().forEach(t=>t.stop())}catch(x){}recStream=null;recAn=null;try{recActx&&recActx.close()}catch(x){}recActx=null;
+async function finishRec(){if(!recMR)return;const dict=recDict;recDict=false;if(!dict)chRecPing(false);clearInterval(recTick);cancelAnimationFrame(recRaf);const dur=(Date.now()-recT0)/1000;const mr=recMR;recMR=null;try{if(recStream&&micOwn(recStream.getAudioTracks()[0]))micPark();else recStream&&recStream.getTracks().forEach(t=>t.stop())}catch(x){}recStream=null;recAn=null;try{recActx&&recActx.close()}catch(x){}recActx=null;
  recShow(false);
  if(recCancel||!recChunks.length)return;if(dict){if(dur<0.6)return;return chDictate(new Blob(recChunks,{type:(mr&&mr.mimeType)||'audio/mp4'}))}if(dur<0.8){toast('الرسالة قصيرة كتير');return}
  const blob=new Blob(recChunks,{type:(mr&&mr.mimeType)||'audio/mp4'});if(blob.size>4000000){toast('الرسالة طويلة كتير');return}
